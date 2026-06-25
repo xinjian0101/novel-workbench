@@ -168,6 +168,16 @@ novel --workspace workspace update-chapter moon-archive 1 --content-file chapter
 
 Use either `--content` or `--content-file`, not both.
 
+## `novel move-chapter`
+
+Move a chapter to a new position and renumber the project.
+
+```powershell
+novel --workspace workspace move-chapter moon-archive 2 1
+```
+
+The command preserves chapter content and status, then rewrites chapter numbers so they stay sequential.
+
 ## `novel export`
 
 Export a project to Markdown.

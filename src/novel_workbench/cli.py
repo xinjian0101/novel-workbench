@@ -25,6 +25,7 @@ COMPLETION_COMMANDS = (
     "search",
     "add-chapter",
     "update-chapter",
+    "move-chapter",
     "export",
     "backup",
     "completion",
@@ -136,6 +137,11 @@ def build_parser() -> argparse.ArgumentParser:
     update_chapter.add_argument("--content")
     update_chapter.add_argument("--content-file", type=Path)
     update_chapter.add_argument("--status")
+
+    move_chapter = subparsers.add_parser("move-chapter", help="Move a chapter to a new number.")
+    move_chapter.add_argument("slug")
+    move_chapter.add_argument("number", type=int)
+    move_chapter.add_argument("new_number", type=int)
 
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
@@ -261,6 +267,10 @@ def run(args: argparse.Namespace) -> int:
             status=args.status,
         )
         print(f"Updated chapter {chapter.number}: {chapter.title}")
+        return 0
+    if args.command == "move-chapter":
+        chapter = store.move_chapter(args.slug, args.number, args.new_number)
+        print(f"Moved chapter {args.number} to {chapter.number}: {chapter.title}")
         return 0
     if args.command == "export":
         output = store.export_markdown(args.slug, args.output, args.template)

@@ -76,6 +76,36 @@ def test_update_chapter_from_existing_project(tmp_path: Path) -> None:
     assert updated.status == "done"
 
 
+def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening", "One")
+    store.add_chapter("first-novel", "Middle", "Two")
+    store.add_chapter("first-novel", "Ending", "Three")
+
+    moved = store.move_chapter("first-novel", 3, 1)
+    project = store.get_project("first-novel")
+
+    assert moved.title == "Ending"
+    assert [(chapter.number, chapter.title) for chapter in project.chapters] == [
+        (1, "Ending"),
+        (2, "Opening"),
+        (3, "Middle"),
+    ]
+    assert store.check_workspace() == {"checked": 1, "ok": 1, "errors": []}
+
+
+def test_move_chapter_validates_target_number(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening")
+
+    with pytest.raises(StorageError):
+        store.move_chapter("first-novel", 1, 0)
+    with pytest.raises(StorageError):
+        store.move_chapter("first-novel", 1, 2)
+
+
 def test_missing_project_and_chapter_raise_clear_errors(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
 

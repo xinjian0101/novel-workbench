@@ -12,6 +12,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "init"]) == 0
     assert main(["--workspace", str(workspace), "create", "first-novel", "First Novel"]) == 0
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Opening", "--content", "Hello"]) == 0
+    assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Ending", "--content", "Goodbye"]) == 0
+    assert main(["--workspace", str(workspace), "move-chapter", "first-novel", "2", "1"]) == 0
     assert main(["--workspace", str(workspace), "rename", "first-novel", "renamed-novel", "--title", "Renamed Novel"]) == 0
     assert main(["--workspace", str(workspace), "doctor"]) == 0
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
@@ -28,10 +30,11 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     captured = capsys.readouterr()
     assert "Renamed project: renamed-novel" in captured.out
     assert "Renamed Novel (renamed-novel)" in captured.out
+    assert "Moved chapter 2 to 1: Ending" in captured.out
     assert "Workspace healthy." in captured.out
-    assert "Words: 1" in captured.out
+    assert "Words: 2" in captured.out
     assert "Target words: 10" in captured.out
-    assert "Progress: 10%" in captured.out
+    assert "Progress: 20%" in captured.out
     assert "Opening [draft]" in captured.out
     assert export_path.exists()
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
@@ -122,6 +125,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "Imported project: working-title (3 chapters)" in captured.out
     assert "Renamed project: journey-draft" in captured.out
     assert "Created sample project: moon-archive (2 chapters)" in captured.out
+    assert "Moved chapter 2 to 1: Descent" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out
     assert "Backed up:" in captured.out
