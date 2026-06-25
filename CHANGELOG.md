@@ -20,4 +20,5 @@
 - Added target word count progress tracking.
 - Added Markdown export templates with YAML front matter support.
 - Added repair hints to workspace doctor output.
+- Added built-in shell completion scripts and setup documentation for bash, zsh, and PowerShell.
 - Added community guidance and created public roadmap issues on GitHub.

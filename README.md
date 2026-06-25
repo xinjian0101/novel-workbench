@@ -49,6 +49,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export with optional YAML front matter for publishing tools
 - Back up project JSON before risky edits
 - Validate workspace health before releases or migrations, with repair hints
+- Print shell completion scripts for bash, zsh, and PowerShell
 - Run fully offline with no account, server, database, or telemetry
 
 ## Quick Start
@@ -82,6 +83,7 @@ python scripts/demo.py
 novel init
 novel list
 novel doctor
+novel completion bash|zsh|powershell
 novel sample [--slug moon-archive]
 novel create <slug> <title> [--synopsis "..."]
 novel import-markdown <slug> <input.md>
@@ -98,7 +100,7 @@ novel backup <slug> <output-dir>
 
 Use `--workspace <dir>` with any command to choose the workspace directory. If omitted, the tool uses `NOVEL_WORKBENCH_HOME`, then falls back to `./workspace`.
 
-See [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md) for command details and examples. Project file details live in [docs/PROJECT_SCHEMA.md](docs/PROJECT_SCHEMA.md).
+See [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md) for command details and examples. Shell completion setup lives in [docs/SHELL_COMPLETION.md](docs/SHELL_COMPLETION.md). Project file details live in [docs/PROJECT_SCHEMA.md](docs/PROJECT_SCHEMA.md).
 
 ## Data Layout
 

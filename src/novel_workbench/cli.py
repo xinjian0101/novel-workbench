@@ -9,9 +9,67 @@ from . import __version__
 from .storage import ProjectStore, StorageError
 
 
+COMPLETION_COMMANDS = (
+    "init",
+    "list",
+    "doctor",
+    "sample",
+    "create",
+    "import-markdown",
+    "show",
+    "stats",
+    "set-target",
+    "clear-target",
+    "search",
+    "add-chapter",
+    "update-chapter",
+    "export",
+    "backup",
+    "completion",
+)
+
+
 def default_workspace() -> Path:
     configured = os.environ.get("NOVEL_WORKBENCH_HOME")
     return Path(configured).expanduser() if configured else Path.cwd() / "workspace"
+
+
+def completion_script(shell: str) -> str:
+    commands = " ".join(COMPLETION_COMMANDS)
+    if shell == "bash":
+        return f"""_novel_completion() {{
+    local cur
+    COMPREPLY=()
+    cur="${{COMP_WORDS[COMP_CWORD]}}"
+    if [[ ${{COMP_CWORD}} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "{commands}" -- "$cur") )
+    fi
+}}
+complete -F _novel_completion novel
+"""
+    if shell == "zsh":
+        zsh_commands = "\n    ".join(f"'{command}:novel {command}'" for command in COMPLETION_COMMANDS)
+        return f"""#compdef novel
+_novel() {{
+  local -a commands
+  commands=(
+    {zsh_commands}
+  )
+  _describe 'command' commands
+}}
+_novel "$@"
+"""
+    if shell == "powershell":
+        ps_commands = ", ".join(f"'{command}'" for command in COMPLETION_COMMANDS)
+        return f"""Register-ArgumentCompleter -Native -CommandName novel -ScriptBlock {{
+    param($wordToComplete, $commandAst, $cursorPosition)
+    $commands = @({ps_commands})
+    $commands |
+        Where-Object {{ $_ -like "$wordToComplete*" }} |
+        ForEach-Object {{ [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }}
+}}
+"""
+    raise StorageError(f"Unsupported shell: {shell}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -76,10 +134,17 @@ def build_parser() -> argparse.ArgumentParser:
     backup.add_argument("slug")
     backup.add_argument("output_dir", type=Path)
 
+    completion = subparsers.add_parser("completion", help="Print a shell completion script.")
+    completion.add_argument("shell", choices=("bash", "zsh", "powershell"), help="Shell name.")
+
     return parser
 
 
 def run(args: argparse.Namespace) -> int:
+    if args.command == "completion":
+        print(completion_script(args.shell), end="")
+        return 0
+
     store = ProjectStore(args.workspace)
     if args.command == "init":
         store.initialize()

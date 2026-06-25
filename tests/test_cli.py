@@ -83,6 +83,18 @@ def test_cli_doctor_reports_invalid_workspace(tmp_path: Path, capsys) -> None:
     assert "Hint: Restore the file from a backup" in captured.out
 
 
+def test_cli_prints_completion_scripts(capsys) -> None:
+    assert main(["completion", "bash"]) == 0
+    assert main(["completion", "zsh"]) == 0
+    assert main(["completion", "powershell"]) == 0
+
+    captured = capsys.readouterr()
+    assert "complete -F _novel_completion novel" in captured.out
+    assert "#compdef novel" in captured.out
+    assert "Register-ArgumentCompleter" in captured.out
+    assert "import-markdown" in captured.out
+
+
 def test_demo_script_runs(capsys) -> None:
     assert demo_main() == 0
 
