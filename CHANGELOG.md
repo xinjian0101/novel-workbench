@@ -1,0 +1,15 @@
+# Changelog
+
+## 0.1.0
+
+- Added local JSON project storage.
+- Added project creation, listing, and inspection commands.
+- Added chapter creation and update commands.
+- Added progress statistics.
+- Added Markdown manuscript import.
+- Added manuscript search.
+- Added project JSON backups.
+- Added Markdown export.
+- Added tests, README, contribution guide, security policy, roadmap, and CI workflow.
+- Added a verified demo script and GitHub launch checklist.
+- Added CLI reference, architecture notes, release template, and source distribution manifest.
