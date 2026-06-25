@@ -15,6 +15,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "doctor"]) == 0
     assert main(["--workspace", str(workspace), "show", "first-novel"]) == 0
     assert main(["--workspace", str(workspace), "stats", "first-novel"]) == 0
+    assert main(["--workspace", str(workspace), "set-target", "first-novel", "10"]) == 0
+    assert main(["--workspace", str(workspace), "stats", "first-novel"]) == 0
+    assert main(["--workspace", str(workspace), "clear-target", "first-novel"]) == 0
     assert main(["--workspace", str(workspace), "search", "first-novel", "hello"]) == 0
     assert main(["--workspace", str(workspace), "export", "first-novel", str(export_path)]) == 0
     assert main(["--workspace", str(workspace), "backup", "first-novel", str(backup_dir)]) == 0
@@ -23,6 +26,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "First Novel (first-novel)" in captured.out
     assert "Workspace healthy." in captured.out
     assert "Words: 1" in captured.out
+    assert "Target words: 10" in captured.out
+    assert "Progress: 10%" in captured.out
     assert "Opening [draft]" in captured.out
     assert export_path.exists()
     assert list(backup_dir.glob("first-novel-*.json"))
@@ -82,4 +87,5 @@ def test_demo_script_runs(capsys) -> None:
     captured = capsys.readouterr()
     assert "Created sample project: moon-archive (2 chapters)" in captured.out
     assert "Words:" in captured.out
+    assert "Target words: 80000" in captured.out
     assert "Backed up:" in captured.out

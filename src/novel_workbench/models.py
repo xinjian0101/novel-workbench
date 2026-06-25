@@ -45,6 +45,7 @@ class NovelProject:
     slug: str
     title: str
     synopsis: str = ""
+    target_words: int | None = None
     chapters: list[Chapter] = field(default_factory=list)
     created_at: str = field(default_factory=utc_now_iso)
     updated_at: str = field(default_factory=utc_now_iso)
@@ -54,6 +55,7 @@ class NovelProject:
             "slug": self.slug,
             "title": self.title,
             "synopsis": self.synopsis,
+            "target_words": self.target_words,
             "chapters": [chapter.to_dict() for chapter in self.chapters],
             "created_at": self.created_at,
             "updated_at": self.updated_at,
@@ -65,7 +67,13 @@ class NovelProject:
             slug=str(data["slug"]),
             title=str(data["title"]),
             synopsis=str(data.get("synopsis", "")),
+            target_words=_target_words_from_dict(data),
             chapters=[Chapter.from_dict(item) for item in data.get("chapters", [])],
             created_at=str(data.get("created_at", utc_now_iso())),
             updated_at=str(data.get("updated_at", utc_now_iso())),
         )
+
+
+def _target_words_from_dict(data: dict[str, Any]) -> int | None:
+    value = data.get("target_words")
+    return None if value is None else int(value)

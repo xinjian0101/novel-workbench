@@ -112,11 +112,66 @@ def test_project_stats_count_progress(tmp_path: Path) -> None:
     assert store.project_stats("first-novel") == {
         "chapters": 2,
         "words": 7,
+        "target_words": None,
+        "progress_percent": None,
         "characters": 40,
         "draft": 0,
         "revising": 1,
         "done": 1,
     }
+
+
+def test_project_stats_show_target_progress(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft")
+    store.set_target_words("first-novel", 10)
+
+    stats = store.project_stats("first-novel")
+
+    assert stats["words"] == 3
+    assert stats["target_words"] == 10
+    assert stats["progress_percent"] == 30
+
+
+def test_set_target_words_validates_positive_values(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    with pytest.raises(StorageError):
+        store.set_target_words("first-novel", 0)
+
+
+def test_clear_target_words(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.set_target_words("first-novel", 10)
+
+    project = store.set_target_words("first-novel", None)
+
+    assert project.target_words is None
+    assert store.project_stats("first-novel")["progress_percent"] is None
+
+
+def test_existing_project_json_without_target_words_still_loads(tmp_path: Path) -> None:
+    projects = tmp_path / "projects"
+    projects.mkdir()
+    (projects / "legacy.json").write_text(
+        '{\n'
+        '  "slug": "legacy",\n'
+        '  "title": "Legacy",\n'
+        '  "synopsis": "",\n'
+        '  "chapters": [],\n'
+        '  "created_at": "2026-06-25T00:00:00+00:00",\n'
+        '  "updated_at": "2026-06-25T00:00:00+00:00"\n'
+        '}\n',
+        encoding="utf-8",
+    )
+    store = ProjectStore(tmp_path)
+
+    project = store.get_project("legacy")
+
+    assert project.target_words is None
 
 
 def test_parse_markdown_chapters() -> None:

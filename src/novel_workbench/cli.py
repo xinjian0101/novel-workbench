@@ -42,6 +42,13 @@ def build_parser() -> argparse.ArgumentParser:
     stats = subparsers.add_parser("stats", help="Show drafting progress for a project.")
     stats.add_argument("slug")
 
+    set_target = subparsers.add_parser("set-target", help="Set a project target word count.")
+    set_target.add_argument("slug")
+    set_target.add_argument("words", type=int)
+
+    clear_target = subparsers.add_parser("clear-target", help="Clear a project target word count.")
+    clear_target.add_argument("slug")
+
     search = subparsers.add_parser("search", help="Search chapter titles and content.")
     search.add_argument("slug")
     search.add_argument("query")
@@ -123,10 +130,21 @@ def run(args: argparse.Namespace) -> int:
         stats = store.project_stats(args.slug)
         print(f"Chapters: {stats['chapters']}")
         print(f"Words: {stats['words']}")
+        if stats["target_words"] is not None:
+            print(f"Target words: {stats['target_words']}")
+            print(f"Progress: {stats['progress_percent']}%")
         print(f"Characters: {stats['characters']}")
         print(f"Draft: {stats['draft']}")
         print(f"Revising: {stats['revising']}")
         print(f"Done: {stats['done']}")
+        return 0
+    if args.command == "set-target":
+        project = store.set_target_words(args.slug, args.words)
+        print(f"Set target words for {project.slug}: {project.target_words}")
+        return 0
+    if args.command == "clear-target":
+        project = store.set_target_words(args.slug, None)
+        print(f"Cleared target words for {project.slug}")
         return 0
     if args.command == "search":
         results = store.search(args.slug, args.query)

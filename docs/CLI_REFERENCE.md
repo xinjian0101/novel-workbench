@@ -75,10 +75,26 @@ novel --workspace workspace show moon-archive
 
 ## `novel stats`
 
-Show chapter, word, character, and status counts.
+Show chapter, word, target, progress, character, and status counts.
 
 ```powershell
 novel --workspace workspace stats moon-archive
+```
+
+## `novel set-target`
+
+Set a project target word count.
+
+```powershell
+novel --workspace workspace set-target moon-archive 80000
+```
+
+## `novel clear-target`
+
+Clear a project target word count.
+
+```powershell
+novel --workspace workspace clear-target moon-archive
 ```
 
 ## `novel search`

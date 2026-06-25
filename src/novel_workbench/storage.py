@@ -57,6 +57,12 @@ def validate_status(status: str) -> str:
     return normalized
 
 
+def validate_target_words(target_words: int) -> int:
+    if target_words < 1:
+        raise StorageError("Target word count must be greater than zero.")
+    return target_words
+
+
 def count_words(content: str) -> int:
     return len(re.findall(r"\b[\w'-]+\b", content))
 
@@ -200,11 +206,24 @@ class ProjectStore:
         self._write_project(project)
         return chapter
 
-    def project_stats(self, slug: str) -> dict[str, int]:
+    def set_target_words(self, slug: str, target_words: int | None) -> NovelProject:
         project = self.get_project(slug)
+        project.target_words = None if target_words is None else validate_target_words(target_words)
+        project.updated_at = utc_now_iso()
+        self._write_project(project)
+        return project
+
+    def project_stats(self, slug: str) -> dict[str, int | None]:
+        project = self.get_project(slug)
+        words = sum(count_words(chapter.content) for chapter in project.chapters)
+        progress_percent = None
+        if project.target_words is not None:
+            progress_percent = min(round((words / project.target_words) * 100), 999)
         return {
             "chapters": len(project.chapters),
-            "words": sum(count_words(chapter.content) for chapter in project.chapters),
+            "words": words,
+            "target_words": project.target_words,
+            "progress_percent": progress_percent,
             "characters": sum(len(chapter.content) for chapter in project.chapters),
             "draft": sum(1 for chapter in project.chapters if chapter.status == "draft"),
             "revising": sum(1 for chapter in project.chapters if chapter.status == "revising"),

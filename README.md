@@ -13,6 +13,8 @@ Created sample project: moon-archive (2 chapters)
 $ novel stats moon-archive
 Chapters: 2
 Words: 15
+Target words: 80000
+Progress: 0%
 Characters: 77
 Draft: 2
 Revising: 0
@@ -40,6 +42,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Update chapter title, content, and status
 - Show project outlines
 - Report chapter, word, character, and status counts
+- Track target word count progress
 - Search across chapter titles and manuscript content
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown
@@ -57,6 +60,7 @@ python -m pip install -e ".[dev]"
 
 novel --workspace workspace init
 novel --workspace workspace sample
+novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
 novel --workspace workspace search moon-archive signal
@@ -81,6 +85,8 @@ novel create <slug> <title> [--synopsis "..."]
 novel import-markdown <slug> <input.md>
 novel show <slug>
 novel stats <slug>
+novel set-target <slug> <words>
+novel clear-target <slug>
 novel search <slug> <query>
 novel add-chapter <slug> <title> [--content "..."] [--status draft|revising|done]
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--status draft|revising|done]

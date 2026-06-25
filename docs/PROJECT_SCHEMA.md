@@ -13,6 +13,7 @@ workspace/projects/<slug>.json
   "slug": "moon-archive",
   "title": "Moon Archive",
   "synopsis": "A historian finds a city under the lunar dust.",
+  "target_words": 80000,
   "chapters": [],
   "created_at": "2026-06-25T12:00:00+00:00",
   "updated_at": "2026-06-25T12:00:00+00:00"
@@ -24,11 +25,14 @@ Required fields:
 - `slug`: lowercase letters, numbers, and single hyphens
 - `title`: non-empty, 120 characters or fewer
 - `synopsis`: string
+- `target_words`: positive integer or `null`
 - `chapters`: array of chapter objects
 - `created_at`: ISO timestamp
 - `updated_at`: ISO timestamp
 
 The file name should match the project slug.
+
+Older project files without `target_words` still load; Novel Workbench treats the field as `null`.
 
 ## Chapter Object
 

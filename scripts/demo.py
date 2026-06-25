@@ -22,6 +22,7 @@ def main() -> int:
     backups = demo_root / "backups"
     commands = [
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "sample"],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-target", "moon-archive", "80000"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "show", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "stats", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "doctor"],
