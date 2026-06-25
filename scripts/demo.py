@@ -22,7 +22,7 @@ def main() -> int:
     exports = demo_root / "exports"
     backups = demo_root / "backups"
     commands = [
-        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "starter", str(drafts / "working-title.md")],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "starter", str(drafts / "working-title.md"), "--template", "hero-journey"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "import-markdown", "working-title", str(drafts / "working-title.md")],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "sample"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-target", "moon-archive", "80000"],

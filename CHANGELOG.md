@@ -17,7 +17,7 @@
 - Added a single release-quality check script and wired CI to use it.
 - Added Dependabot configuration for GitHub Actions maintenance.
 - Added sample project generation for instant onboarding.
-- Added starter manuscript generation for importable first drafts.
+- Added starter manuscript generation with three-act, hero journey, and mystery templates.
 - Added target word count progress tracking.
 - Added Markdown export templates with YAML front matter support.
 - Added repair hints to workspace doctor output.

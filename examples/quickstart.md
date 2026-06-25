@@ -4,7 +4,7 @@ This example shows the smallest complete flow.
 
 ```powershell
 novel --workspace workspace init
-novel --workspace workspace starter drafts/working-title.md
+novel --workspace workspace starter drafts/working-title.md --template three-act
 novel --workspace workspace import-markdown working-title drafts/working-title.md
 novel --workspace workspace sample
 novel --workspace workspace set-target moon-archive 80000
@@ -54,5 +54,6 @@ Generating a starter manuscript:
 
 ```powershell
 novel --workspace workspace starter drafts/working-title.md
+novel --workspace workspace starter drafts/mystery.md --template mystery
 novel --workspace workspace import-markdown working-title drafts/working-title.md
 ```

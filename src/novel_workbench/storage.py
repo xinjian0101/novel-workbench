@@ -20,7 +20,8 @@ SAMPLE_PROJECT = {
         ("Descent", "They opened the hatch and heard rain below."),
     ],
 }
-STARTER_MARKDOWN = """# Working Title
+STARTER_TEMPLATES = {
+    "three-act": """# Working Title
 
 One paragraph premise: protagonist, pressure, stakes, and the change that makes the story worth writing.
 
@@ -35,7 +36,40 @@ Draft the moment that changes the protagonist's plans.
 ## Chapter 3: First Choice
 
 Draft the first irreversible decision.
-"""
+""",
+    "hero-journey": """# Working Title
+
+One paragraph premise: the ordinary world, the call, the refusal, and the transformation the protagonist cannot avoid.
+
+## Chapter 1: Ordinary World
+
+Show the protagonist before the journey begins.
+
+## Chapter 2: Call to Adventure
+
+Introduce the invitation, threat, or discovery that demands action.
+
+## Chapter 3: Crossing the Threshold
+
+Draft the moment the protagonist leaves safety behind.
+""",
+    "mystery": """# Working Title
+
+One paragraph premise: the crime, the investigator, the hidden pressure, and why solving it matters now.
+
+## Chapter 1: The Body
+
+Open with the discovery, disappearance, or impossible event.
+
+## Chapter 2: First Suspect
+
+Introduce the first plausible answer and the detail that makes it unstable.
+
+## Chapter 3: False Pattern
+
+Draft the clue trail that seems obvious but points in the wrong direction.
+""",
+}
 
 
 class StorageError(Exception):
@@ -85,6 +119,14 @@ def validate_export_template(template: str) -> str:
     if normalized not in EXPORT_TEMPLATES:
         allowed = ", ".join(sorted(EXPORT_TEMPLATES))
         raise StorageError(f"Export template must be one of: {allowed}.")
+    return normalized
+
+
+def validate_starter_template(template: str) -> str:
+    normalized = template.strip().lower()
+    if normalized not in STARTER_TEMPLATES:
+        allowed = ", ".join(sorted(STARTER_TEMPLATES))
+        raise StorageError(f"Starter template must be one of: {allowed}.")
     return normalized
 
 
@@ -186,11 +228,12 @@ class ProjectStore:
             self.add_chapter(project.slug, chapter_title, content)
         return self.get_project(project.slug)
 
-    def write_starter_markdown(self, output_path: Path, *, overwrite: bool = False) -> Path:
+    def write_starter_markdown(self, output_path: Path, *, template: str = "three-act", overwrite: bool = False) -> Path:
+        template = validate_starter_template(template)
         if output_path.exists() and not overwrite:
             raise DuplicateError(f"Starter file already exists: {output_path}")
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(STARTER_MARKDOWN, encoding="utf-8")
+        output_path.write_text(STARTER_TEMPLATES[template], encoding="utf-8")
         return output_path
 
     def get_project(self, slug: str) -> NovelProject:

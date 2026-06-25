@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
-from .storage import ProjectStore, StorageError
+from .storage import STARTER_TEMPLATES, ProjectStore, StorageError
 
 
 COMPLETION_COMMANDS = (
@@ -88,6 +88,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     starter = subparsers.add_parser("starter", help="Write an importable starter Markdown manuscript.")
     starter.add_argument("output", type=Path)
+    starter.add_argument("--template", choices=sorted(STARTER_TEMPLATES), default="three-act", help="Starter structure.")
     starter.add_argument("--force", action="store_true", help="Overwrite the output file if it exists.")
 
     create = subparsers.add_parser("create", help="Create a project.")
@@ -184,7 +185,7 @@ def run(args: argparse.Namespace) -> int:
         print(f"Created sample project: {project.slug} ({len(project.chapters)} chapters)")
         return 0
     if args.command == "starter":
-        output = store.write_starter_markdown(args.output, overwrite=args.force)
+        output = store.write_starter_markdown(args.output, template=args.template, overwrite=args.force)
         print(f"Wrote starter manuscript: {output}")
         return 0
     if args.command == "create":

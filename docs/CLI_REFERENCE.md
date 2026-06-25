@@ -57,11 +57,18 @@ Write an importable Markdown manuscript template.
 
 ```powershell
 novel --workspace workspace starter drafts/working-title.md
+novel --workspace workspace starter drafts/working-title.md --template mystery
 novel --workspace workspace starter drafts/working-title.md --force
 novel --workspace workspace import-markdown working-title drafts/working-title.md
 ```
 
 The generated file starts with a project title, synopsis prompt, and three chapter headings that match the `import-markdown` format.
+
+Templates:
+
+- `three-act`: opening image, inciting incident, and first choice. This is the default.
+- `hero-journey`: ordinary world, call to adventure, and crossing the threshold.
+- `mystery`: the body, first suspect, and false pattern.
 
 ## `novel create`
 

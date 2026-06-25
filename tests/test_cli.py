@@ -38,7 +38,7 @@ def test_cli_writes_starter_and_imports_it(tmp_path: Path, capsys) -> None:
     workspace = tmp_path / "workspace"
     starter = tmp_path / "starter.md"
 
-    assert main(["--workspace", str(workspace), "starter", str(starter)]) == 0
+    assert main(["--workspace", str(workspace), "starter", str(starter), "--template", "hero-journey"]) == 0
     assert main(["--workspace", str(workspace), "import-markdown", "working-title", str(starter)]) == 0
     assert main(["--workspace", str(workspace), "stats", "working-title"]) == 0
 
@@ -46,6 +46,7 @@ def test_cli_writes_starter_and_imports_it(tmp_path: Path, capsys) -> None:
     assert "Wrote starter manuscript:" in captured.out
     assert "Imported project: working-title (3 chapters)" in captured.out
     assert "Chapters: 3" in captured.out
+    assert "Crossing the Threshold" in starter.read_text(encoding="utf-8")
 
 
 def test_cli_import_markdown(tmp_path: Path, capsys) -> None:

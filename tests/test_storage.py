@@ -265,6 +265,24 @@ def test_starter_markdown_can_be_imported(tmp_path: Path) -> None:
     assert project.chapters[0].title == "Opening Image"
 
 
+def test_starter_markdown_supports_named_templates(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    starter = tmp_path / "mystery.md"
+
+    store.write_starter_markdown(starter, template="mystery")
+    project = store.import_markdown("mystery-draft", starter)
+
+    assert project.title == "Working Title"
+    assert [chapter.title for chapter in project.chapters] == ["The Body", "First Suspect", "False Pattern"]
+
+
+def test_starter_markdown_rejects_unknown_template(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+
+    with pytest.raises(StorageError):
+        store.write_starter_markdown(tmp_path / "starter.md", template="unknown")
+
+
 def test_starter_markdown_does_not_overwrite_without_force(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     starter = tmp_path / "starter.md"
