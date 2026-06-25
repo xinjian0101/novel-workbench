@@ -6,8 +6,8 @@
 Novel Workbench is a fast, local-first command line workspace for writing long-form fiction. It gives authors a simple way to create projects, draft chapters, track progress, and export a clean Markdown manuscript without signing up for a cloud service.
 
 ```text
-$ novel import-markdown moon-archive moon-archive.md
-Imported project: moon-archive (2 chapters)
+$ novel sample
+Created sample project: moon-archive (2 chapters)
 
 $ novel stats moon-archive
 Chapters: 2
@@ -34,6 +34,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 ## Features
 
 - Create and list novel projects
+- Create a sample project for instant exploration
 - Add chapters with draft, revising, and done statuses
 - Update chapter title, content, and status
 - Show project outlines
@@ -54,13 +55,12 @@ python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 
 novel --workspace workspace init
-novel --workspace workspace create first-novel "First Novel" --synopsis "A concise premise."
-novel --workspace workspace add-chapter first-novel "Opening" --content "The story begins."
-novel --workspace workspace stats first-novel
+novel --workspace workspace sample
+novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
-novel --workspace workspace search first-novel begins
-novel --workspace workspace export first-novel exports/first-novel.md
-novel --workspace workspace backup first-novel backups
+novel --workspace workspace search moon-archive signal
+novel --workspace workspace export moon-archive exports/moon-archive.md
+novel --workspace workspace backup moon-archive backups
 ```
 
 Run the bundled demo:
@@ -75,6 +75,7 @@ python scripts/demo.py
 novel init
 novel list
 novel doctor
+novel sample [--slug moon-archive]
 novel create <slug> <title> [--synopsis "..."]
 novel import-markdown <slug> <input.md>
 novel show <slug>

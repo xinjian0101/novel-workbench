@@ -28,6 +28,15 @@ novel --workspace workspace doctor
 
 The command exits with `0` when the workspace is healthy and `2` when project files are invalid.
 
+## `novel sample`
+
+Create a ready-to-explore sample project.
+
+```powershell
+novel --workspace workspace sample
+novel --workspace workspace sample --slug my-demo
+```
+
 ## `novel create`
 
 Create an empty project.

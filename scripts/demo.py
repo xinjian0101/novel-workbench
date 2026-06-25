@@ -20,20 +20,8 @@ def main() -> int:
     workspace = demo_root / "workspace"
     exports = demo_root / "exports"
     backups = demo_root / "backups"
-    manuscript = demo_root / "moon-archive.md"
-
-    manuscript.write_text(
-        "# Moon Archive\n\n"
-        "A historian finds a city under the lunar dust.\n\n"
-        "## Chapter 1: Signal\n\n"
-        "The first signal arrived at 03:17.\n\n"
-        "## Chapter 2: Descent\n\n"
-        "They opened the hatch and heard rain below.\n",
-        encoding="utf-8",
-    )
-
     commands = [
-        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "import-markdown", "moon-archive", str(manuscript)],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "sample"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "show", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "stats", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "doctor"],

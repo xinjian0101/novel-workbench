@@ -32,6 +32,25 @@ def test_rejects_duplicate_project(tmp_path: Path) -> None:
         store.create_project("first-novel", "Another Title")
 
 
+def test_create_sample_project(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+
+    project = store.create_sample_project()
+
+    assert project.slug == "moon-archive"
+    assert project.title == "Moon Archive"
+    assert len(project.chapters) == 2
+    assert project.chapters[0].title == "Signal"
+
+
+def test_create_sample_project_rejects_duplicate_slug(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_sample_project()
+
+    with pytest.raises(DuplicateError):
+        store.create_sample_project()
+
+
 def test_validates_slug_title_and_status(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
 

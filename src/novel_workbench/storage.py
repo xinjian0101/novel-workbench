@@ -10,6 +10,15 @@ from .models import Chapter, NovelProject, utc_now_iso
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
+SAMPLE_PROJECT = {
+    "slug": "moon-archive",
+    "title": "Moon Archive",
+    "synopsis": "A historian finds a city under the lunar dust.",
+    "chapters": [
+        ("Signal", "The first signal arrived at 03:17."),
+        ("Descent", "They opened the hatch and heard rain below."),
+    ],
+}
 
 
 class StorageError(Exception):
@@ -129,6 +138,12 @@ class ProjectStore:
             raise DuplicateError(f"Project '{project.slug}' already exists.")
         self._write_project(project)
         return project
+
+    def create_sample_project(self, slug: str = SAMPLE_PROJECT["slug"]) -> NovelProject:
+        project = self.create_project(slug, SAMPLE_PROJECT["title"], SAMPLE_PROJECT["synopsis"])
+        for chapter_title, content in SAMPLE_PROJECT["chapters"]:
+            self.add_chapter(project.slug, chapter_title, content)
+        return self.get_project(project.slug)
 
     def import_markdown(self, slug: str, markdown_path: Path) -> NovelProject:
         if not markdown_path.exists():

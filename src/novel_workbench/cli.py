@@ -24,6 +24,9 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("list", help="List projects.")
     subparsers.add_parser("doctor", help="Validate workspace project files.")
 
+    sample = subparsers.add_parser("sample", help="Create a small sample project.")
+    sample.add_argument("--slug", default="moon-archive", help="Sample project slug.")
+
     create = subparsers.add_parser("create", help="Create a project.")
     create.add_argument("slug", help="Lowercase project identifier, for example: first-novel.")
     create.add_argument("title", help="Project title.")
@@ -96,6 +99,10 @@ def run(args: argparse.Namespace) -> int:
         for error in errors:
             print(f"- {error['file']}: {error['error']}")
         return 2
+    if args.command == "sample":
+        project = store.create_sample_project(args.slug)
+        print(f"Created sample project: {project.slug} ({len(project.chapters)} chapters)")
+        return 0
     if args.command == "create":
         project = store.create_project(args.slug, args.title, args.synopsis)
         print(f"Created project: {project.slug}")

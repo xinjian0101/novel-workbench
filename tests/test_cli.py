@@ -45,6 +45,17 @@ def test_cli_import_markdown(tmp_path: Path, capsys) -> None:
     assert "Imported project: moon-archive (1 chapters)" in captured.out
 
 
+def test_cli_sample_creates_demo_project(tmp_path: Path, capsys) -> None:
+    workspace = tmp_path / "workspace"
+
+    assert main(["--workspace", str(workspace), "sample"]) == 0
+    assert main(["--workspace", str(workspace), "show", "moon-archive"]) == 0
+
+    captured = capsys.readouterr()
+    assert "Created sample project: moon-archive (2 chapters)" in captured.out
+    assert "Moon Archive (moon-archive)" in captured.out
+
+
 def test_cli_reports_validation_errors(tmp_path: Path, capsys) -> None:
     code = main(["--workspace", str(tmp_path), "create", "Bad Slug", "Title"])
 
@@ -69,6 +80,6 @@ def test_demo_script_runs(capsys) -> None:
     assert demo_main() == 0
 
     captured = capsys.readouterr()
-    assert "Imported project: moon-archive (2 chapters)" in captured.out
+    assert "Created sample project: moon-archive (2 chapters)" in captured.out
     assert "Words:" in captured.out
     assert "Backed up:" in captured.out
