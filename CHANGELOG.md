@@ -17,3 +17,4 @@
 - Added a single release-quality check script and wired CI to use it.
 - Added Dependabot configuration for GitHub Actions maintenance.
 - Added sample project generation for instant onboarding.
+- Added community guidance and created public roadmap issues on GitHub.

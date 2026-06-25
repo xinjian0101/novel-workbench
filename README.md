@@ -162,6 +162,8 @@ Use [docs/GITHUB_LAUNCH.md](docs/GITHUB_LAUNCH.md) before publishing the reposit
 
 Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), then open a focused issue or pull request.
 
+Community and issue labels are described in [docs/COMMUNITY.md](docs/COMMUNITY.md).
+
 ## Security
 
 Novel Workbench is local-first and does not transmit manuscripts. Report security concerns through [SECURITY.md](SECURITY.md).
