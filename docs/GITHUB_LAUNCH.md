@@ -44,5 +44,5 @@ Markdown in, Markdown out. No cloud account required.
 ## Launch Risks
 
 - A real star count cannot be guaranteed by repository contents alone.
-- If the project is pushed under a different name, update package URLs before publishing to PyPI.
+- Package URLs currently point to `https://github.com/xinjian0101/novel-workbench`.
 - Do not commit local `workspace/`, `exports/`, `backups/`, `.demo-workspace/`, or `.env` files.

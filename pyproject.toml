@@ -24,6 +24,11 @@ classifiers = [
 ]
 dependencies = []
 
+[project.urls]
+Homepage = "https://github.com/xinjian0101/novel-workbench"
+Issues = "https://github.com/xinjian0101/novel-workbench/issues"
+Changelog = "https://github.com/xinjian0101/novel-workbench/blob/master/CHANGELOG.md"
+
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0",
