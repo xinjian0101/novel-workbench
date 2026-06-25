@@ -87,6 +87,36 @@ def test_missing_project_and_chapter_raise_clear_errors(tmp_path: Path) -> None:
         store.update_chapter("first-novel", 99, content="No chapter.")
 
 
+def test_rename_project_updates_slug_title_and_file(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel")
+    store.set_target_words("first-novel", 50000)
+    store.add_chapter("first-novel", "Opening", "The story begins.")
+
+    project = store.rename_project("first-novel", "second-novel", "Second Novel")
+
+    assert project.slug == "second-novel"
+    assert project.title == "Second Novel"
+    assert project.target_words == 50000
+    assert project.chapters[0].title == "Opening"
+    assert not (tmp_path / "workspace" / "projects" / "first-novel.json").exists()
+    assert (tmp_path / "workspace" / "projects" / "second-novel.json").exists()
+    with pytest.raises(NotFoundError):
+        store.get_project("first-novel")
+
+
+def test_rename_project_rejects_existing_slug(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel")
+    store.create_project("second-novel", "Second Novel")
+
+    with pytest.raises(DuplicateError):
+        store.rename_project("first-novel", "second-novel")
+
+    assert store.get_project("first-novel").title == "First Novel"
+    assert store.get_project("second-novel").title == "Second Novel"
+
+
 def test_export_markdown(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")

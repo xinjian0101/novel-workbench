@@ -12,28 +12,30 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "init"]) == 0
     assert main(["--workspace", str(workspace), "create", "first-novel", "First Novel"]) == 0
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Opening", "--content", "Hello"]) == 0
+    assert main(["--workspace", str(workspace), "rename", "first-novel", "renamed-novel", "--title", "Renamed Novel"]) == 0
     assert main(["--workspace", str(workspace), "doctor"]) == 0
-    assert main(["--workspace", str(workspace), "show", "first-novel"]) == 0
-    assert main(["--workspace", str(workspace), "stats", "first-novel"]) == 0
-    assert main(["--workspace", str(workspace), "set-target", "first-novel", "10"]) == 0
-    assert main(["--workspace", str(workspace), "stats", "first-novel"]) == 0
-    assert main(["--workspace", str(workspace), "clear-target", "first-novel"]) == 0
-    assert main(["--workspace", str(workspace), "search", "first-novel", "hello"]) == 0
-    assert main(["--workspace", str(workspace), "export", "first-novel", str(export_path)]) == 0
-    assert main(["--workspace", str(workspace), "export", "first-novel", str(tmp_path / "frontmatter.md"), "--template", "frontmatter"]) == 0
-    assert main(["--workspace", str(workspace), "export", "first-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
-    assert main(["--workspace", str(workspace), "backup", "first-novel", str(backup_dir)]) == 0
+    assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "set-target", "renamed-novel", "10"]) == 0
+    assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "clear-target", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "search", "renamed-novel", "hello"]) == 0
+    assert main(["--workspace", str(workspace), "export", "renamed-novel", str(export_path)]) == 0
+    assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "frontmatter.md"), "--template", "frontmatter"]) == 0
+    assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
+    assert main(["--workspace", str(workspace), "backup", "renamed-novel", str(backup_dir)]) == 0
 
     captured = capsys.readouterr()
-    assert "First Novel (first-novel)" in captured.out
+    assert "Renamed project: renamed-novel" in captured.out
+    assert "Renamed Novel (renamed-novel)" in captured.out
     assert "Workspace healthy." in captured.out
     assert "Words: 1" in captured.out
     assert "Target words: 10" in captured.out
     assert "Progress: 10%" in captured.out
     assert "Opening [draft]" in captured.out
     assert export_path.exists()
-    assert "# First Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
-    assert list(backup_dir.glob("first-novel-*.json"))
+    assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
+    assert list(backup_dir.glob("renamed-novel-*.json"))
 
 
 def test_cli_writes_starter_and_imports_it(tmp_path: Path, capsys) -> None:
@@ -118,6 +120,7 @@ def test_demo_script_runs(capsys) -> None:
     captured = capsys.readouterr()
     assert "Wrote starter manuscript:" in captured.out
     assert "Imported project: working-title (3 chapters)" in captured.out
+    assert "Renamed project: journey-draft" in captured.out
     assert "Created sample project: moon-archive (2 chapters)" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out

@@ -4,6 +4,7 @@
 
 - Added local JSON project storage.
 - Added project creation, listing, and inspection commands.
+- Added project rename support for changing slugs and titles safely.
 - Added chapter creation and update commands.
 - Added progress statistics.
 - Added Markdown manuscript import.

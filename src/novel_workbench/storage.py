@@ -242,6 +242,22 @@ class ProjectStore:
             raise NotFoundError(f"Project '{validate_slug(slug)}' does not exist.")
         return self._read_project(path)
 
+    def rename_project(self, slug: str, new_slug: str, new_title: str | None = None) -> NovelProject:
+        project = self.get_project(slug)
+        old_path = self.project_path(project.slug)
+        normalized_slug = validate_slug(new_slug)
+        new_path = self.project_path(normalized_slug)
+        if new_path.exists() and new_path != old_path:
+            raise DuplicateError(f"Project '{normalized_slug}' already exists.")
+        project.slug = normalized_slug
+        if new_title is not None:
+            project.title = validate_title(new_title)
+        project.updated_at = utc_now_iso()
+        self._write_project(project)
+        if old_path != new_path:
+            old_path.unlink()
+        return self.get_project(project.slug)
+
     def add_chapter(self, slug: str, title: str, content: str = "", status: str = "draft") -> Chapter:
         project = self.get_project(slug)
         next_number = max((chapter.number for chapter in project.chapters), default=0) + 1

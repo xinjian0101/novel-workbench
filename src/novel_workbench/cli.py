@@ -16,6 +16,7 @@ COMPLETION_COMMANDS = (
     "sample",
     "starter",
     "create",
+    "rename",
     "import-markdown",
     "show",
     "stats",
@@ -95,6 +96,11 @@ def build_parser() -> argparse.ArgumentParser:
     create.add_argument("slug", help="Lowercase project identifier, for example: first-novel.")
     create.add_argument("title", help="Project title.")
     create.add_argument("--synopsis", default="", help="Short project synopsis.")
+
+    rename = subparsers.add_parser("rename", help="Rename a project slug and optionally its title.")
+    rename.add_argument("slug")
+    rename.add_argument("new_slug")
+    rename.add_argument("--title", help="New project title.")
 
     import_markdown = subparsers.add_parser("import-markdown", help="Create a project from a Markdown manuscript.")
     import_markdown.add_argument("slug")
@@ -191,6 +197,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "create":
         project = store.create_project(args.slug, args.title, args.synopsis)
         print(f"Created project: {project.slug}")
+        return 0
+    if args.command == "rename":
+        project = store.rename_project(args.slug, args.new_slug, args.title)
+        print(f"Renamed project: {project.slug}")
         return 0
     if args.command == "import-markdown":
         project = store.import_markdown(args.slug, args.input)

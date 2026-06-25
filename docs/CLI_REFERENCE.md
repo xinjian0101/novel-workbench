@@ -78,6 +78,17 @@ Create an empty project.
 novel --workspace workspace create first-novel "First Novel" --synopsis "A concise premise."
 ```
 
+## `novel rename`
+
+Rename a project slug and optionally update its title.
+
+```powershell
+novel --workspace workspace rename first-novel second-novel
+novel --workspace workspace rename first-novel second-novel --title "Second Novel"
+```
+
+The command rewrites the project JSON under the new slug, preserves chapters and progress metadata, and refuses to overwrite an existing project.
+
 ## `novel import-markdown`
 
 Create a project from a Markdown manuscript.

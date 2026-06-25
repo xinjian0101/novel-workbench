@@ -24,6 +24,7 @@ def main() -> int:
     commands = [
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "starter", str(drafts / "working-title.md"), "--template", "hero-journey"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "import-markdown", "working-title", str(drafts / "working-title.md")],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "rename", "working-title", "journey-draft", "--title", "Journey Draft"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "sample"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-target", "moon-archive", "80000"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "show", "moon-archive"],

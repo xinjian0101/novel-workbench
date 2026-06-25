@@ -39,6 +39,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Create and list novel projects
 - Create a sample project for instant exploration
 - Generate an importable starter manuscript template
+- Rename project slugs and titles without losing chapters
 - Add chapters with draft, revising, and done statuses
 - Update chapter title, content, and status
 - Show project outlines
@@ -65,6 +66,7 @@ python -m pip install -e ".[dev]"
 novel --workspace workspace init
 novel --workspace workspace starter drafts/working-title.md --template three-act
 novel --workspace workspace import-markdown working-title drafts/working-title.md
+novel --workspace workspace rename working-title first-draft --title "First Draft"
 novel --workspace workspace sample
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive
@@ -92,6 +94,7 @@ novel completion bash|zsh|powershell
 novel sample [--slug moon-archive]
 novel starter <output.md> [--template three-act|hero-journey|mystery] [--force]
 novel create <slug> <title> [--synopsis "..."]
+novel rename <slug> <new-slug> [--title "..."]
 novel import-markdown <slug> <input.md>
 novel show <slug>
 novel stats <slug>
