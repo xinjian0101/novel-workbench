@@ -66,4 +66,4 @@ Run:
 novel --workspace workspace doctor
 ```
 
-The doctor command validates project JSON files, reports corrupt files, checks file-name-to-slug consistency, and checks chapter numbering.
+The doctor command validates project JSON files, reports corrupt files, checks file-name-to-slug consistency, checks chapter numbering, and prints repair hints for known failures.

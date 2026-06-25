@@ -48,7 +48,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export manuscripts to Markdown
 - Export with optional YAML front matter for publishing tools
 - Back up project JSON before risky edits
-- Validate workspace health before releases or migrations
+- Validate workspace health before releases or migrations, with repair hints
 - Run fully offline with no account, server, database, or telemetry
 
 ## Quick Start

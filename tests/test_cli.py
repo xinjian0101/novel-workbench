@@ -80,6 +80,7 @@ def test_cli_doctor_reports_invalid_workspace(tmp_path: Path, capsys) -> None:
     captured = capsys.readouterr()
     assert code == 2
     assert "Errors: 1" in captured.out
+    assert "Hint: Restore the file from a backup" in captured.out
 
 
 def test_demo_script_runs(capsys) -> None:

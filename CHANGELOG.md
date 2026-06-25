@@ -19,4 +19,5 @@
 - Added sample project generation for instant onboarding.
 - Added target word count progress tracking.
 - Added Markdown export templates with YAML front matter support.
+- Added repair hints to workspace doctor output.
 - Added community guidance and created public roadmap issues on GitHub.

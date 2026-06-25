@@ -138,11 +138,12 @@ class ProjectStore:
                         {
                             "file": str(path),
                             "error": f"File name '{path.stem}' does not match project slug '{project.slug}'.",
+                            "hint": f"Rename the file to '{project.slug}.json' or update the project slug.",
                         }
                     )
                 _validate_chapter_numbers(project)
             except StorageError as exc:
-                errors.append({"file": str(path), "error": str(exc)})
+                errors.append({"file": str(path), "error": str(exc), "hint": _doctor_hint(str(exc))})
         return {"checked": checked, "ok": checked - len(errors), "errors": errors}
 
     def create_project(self, slug: str, title: str, synopsis: str = "") -> NovelProject:
@@ -337,3 +338,11 @@ def _validate_chapter_numbers(project: NovelProject) -> None:
     expected = list(range(1, len(numbers) + 1))
     if numbers != expected:
         raise StorageError(f"Project '{project.slug}' has non-sequential chapter numbers.")
+
+
+def _doctor_hint(error: str) -> str:
+    if "Project file is invalid" in error:
+        return "Restore the file from a backup or fix the JSON syntax before running other commands."
+    if "non-sequential chapter numbers" in error:
+        return "Renumber chapters so they start at 1 and increase by 1 without gaps or duplicates."
+    return "Inspect the project file, fix the reported data, then rerun `novel doctor`."

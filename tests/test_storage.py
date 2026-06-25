@@ -316,6 +316,7 @@ def test_check_workspace_reports_invalid_project_files(tmp_path: Path) -> None:
     assert report["checked"] == 1
     assert report["ok"] == 0
     assert report["errors"]
+    assert "Restore the file from a backup" in report["errors"][0]["hint"]
 
 
 def test_check_workspace_reports_slug_mismatch(tmp_path: Path) -> None:
@@ -330,3 +331,20 @@ def test_check_workspace_reports_slug_mismatch(tmp_path: Path) -> None:
     assert report["checked"] == 1
     assert report["ok"] == 0
     assert "does not match project slug" in report["errors"][0]["error"]
+    assert "Rename the file" in report["errors"][0]["hint"]
+
+
+def test_check_workspace_reports_chapter_number_hint(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening")
+    path = tmp_path / "projects" / "first-novel.json"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(text.replace('"number": 1', '"number": 2'), encoding="utf-8")
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert "non-sequential chapter numbers" in report["errors"][0]["error"]
+    assert "Renumber chapters" in report["errors"][0]["hint"]

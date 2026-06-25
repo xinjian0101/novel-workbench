@@ -106,6 +106,8 @@ def run(args: argparse.Namespace) -> int:
         print(f"Errors: {len(errors)}")
         for error in errors:
             print(f"- {error['file']}: {error['error']}")
+            if error.get("hint"):
+                print(f"  Hint: {error['hint']}")
         return 2
     if args.command == "sample":
         project = store.create_sample_project(args.slug)
