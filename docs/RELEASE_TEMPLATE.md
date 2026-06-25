@@ -17,10 +17,7 @@ One or two sentences explaining why this release matters.
 ## Verification
 
 ```powershell
-python -m pytest
-python -m compileall src tests scripts
-python -m build
-python scripts/demo.py
+python scripts/check.py
 ```
 
 ## Upgrade Notes

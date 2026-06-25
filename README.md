@@ -131,9 +131,7 @@ python -m pip install -e ".[dev]"
 Run checks:
 
 ```powershell
-python -m pytest
-python -m compileall src tests
-python -m build
+python scripts/check.py
 ```
 
 Architecture notes live in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).

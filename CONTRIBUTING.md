@@ -16,9 +16,7 @@ python -m pip install -e ".[dev]"
 Run:
 
 ```powershell
-python -m pytest
-python -m compileall src tests
-python -m build
+python scripts/check.py
 ```
 
 ## Contribution Guidelines

@@ -21,9 +21,5 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
           python -m pip install build
-      - name: Test
-        run: python -m pytest
-      - name: Compile
-        run: python -m compileall src tests
-      - name: Build
-        run: python -m build
+      - name: Check
+        run: python scripts/check.py

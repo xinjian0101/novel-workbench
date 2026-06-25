@@ -9,6 +9,7 @@ Use this checklist before making the repository public or announcing it.
 - Website: leave blank unless a real project page exists.
 - Visibility: public only after CI passes on GitHub.
 - Features: enable Issues and Discussions if maintainers can respond.
+- Dependabot: enabled for GitHub Actions through `.github/dependabot.yml`.
 
 ## README Review
 
@@ -23,10 +24,7 @@ Use this checklist before making the repository public or announcing it.
 1. Run:
 
    ```powershell
-   python -m pytest
-   python -m compileall src tests scripts
-   python -m build
-   python scripts/demo.py
+   python scripts/check.py
    ```
 
 2. Tag the first release as `v0.1.0`.
