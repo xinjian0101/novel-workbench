@@ -10,6 +10,7 @@
 - Added manuscript search.
 - Added project JSON backups.
 - Added Markdown export.
+- Added progress report export for shareable project status snapshots.
 - Added tests, README, contribution guide, security policy, roadmap, and CI workflow.
 - Added a verified demo script and GitHub launch checklist.
 - Added CLI reference, architecture notes, release template, and source distribution manifest.

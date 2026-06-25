@@ -48,6 +48,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown
 - Export with optional YAML front matter for publishing tools
+- Export shareable progress reports with chapter and status tables
 - Back up project JSON before risky edits
 - Validate workspace health before releases or migrations, with repair hints
 - Print shell completion scripts for bash, zsh, and PowerShell
@@ -71,6 +72,7 @@ novel --workspace workspace doctor
 novel --workspace workspace search moon-archive signal
 novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
+novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
 novel --workspace workspace backup moon-archive backups
 ```
 
@@ -98,7 +100,7 @@ novel clear-target <slug>
 novel search <slug> <query>
 novel add-chapter <slug> <title> [--content "..."] [--status draft|revising|done]
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--status draft|revising|done]
-novel export <slug> <output.md> [--template default|frontmatter]
+novel export <slug> <output.md> [--template default|frontmatter|progress]
 novel backup <slug> <output-dir>
 ```
 

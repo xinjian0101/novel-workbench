@@ -126,6 +126,38 @@ def test_export_markdown_frontmatter_template(tmp_path: Path) -> None:
     )
 
 
+def test_export_markdown_progress_template(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.set_target_words("first-novel", 10)
+    store.add_chapter("first-novel", "Opening", "The story begins.", "done")
+    store.add_chapter("first-novel", "Middle", "A second scene unfolds.", "revising")
+    output = tmp_path / "reports" / "first-novel-progress.md"
+
+    store.export_markdown("first-novel", output, template="progress")
+
+    assert output.read_text(encoding="utf-8") == (
+        "# First Novel Progress\n\n"
+        "A concise premise.\n\n"
+        "## Overview\n\n"
+        "- Slug: `first-novel`\n"
+        "- Chapters: 2\n"
+        "- Words: 7\n"
+        "- Characters: 40\n"
+        "- Target words: 10\n"
+        "- Progress: 70%\n\n"
+        "## Status\n\n"
+        "- Draft: 0\n"
+        "- Revising: 1\n"
+        "- Done: 1\n\n"
+        "## Chapters\n\n"
+        "| # | Title | Status | Words |\n"
+        "|---:|---|---|---:|\n"
+        "| 1 | Opening | done | 3 |\n"
+        "| 2 | Middle | revising | 4 |\n"
+    )
+
+
 def test_export_markdown_rejects_unknown_template(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel")

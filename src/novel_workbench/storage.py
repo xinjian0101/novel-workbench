@@ -10,7 +10,7 @@ from .models import Chapter, NovelProject, utc_now_iso
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
-EXPORT_TEMPLATES = {"default", "frontmatter"}
+EXPORT_TEMPLATES = {"default", "frontmatter", "progress"}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -291,20 +291,7 @@ class ProjectStore:
 
     def project_stats(self, slug: str) -> dict[str, int | None]:
         project = self.get_project(slug)
-        words = sum(count_words(chapter.content) for chapter in project.chapters)
-        progress_percent = None
-        if project.target_words is not None:
-            progress_percent = min(round((words / project.target_words) * 100), 999)
-        return {
-            "chapters": len(project.chapters),
-            "words": words,
-            "target_words": project.target_words,
-            "progress_percent": progress_percent,
-            "characters": sum(len(chapter.content) for chapter in project.chapters),
-            "draft": sum(1 for chapter in project.chapters if chapter.status == "draft"),
-            "revising": sum(1 for chapter in project.chapters if chapter.status == "revising"),
-            "done": sum(1 for chapter in project.chapters if chapter.status == "done"),
-        }
+        return _stats_for_project(project)
 
     def search(self, slug: str, query: str) -> list[dict[str, str | int]]:
         normalized_query = query.strip().lower()
@@ -340,6 +327,8 @@ class ProjectStore:
         template = validate_export_template(template)
         if template == "frontmatter":
             lines = _frontmatter_export_lines(project)
+        elif template == "progress":
+            lines = _progress_export_lines(project)
         else:
             lines = _default_export_lines(project)
         output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
@@ -381,6 +370,66 @@ def _frontmatter_export_lines(project: NovelProject) -> list[str]:
     lines.extend(["---", ""])
     lines.extend(_default_export_lines(project))
     return lines
+
+
+def _progress_export_lines(project: NovelProject) -> list[str]:
+    stats = _stats_for_project(project)
+    lines = [f"# {project.title} Progress", ""]
+    if project.synopsis:
+        lines.extend([project.synopsis, ""])
+    lines.extend(
+        [
+            "## Overview",
+            "",
+            f"- Slug: `{project.slug}`",
+            f"- Chapters: {stats['chapters']}",
+            f"- Words: {stats['words']}",
+            f"- Characters: {stats['characters']}",
+        ]
+    )
+    if stats["target_words"] is not None:
+        lines.extend(
+            [
+                f"- Target words: {stats['target_words']}",
+                f"- Progress: {stats['progress_percent']}%",
+            ]
+        )
+    lines.extend(
+        [
+            "",
+            "## Status",
+            "",
+            f"- Draft: {stats['draft']}",
+            f"- Revising: {stats['revising']}",
+            f"- Done: {stats['done']}",
+            "",
+            "## Chapters",
+            "",
+            "| # | Title | Status | Words |",
+            "|---:|---|---|---:|",
+        ]
+    )
+    for chapter in sorted(project.chapters, key=lambda item: item.number):
+        title = chapter.title.replace("|", "\\|")
+        lines.append(f"| {chapter.number} | {title} | {chapter.status} | {count_words(chapter.content)} |")
+    return lines
+
+
+def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
+    words = sum(count_words(chapter.content) for chapter in project.chapters)
+    progress_percent = None
+    if project.target_words is not None:
+        progress_percent = min(round((words / project.target_words) * 100), 999)
+    return {
+        "chapters": len(project.chapters),
+        "words": words,
+        "target_words": project.target_words,
+        "progress_percent": progress_percent,
+        "characters": sum(len(chapter.content) for chapter in project.chapters),
+        "draft": sum(1 for chapter in project.chapters if chapter.status == "draft"),
+        "revising": sum(1 for chapter in project.chapters if chapter.status == "revising"),
+        "done": sum(1 for chapter in project.chapters if chapter.status == "done"),
+    }
 
 
 def _escape_yaml(value: str) -> str:

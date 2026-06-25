@@ -12,6 +12,7 @@ novel --workspace workspace stats moon-archive
 novel --workspace workspace search moon-archive signal
 novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
+novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
 novel --workspace workspace backup moon-archive backups
 ```
 
@@ -42,6 +43,19 @@ The first signal arrived at 03:17.
 ## Chapter 2: Descent
 
 They opened the hatch and heard rain below.
+```
+
+Expected progress report:
+
+```markdown
+# Moon Archive Progress
+
+## Overview
+
+- Chapters: 2
+- Words: 15
+- Target words: 80000
+- Progress: 0%
 ```
 
 Importing from Markdown:
