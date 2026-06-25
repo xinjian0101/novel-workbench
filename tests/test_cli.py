@@ -13,7 +13,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "create", "first-novel", "First Novel"]) == 0
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Opening", "--content", "Hello"]) == 0
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Ending", "--content", "Goodbye"]) == 0
+    assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Cut Scene", "--content", "Remove"]) == 0
     assert main(["--workspace", str(workspace), "move-chapter", "first-novel", "2", "1"]) == 0
+    assert main(["--workspace", str(workspace), "delete-chapter", "first-novel", "3"]) == 0
     assert main(["--workspace", str(workspace), "rename", "first-novel", "renamed-novel", "--title", "Renamed Novel"]) == 0
     assert main(["--workspace", str(workspace), "doctor"]) == 0
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
@@ -31,6 +33,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Renamed project: renamed-novel" in captured.out
     assert "Renamed Novel (renamed-novel)" in captured.out
     assert "Moved chapter 2 to 1: Ending" in captured.out
+    assert "Deleted chapter 3: Cut Scene" in captured.out
     assert "Workspace healthy." in captured.out
     assert "Words: 2" in captured.out
     assert "Target words: 10" in captured.out
@@ -126,6 +129,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "Renamed project: journey-draft" in captured.out
     assert "Created sample project: moon-archive (2 chapters)" in captured.out
     assert "Moved chapter 2 to 1: Descent" in captured.out
+    assert "Deleted chapter 2: Signal" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out
     assert "Backed up:" in captured.out

@@ -27,6 +27,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "rename", "working-title", "journey-draft", "--title", "Journey Draft"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "sample"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "move-chapter", "moon-archive", "2", "1"],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "delete-chapter", "moon-archive", "2"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-target", "moon-archive", "80000"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "show", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "stats", "moon-archive"],

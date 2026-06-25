@@ -7,6 +7,7 @@
 - Added project rename support for changing slugs and titles safely.
 - Added chapter creation and update commands.
 - Added chapter moving with automatic renumbering.
+- Added chapter deletion with automatic renumbering.
 - Added progress statistics.
 - Added Markdown manuscript import.
 - Added manuscript search.

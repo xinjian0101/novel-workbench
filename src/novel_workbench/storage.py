@@ -320,6 +320,23 @@ class ProjectStore:
         self._write_project(project)
         return chapter
 
+    def delete_chapter(self, slug: str, number: int) -> Chapter:
+        if number < 1:
+            raise StorageError("Chapter number must be greater than zero.")
+        project = self.get_project(slug)
+        chapters = sorted(project.chapters, key=lambda item: item.number)
+        index = next((idx for idx, item in enumerate(chapters) if item.number == number), None)
+        if index is None:
+            raise NotFoundError(f"Chapter {number} does not exist in project '{project.slug}'.")
+        chapter = chapters.pop(index)
+        now = utc_now_iso()
+        for idx, item in enumerate(chapters, start=1):
+            item.number = idx
+        project.chapters = chapters
+        project.updated_at = now
+        self._write_project(project)
+        return chapter
+
     def set_target_words(self, slug: str, target_words: int | None) -> NovelProject:
         project = self.get_project(slug)
         project.target_words = None if target_words is None else validate_target_words(target_words)

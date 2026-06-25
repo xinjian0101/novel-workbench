@@ -42,6 +42,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Rename project slugs and titles without losing chapters
 - Add chapters with draft, revising, and done statuses
 - Move chapters and keep numbering consistent
+- Delete chapters and automatically close numbering gaps
 - Update chapter title, content, and status
 - Show project outlines
 - Report chapter, word, character, and status counts
@@ -70,6 +71,7 @@ novel --workspace workspace import-markdown working-title drafts/working-title.m
 novel --workspace workspace rename working-title first-draft --title "First Draft"
 novel --workspace workspace sample
 novel --workspace workspace move-chapter moon-archive 2 1
+novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
@@ -106,6 +108,7 @@ novel search <slug> <query>
 novel add-chapter <slug> <title> [--content "..."] [--status draft|revising|done]
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--status draft|revising|done]
 novel move-chapter <slug> <number> <new-number>
+novel delete-chapter <slug> <number>
 novel export <slug> <output.md> [--template default|frontmatter|progress]
 novel backup <slug> <output-dir>
 ```

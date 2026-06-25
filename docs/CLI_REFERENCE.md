@@ -178,6 +178,16 @@ novel --workspace workspace move-chapter moon-archive 2 1
 
 The command preserves chapter content and status, then rewrites chapter numbers so they stay sequential.
 
+## `novel delete-chapter`
+
+Delete a chapter and renumber the remaining chapters.
+
+```powershell
+novel --workspace workspace delete-chapter moon-archive 2
+```
+
+The command removes the selected chapter and closes numbering gaps.
+
 ## `novel export`
 
 Export a project to Markdown.

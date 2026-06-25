@@ -106,6 +106,34 @@ def test_move_chapter_validates_target_number(tmp_path: Path) -> None:
         store.move_chapter("first-novel", 1, 2)
 
 
+def test_delete_chapter_removes_and_renumbers(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening", "One")
+    store.add_chapter("first-novel", "Middle", "Two")
+    store.add_chapter("first-novel", "Ending", "Three")
+
+    deleted = store.delete_chapter("first-novel", 2)
+    project = store.get_project("first-novel")
+
+    assert deleted.title == "Middle"
+    assert [(chapter.number, chapter.title) for chapter in project.chapters] == [
+        (1, "Opening"),
+        (2, "Ending"),
+    ]
+    assert store.check_workspace() == {"checked": 1, "ok": 1, "errors": []}
+
+
+def test_delete_chapter_validates_number(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    with pytest.raises(StorageError):
+        store.delete_chapter("first-novel", 0)
+    with pytest.raises(NotFoundError):
+        store.delete_chapter("first-novel", 1)
+
+
 def test_missing_project_and_chapter_raise_clear_errors(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
 
