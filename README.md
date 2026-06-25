@@ -46,6 +46,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Search across chapter titles and manuscript content
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown
+- Export with optional YAML front matter for publishing tools
 - Back up project JSON before risky edits
 - Validate workspace health before releases or migrations
 - Run fully offline with no account, server, database, or telemetry
@@ -65,6 +66,7 @@ novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
 novel --workspace workspace search moon-archive signal
 novel --workspace workspace export moon-archive exports/moon-archive.md
+novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace backup moon-archive backups
 ```
 
@@ -90,7 +92,7 @@ novel clear-target <slug>
 novel search <slug> <query>
 novel add-chapter <slug> <title> [--content "..."] [--status draft|revising|done]
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--status draft|revising|done]
-novel export <slug> <output.md>
+novel export <slug> <output.md> [--template default|frontmatter]
 novel backup <slug> <output-dir>
 ```
 

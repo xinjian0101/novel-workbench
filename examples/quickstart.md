@@ -9,6 +9,7 @@ novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive
 novel --workspace workspace search moon-archive signal
 novel --workspace workspace export moon-archive exports/moon-archive.md
+novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace backup moon-archive backups
 ```
 

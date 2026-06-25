@@ -20,6 +20,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "clear-target", "first-novel"]) == 0
     assert main(["--workspace", str(workspace), "search", "first-novel", "hello"]) == 0
     assert main(["--workspace", str(workspace), "export", "first-novel", str(export_path)]) == 0
+    assert main(["--workspace", str(workspace), "export", "first-novel", str(tmp_path / "frontmatter.md"), "--template", "frontmatter"]) == 0
     assert main(["--workspace", str(workspace), "backup", "first-novel", str(backup_dir)]) == 0
 
     captured = capsys.readouterr()

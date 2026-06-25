@@ -70,6 +70,7 @@ def build_parser() -> argparse.ArgumentParser:
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
     export.add_argument("output", type=Path)
+    export.add_argument("--template", default="default", help="default or frontmatter.")
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
     backup.add_argument("slug")
@@ -175,7 +176,7 @@ def run(args: argparse.Namespace) -> int:
         print(f"Updated chapter {chapter.number}: {chapter.title}")
         return 0
     if args.command == "export":
-        output = store.export_markdown(args.slug, args.output)
+        output = store.export_markdown(args.slug, args.output, args.template)
         print(f"Exported: {output}")
         return 0
     if args.command == "backup":

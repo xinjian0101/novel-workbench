@@ -103,6 +103,37 @@ def test_export_markdown(tmp_path: Path) -> None:
     )
 
 
+def test_export_markdown_frontmatter_template(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.set_target_words("first-novel", 50000)
+    store.add_chapter("first-novel", "Opening", "The story begins.")
+    output = tmp_path / "exports" / "first-novel.md"
+
+    store.export_markdown("first-novel", output, template="frontmatter")
+
+    assert output.read_text(encoding="utf-8") == (
+        "---\n"
+        'title: "First Novel"\n'
+        'slug: "first-novel"\n'
+        'synopsis: "A concise premise."\n'
+        "target_words: 50000\n"
+        "---\n\n"
+        "# First Novel\n\n"
+        "A concise premise.\n\n"
+        "## Chapter 1: Opening\n\n"
+        "The story begins.\n"
+    )
+
+
+def test_export_markdown_rejects_unknown_template(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel")
+
+    with pytest.raises(StorageError):
+        store.export_markdown("first-novel", tmp_path / "book.md", template="unknown")
+
+
 def test_project_stats_count_progress(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")

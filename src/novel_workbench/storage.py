@@ -10,6 +10,7 @@ from .models import Chapter, NovelProject, utc_now_iso
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
+EXPORT_TEMPLATES = {"default", "frontmatter"}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -61,6 +62,14 @@ def validate_target_words(target_words: int) -> int:
     if target_words < 1:
         raise StorageError("Target word count must be greater than zero.")
     return target_words
+
+
+def validate_export_template(template: str) -> str:
+    normalized = template.strip().lower()
+    if normalized not in EXPORT_TEMPLATES:
+        allowed = ", ".join(sorted(EXPORT_TEMPLATES))
+        raise StorageError(f"Export template must be one of: {allowed}.")
+    return normalized
 
 
 def count_words(content: str) -> int:
@@ -258,14 +267,14 @@ class ProjectStore:
         shutil.copy2(self.project_path(project.slug), output_path)
         return output_path
 
-    def export_markdown(self, slug: str, output_path: Path) -> Path:
+    def export_markdown(self, slug: str, output_path: Path, template: str = "default") -> Path:
         project = self.get_project(slug)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        lines = [f"# {project.title}", ""]
-        if project.synopsis:
-            lines.extend([project.synopsis, ""])
-        for chapter in sorted(project.chapters, key=lambda item: item.number):
-            lines.extend([f"## Chapter {chapter.number}: {chapter.title}", "", chapter.content.strip(), ""])
+        template = validate_export_template(template)
+        if template == "frontmatter":
+            lines = _frontmatter_export_lines(project)
+        else:
+            lines = _default_export_lines(project)
         output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
         return output_path
 
@@ -281,6 +290,34 @@ class ProjectStore:
         path.parent.mkdir(parents=True, exist_ok=True)
         payload = json.dumps(project.to_dict(), ensure_ascii=False, indent=2)
         path.write_text(payload + "\n", encoding="utf-8")
+
+
+def _default_export_lines(project: NovelProject) -> list[str]:
+    lines = [f"# {project.title}", ""]
+    if project.synopsis:
+        lines.extend([project.synopsis, ""])
+    for chapter in sorted(project.chapters, key=lambda item: item.number):
+        lines.extend([f"## Chapter {chapter.number}: {chapter.title}", "", chapter.content.strip(), ""])
+    return lines
+
+
+def _frontmatter_export_lines(project: NovelProject) -> list[str]:
+    lines = [
+        "---",
+        f'title: "{_escape_yaml(project.title)}"',
+        f'slug: "{_escape_yaml(project.slug)}"',
+    ]
+    if project.synopsis:
+        lines.append(f'synopsis: "{_escape_yaml(project.synopsis)}"')
+    if project.target_words is not None:
+        lines.append(f"target_words: {project.target_words}")
+    lines.extend(["---", ""])
+    lines.extend(_default_export_lines(project))
+    return lines
+
+
+def _escape_yaml(value: str) -> str:
+    return value.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def _snippet(content: str, query: str, radius: int = 40) -> str:

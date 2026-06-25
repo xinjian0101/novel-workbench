@@ -130,7 +130,13 @@ Export a project to Markdown.
 
 ```powershell
 novel --workspace workspace export moon-archive exports/moon-archive.md
+novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 ```
+
+Templates:
+
+- `default`: plain manuscript Markdown.
+- `frontmatter`: YAML front matter followed by the default Markdown body.
 
 ## `novel backup`
 
