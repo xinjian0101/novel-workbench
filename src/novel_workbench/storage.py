@@ -101,6 +101,26 @@ class ProjectStore:
         projects = [self._read_project(path) for path in sorted(self.projects_dir.glob("*.json"))]
         return sorted(projects, key=lambda project: project.updated_at, reverse=True)
 
+    def check_workspace(self) -> dict[str, int | list[dict[str, str]]]:
+        self.initialize()
+        checked = 0
+        errors: list[dict[str, str]] = []
+        for path in sorted(self.projects_dir.glob("*.json")):
+            checked += 1
+            try:
+                project = self._read_project(path)
+                if path.stem != project.slug:
+                    errors.append(
+                        {
+                            "file": str(path),
+                            "error": f"File name '{path.stem}' does not match project slug '{project.slug}'.",
+                        }
+                    )
+                _validate_chapter_numbers(project)
+            except StorageError as exc:
+                errors.append({"file": str(path), "error": str(exc)})
+        return {"checked": checked, "ok": checked - len(errors), "errors": errors}
+
     def create_project(self, slug: str, title: str, synopsis: str = "") -> NovelProject:
         self.initialize()
         project = NovelProject(slug=validate_slug(slug), title=validate_title(title), synopsis=synopsis.strip())
@@ -239,3 +259,10 @@ def _snippet(content: str, query: str, radius: int = 40) -> str:
     prefix = "..." if start > 0 else ""
     suffix = "..." if end < len(content) else ""
     return f"{prefix}{content[start:end].strip()}{suffix}"
+
+
+def _validate_chapter_numbers(project: NovelProject) -> None:
+    numbers = [chapter.number for chapter in project.chapters]
+    expected = list(range(1, len(numbers) + 1))
+    if numbers != expected:
+        raise StorageError(f"Project '{project.slug}' has non-sequential chapter numbers.")

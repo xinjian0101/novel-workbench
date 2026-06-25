@@ -37,6 +37,8 @@ Each chapter contains:
 
 Valid statuses are `draft`, `revising`, and `done`.
 
+See [PROJECT_SCHEMA.md](PROJECT_SCHEMA.md) for the file-level schema and validation expectations.
+
 ## Design Choices
 
 - No database: writers can inspect, back up, and version project files directly.

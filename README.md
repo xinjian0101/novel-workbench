@@ -42,6 +42,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown
 - Back up project JSON before risky edits
+- Validate workspace health before releases or migrations
 - Run fully offline with no account, server, database, or telemetry
 
 ## Quick Start
@@ -56,6 +57,7 @@ novel --workspace workspace init
 novel --workspace workspace create first-novel "First Novel" --synopsis "A concise premise."
 novel --workspace workspace add-chapter first-novel "Opening" --content "The story begins."
 novel --workspace workspace stats first-novel
+novel --workspace workspace doctor
 novel --workspace workspace search first-novel begins
 novel --workspace workspace export first-novel exports/first-novel.md
 novel --workspace workspace backup first-novel backups
@@ -72,6 +74,7 @@ python scripts/demo.py
 ```text
 novel init
 novel list
+novel doctor
 novel create <slug> <title> [--synopsis "..."]
 novel import-markdown <slug> <input.md>
 novel show <slug>
@@ -85,7 +88,7 @@ novel backup <slug> <output-dir>
 
 Use `--workspace <dir>` with any command to choose the workspace directory. If omitted, the tool uses `NOVEL_WORKBENCH_HOME`, then falls back to `./workspace`.
 
-See [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md) for command details and examples.
+See [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md) for command details and examples. Project file details live in [docs/PROJECT_SCHEMA.md](docs/PROJECT_SCHEMA.md).
 
 ## Data Layout
 

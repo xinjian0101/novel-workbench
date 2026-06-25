@@ -18,6 +18,16 @@ List projects in the workspace.
 novel --workspace workspace list
 ```
 
+## `novel doctor`
+
+Validate project files in the workspace.
+
+```powershell
+novel --workspace workspace doctor
+```
+
+The command exits with `0` when the workspace is healthy and `2` when project files are invalid.
+
 ## `novel create`
 
 Create an empty project.

@@ -12,6 +12,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "init"]) == 0
     assert main(["--workspace", str(workspace), "create", "first-novel", "First Novel"]) == 0
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Opening", "--content", "Hello"]) == 0
+    assert main(["--workspace", str(workspace), "doctor"]) == 0
     assert main(["--workspace", str(workspace), "show", "first-novel"]) == 0
     assert main(["--workspace", str(workspace), "stats", "first-novel"]) == 0
     assert main(["--workspace", str(workspace), "search", "first-novel", "hello"]) == 0
@@ -20,6 +21,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
 
     captured = capsys.readouterr()
     assert "First Novel (first-novel)" in captured.out
+    assert "Workspace healthy." in captured.out
     assert "Words: 1" in captured.out
     assert "Opening [draft]" in captured.out
     assert export_path.exists()
@@ -49,6 +51,18 @@ def test_cli_reports_validation_errors(tmp_path: Path, capsys) -> None:
     captured = capsys.readouterr()
     assert code == 2
     assert "Slug must use lowercase" in captured.err
+
+
+def test_cli_doctor_reports_invalid_workspace(tmp_path: Path, capsys) -> None:
+    projects = tmp_path / "projects"
+    projects.mkdir()
+    (projects / "broken.json").write_text("{not json", encoding="utf-8")
+
+    code = main(["--workspace", str(tmp_path), "doctor"])
+
+    captured = capsys.readouterr()
+    assert code == 2
+    assert "Errors: 1" in captured.out
 
 
 def test_demo_script_runs(capsys) -> None:

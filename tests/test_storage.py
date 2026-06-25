@@ -191,3 +191,37 @@ def test_backup_project_copies_json(tmp_path: Path) -> None:
     assert backup_path.exists()
     assert backup_path.name.startswith("first-novel-")
     assert '"title": "First Novel"' in backup_path.read_text(encoding="utf-8")
+
+
+def test_check_workspace_reports_healthy_projects(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening")
+
+    assert store.check_workspace() == {"checked": 1, "ok": 1, "errors": []}
+
+
+def test_check_workspace_reports_invalid_project_files(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.initialize()
+    (tmp_path / "projects" / "broken.json").write_text("{not json", encoding="utf-8")
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert report["errors"]
+
+
+def test_check_workspace_reports_slug_mismatch(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    source = tmp_path / "projects" / "first-novel.json"
+    target = tmp_path / "projects" / "wrong-name.json"
+    source.rename(target)
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert "does not match project slug" in report["errors"][0]["error"]

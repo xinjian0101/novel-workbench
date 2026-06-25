@@ -13,3 +13,4 @@
 - Added tests, README, contribution guide, security policy, roadmap, and CI workflow.
 - Added a verified demo script and GitHub launch checklist.
 - Added CLI reference, architecture notes, release template, and source distribution manifest.
+- Added workspace doctor command and project schema documentation.

@@ -22,6 +22,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("init", help="Create the workspace directory.")
     subparsers.add_parser("list", help="List projects.")
+    subparsers.add_parser("doctor", help="Validate workspace project files.")
 
     create = subparsers.add_parser("create", help="Create a project.")
     create.add_argument("slug", help="Lowercase project identifier, for example: first-novel.")
@@ -81,6 +82,20 @@ def run(args: argparse.Namespace) -> int:
         for project in projects:
             print(f"{project.slug}\t{project.title}\t{len(project.chapters)} chapters")
         return 0
+    if args.command == "doctor":
+        report = store.check_workspace()
+        print(f"Checked: {report['checked']}")
+        print(f"OK: {report['ok']}")
+        errors = report["errors"]
+        if not isinstance(errors, list):
+            raise StorageError("Invalid doctor report.")
+        if not errors:
+            print("Workspace healthy.")
+            return 0
+        print(f"Errors: {len(errors)}")
+        for error in errors:
+            print(f"- {error['file']}: {error['error']}")
+        return 2
     if args.command == "create":
         project = store.create_project(args.slug, args.title, args.synopsis)
         print(f"Created project: {project.slug}")
