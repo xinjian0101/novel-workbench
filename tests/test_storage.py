@@ -253,6 +253,31 @@ def test_import_markdown_creates_project(tmp_path: Path) -> None:
     assert project.chapters[0].content == "The first signal arrived."
 
 
+def test_starter_markdown_can_be_imported(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    starter = tmp_path / "starter.md"
+
+    store.write_starter_markdown(starter)
+    project = store.import_markdown("working-title", starter)
+
+    assert project.title == "Working Title"
+    assert len(project.chapters) == 3
+    assert project.chapters[0].title == "Opening Image"
+
+
+def test_starter_markdown_does_not_overwrite_without_force(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    starter = tmp_path / "starter.md"
+    starter.write_text("keep me", encoding="utf-8")
+
+    with pytest.raises(DuplicateError):
+        store.write_starter_markdown(starter)
+
+    assert starter.read_text(encoding="utf-8") == "keep me"
+    store.write_starter_markdown(starter, overwrite=True)
+    assert starter.read_text(encoding="utf-8").startswith("# Working Title")
+
+
 def test_import_markdown_rejects_missing_chapters(tmp_path: Path) -> None:
     markdown_path = tmp_path / "source.md"
     markdown_path.write_text("# Moon Archive\n\nNo chapter headings yet.\n", encoding="utf-8")

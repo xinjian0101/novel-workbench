@@ -51,6 +51,18 @@ novel --workspace workspace sample
 novel --workspace workspace sample --slug my-demo
 ```
 
+## `novel starter`
+
+Write an importable Markdown manuscript template.
+
+```powershell
+novel --workspace workspace starter drafts/working-title.md
+novel --workspace workspace starter drafts/working-title.md --force
+novel --workspace workspace import-markdown working-title drafts/working-title.md
+```
+
+The generated file starts with a project title, synopsis prompt, and three chapter headings that match the `import-markdown` format.
+
 ## `novel create`
 
 Create an empty project.

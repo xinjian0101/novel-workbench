@@ -18,9 +18,12 @@ def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
     demo_root = Path(tempfile.mkdtemp(prefix="novel-workbench-demo-"))
     workspace = demo_root / "workspace"
+    drafts = demo_root / "drafts"
     exports = demo_root / "exports"
     backups = demo_root / "backups"
     commands = [
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "starter", str(drafts / "working-title.md")],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "import-markdown", "working-title", str(drafts / "working-title.md")],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "sample"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-target", "moon-archive", "80000"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "show", "moon-archive"],

@@ -34,6 +34,20 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert list(backup_dir.glob("first-novel-*.json"))
 
 
+def test_cli_writes_starter_and_imports_it(tmp_path: Path, capsys) -> None:
+    workspace = tmp_path / "workspace"
+    starter = tmp_path / "starter.md"
+
+    assert main(["--workspace", str(workspace), "starter", str(starter)]) == 0
+    assert main(["--workspace", str(workspace), "import-markdown", "working-title", str(starter)]) == 0
+    assert main(["--workspace", str(workspace), "stats", "working-title"]) == 0
+
+    captured = capsys.readouterr()
+    assert "Wrote starter manuscript:" in captured.out
+    assert "Imported project: working-title (3 chapters)" in captured.out
+    assert "Chapters: 3" in captured.out
+
+
 def test_cli_import_markdown(tmp_path: Path, capsys) -> None:
     workspace = tmp_path / "workspace"
     markdown_path = tmp_path / "source.md"
@@ -99,6 +113,8 @@ def test_demo_script_runs(capsys) -> None:
     assert demo_main() == 0
 
     captured = capsys.readouterr()
+    assert "Wrote starter manuscript:" in captured.out
+    assert "Imported project: working-title (3 chapters)" in captured.out
     assert "Created sample project: moon-archive (2 chapters)" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out

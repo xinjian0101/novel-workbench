@@ -14,6 +14,7 @@ COMPLETION_COMMANDS = (
     "list",
     "doctor",
     "sample",
+    "starter",
     "create",
     "import-markdown",
     "show",
@@ -84,6 +85,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     sample = subparsers.add_parser("sample", help="Create a small sample project.")
     sample.add_argument("--slug", default="moon-archive", help="Sample project slug.")
+
+    starter = subparsers.add_parser("starter", help="Write an importable starter Markdown manuscript.")
+    starter.add_argument("output", type=Path)
+    starter.add_argument("--force", action="store_true", help="Overwrite the output file if it exists.")
 
     create = subparsers.add_parser("create", help="Create a project.")
     create.add_argument("slug", help="Lowercase project identifier, for example: first-novel.")
@@ -177,6 +182,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "sample":
         project = store.create_sample_project(args.slug)
         print(f"Created sample project: {project.slug} ({len(project.chapters)} chapters)")
+        return 0
+    if args.command == "starter":
+        output = store.write_starter_markdown(args.output, overwrite=args.force)
+        print(f"Wrote starter manuscript: {output}")
         return 0
     if args.command == "create":
         project = store.create_project(args.slug, args.title, args.synopsis)

@@ -20,6 +20,22 @@ SAMPLE_PROJECT = {
         ("Descent", "They opened the hatch and heard rain below."),
     ],
 }
+STARTER_MARKDOWN = """# Working Title
+
+One paragraph premise: protagonist, pressure, stakes, and the change that makes the story worth writing.
+
+## Chapter 1: Opening Image
+
+Draft the first scene here. Start close to the character, show the ordinary world under tension, and end with a reason to turn the page.
+
+## Chapter 2: Inciting Incident
+
+Draft the moment that changes the protagonist's plans.
+
+## Chapter 3: First Choice
+
+Draft the first irreversible decision.
+"""
 
 
 class StorageError(Exception):
@@ -169,6 +185,13 @@ class ProjectStore:
         for chapter_title, content in chapters:
             self.add_chapter(project.slug, chapter_title, content)
         return self.get_project(project.slug)
+
+    def write_starter_markdown(self, output_path: Path, *, overwrite: bool = False) -> Path:
+        if output_path.exists() and not overwrite:
+            raise DuplicateError(f"Starter file already exists: {output_path}")
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(STARTER_MARKDOWN, encoding="utf-8")
+        return output_path
 
     def get_project(self, slug: str) -> NovelProject:
         path = self.project_path(slug)
