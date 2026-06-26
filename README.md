@@ -49,7 +49,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Show project outlines
 - Report chapter, word, character, and status counts
 - Track target word count progress
-- Search across chapter titles and manuscript content
+- Search across chapter titles, manuscript content, and project notes
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown
 - Export with optional YAML front matter for publishing tools

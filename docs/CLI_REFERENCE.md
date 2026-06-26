@@ -179,7 +179,7 @@ novel --workspace workspace delete-note moon-archive 1
 
 ## `novel search`
 
-Search chapter titles and manuscript content.
+Search chapter titles, manuscript content, note titles, note content, and note kinds.
 
 ```powershell
 novel --workspace workspace search moon-archive signal

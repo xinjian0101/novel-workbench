@@ -397,10 +397,24 @@ class ProjectStore:
                 continue
             results.append(
                 {
+                    "type": "chapter",
                     "number": chapter.number,
                     "title": chapter.title,
                     "status": chapter.status,
                     "snippet": _snippet(chapter.content or chapter.title, normalized_query),
+                }
+            )
+        for note in project.notes:
+            haystack = f"{note.title}\n{note.content}\n{note.kind}".lower()
+            if normalized_query not in haystack:
+                continue
+            results.append(
+                {
+                    "type": "note",
+                    "number": note.id,
+                    "title": note.title,
+                    "status": note.kind,
+                    "snippet": _snippet(note.content or note.title, normalized_query),
                 }
             )
         return results

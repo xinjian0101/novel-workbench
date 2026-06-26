@@ -466,16 +466,25 @@ def test_search_returns_matching_chapters(tmp_path: Path) -> None:
     store.create_project("first-novel", "First Novel")
     store.add_chapter("first-novel", "Opening", "The signal arrives before sunrise.", "draft")
     store.add_chapter("first-novel", "Aftermath", "Everyone waits.", "done")
+    store.add_note("first-novel", "Signal origin", "The beacon is under the sea.", "plot")
 
     results = store.search("first-novel", "signal")
 
     assert results == [
         {
+            "type": "chapter",
             "number": 1,
             "title": "Opening",
             "status": "draft",
             "snippet": "The signal arrives before sunrise.",
-        }
+        },
+        {
+            "type": "note",
+            "number": 1,
+            "title": "Signal origin",
+            "status": "plot",
+            "snippet": "The beacon is under the sea.",
+        },
     ]
 
 

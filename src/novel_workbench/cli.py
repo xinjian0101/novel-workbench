@@ -293,7 +293,8 @@ def run(args: argparse.Namespace) -> int:
             print("No matches found.")
             return 0
         for result in results:
-            print(f"{result['number']}. {result['title']} [{result['status']}]")
+            label = "Chapter" if result["type"] == "chapter" else "Note"
+            print(f"{label} {result['number']}: {result['title']} [{result['status']}]")
             print(f"   {result['snippet']}")
         return 0
     if args.command == "add-chapter":

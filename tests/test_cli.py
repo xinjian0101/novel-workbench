@@ -45,7 +45,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Words: 2" in captured.out
     assert "Target words: 10" in captured.out
     assert "Progress: 20%" in captured.out
-    assert "Opening [draft]" in captured.out
+    assert "Chapter 2: Opening [draft]" in captured.out
     assert export_path.exists()
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
     assert list(backup_dir.glob("renamed-novel-*.json"))
