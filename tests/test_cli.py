@@ -29,6 +29,38 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     revision_file = tmp_path / "revision.md"
     revision_file.write_text("Raise the stakes in act two.", encoding="utf-8")
     assert main(["--workspace", str(workspace), "set-metadata", "renamed-novel", "--genre", "science fiction", "--audience", "adult", "--revision-notes-file", str(revision_file)]) == 0
+    assert main([
+        "--workspace",
+        str(workspace),
+        "add-character",
+        "renamed-novel",
+        "Ada",
+        "--role",
+        "protagonist",
+        "--goal",
+        "Decode the archive signal.",
+        "--conflict",
+        "The station crew distrusts her.",
+        "--arc",
+        "Learns to ask for help.",
+    ]) == 0
+    location_notes = tmp_path / "location.md"
+    location_notes.write_text("The lower vault floods during storms.", encoding="utf-8")
+    assert main([
+        "--workspace",
+        str(workspace),
+        "add-location",
+        "renamed-novel",
+        "Archive Vault",
+        "--description",
+        "A sealed records chamber below the city.",
+        "--mood",
+        "quiet dread",
+        "--importance",
+        "It hides the first relay.",
+        "--notes-file",
+        str(location_notes),
+    ]) == 0
     assert main(["--workspace", str(workspace), "add-note", "renamed-novel", "Ada", "--kind", "character", "--content", "Engineer protagonist"]) == 0
     assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "add-progress", "renamed-novel", "450", "--date", "2026-06-25", "--note", "Drafted the new opening."]) == 0
@@ -74,7 +106,11 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Raise the stakes in act two." in captured.out
     assert "Moved chapter 2 to 1: Ending" in captured.out
     assert "Deleted chapter 3: Cut Scene" in captured.out
-    assert "Added note 1: Ada [character]" in captured.out
+    assert "Added note 3: Ada [character]" in captured.out
+    assert "Added character 1: Ada" in captured.out
+    assert "Added location 2: Archive Vault" in captured.out
+    assert "Decode the archive signal." in captured.out
+    assert "A sealed records chamber below the city." in captured.out
     assert "Logged progress 1: 2026-06-25 +450 words" in captured.out
     assert "1. 2026-06-25: +450 words - Drafted the new opening." in captured.out
     assert "Added scene 1.1: First Image" in captured.out
@@ -87,7 +123,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Deleted note 1: Ada Byron" in captured.out
     assert "Restored project: renamed-novel" in captured.out
     assert "Workspace healthy." in captured.out
-    assert "Notes: 1" in captured.out
+    assert "Notes: 3" in captured.out
     assert "Words: 2" in captured.out
     assert "Logged words: 450" in captured.out
     assert "Writing days: 1" in captured.out
@@ -202,6 +238,8 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "plan" in captured.out
     assert "set-metadata" in captured.out
     assert "set-deadline" in captured.out
+    assert "add-character" in captured.out
+    assert "add-location" in captured.out
     assert "update-note" in captured.out
     assert "add-progress" in captured.out
 
@@ -216,7 +254,10 @@ def test_demo_script_runs(capsys) -> None:
     assert "Created sample project: moon-archive (2 chapters)" in captured.out
     assert "Moved chapter 2 to 1: Descent" in captured.out
     assert "Deleted chapter 2: Signal" in captured.out
-    assert "Added note 1: Underground rain [plot]" in captured.out
+    assert "Added character 1: Ada" in captured.out
+    assert "Added location 2: Archive Vault" in captured.out
+    assert "Added note 3: Underground rain [plot]" in captured.out
+    assert "Updated note 3: Underground rain [research]" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out
     assert "Backed up:" in captured.out

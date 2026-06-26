@@ -779,7 +779,7 @@ def planning_lines(project: NovelProject) -> list[str]:
             for note in notes:
                 lines.append(f"- {note.title}")
                 if note.content:
-                    lines.append(f"  {note.content}")
+                    lines.extend(_indent_lines(note.content, "  "))
             lines.append("")
         if lines[-1] == "":
             lines.pop()
@@ -949,6 +949,10 @@ def _progress_log_lines(project: NovelProject) -> list[str]:
         note = entry.note.replace("|", "\\|")
         lines.append(f"| {entry.date} | {entry.words} | {note} |")
     return lines
+
+
+def _indent_lines(content: str, prefix: str) -> list[str]:
+    return [f"{prefix}{line}" if line else "" for line in content.splitlines()]
 
 
 def _stats_for_project(project: NovelProject) -> dict[str, int | None]:

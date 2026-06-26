@@ -13,6 +13,7 @@
 - Added chapter moving with automatic renumbering.
 - Added chapter deletion with automatic renumbering.
 - Added project notes for characters, locations, plot, research, and general planning.
+- Added structured character and location note commands.
 - Added project note updates for revising note titles, kinds, and content.
 - Added writing progress logs with dated word-count entries and summary statistics.
 - Added target deadline tracking with required daily word-count pace.

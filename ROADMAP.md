@@ -8,7 +8,6 @@ No near-term items are currently scheduled.
 
 ## Medium Term
 
-- Character and location notes
 - Cross-platform packaged releases
 
 ## Later

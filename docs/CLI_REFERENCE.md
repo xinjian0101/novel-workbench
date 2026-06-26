@@ -191,6 +191,30 @@ Clear a project target completion date.
 novel --workspace workspace clear-deadline moon-archive
 ```
 
+## `novel add-character`
+
+Add a structured character note.
+
+```powershell
+novel --workspace workspace add-character moon-archive "Ada" --role protagonist --goal "Decode the archive signal."
+novel --workspace workspace add-character moon-archive "Ada" --conflict "The crew distrusts her." --arc "Learns to ask for help."
+novel --workspace workspace add-character moon-archive "Ada" --notes-file notes/ada.md
+```
+
+The command stores the entry as a `character` note, so it appears in `list-notes --kind character`, search results, and the `plan` view. Use either `--notes` or `--notes-file`, not both.
+
+## `novel add-location`
+
+Add a structured location note.
+
+```powershell
+novel --workspace workspace add-location moon-archive "Archive Vault" --description "A sealed records chamber below the city."
+novel --workspace workspace add-location moon-archive "Archive Vault" --mood "quiet dread" --importance "It hides the first relay."
+novel --workspace workspace add-location moon-archive "Archive Vault" --notes-file notes/archive-vault.md
+```
+
+The command stores the entry as a `location` note, so it appears in `list-notes --kind location`, search results, and the `plan` view. Use either `--notes` or `--notes-file`, not both.
+
 ## `novel add-note`
 
 Add a planning note to a project.

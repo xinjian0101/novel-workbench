@@ -28,6 +28,8 @@ COMPLETION_COMMANDS = (
     "clear-target",
     "set-deadline",
     "clear-deadline",
+    "add-character",
+    "add-location",
     "add-note",
     "list-notes",
     "update-note",
@@ -102,6 +104,22 @@ def _read_text_option(path: Path, label: str) -> str:
         raise StorageError(f"Could not read {label.lower()} file: {path} ({exc.strerror or exc})") from exc
 
 
+def _structured_note_content(fields: list[tuple[str, str | None]], trailing_notes: str | None = None) -> str:
+    lines: list[str] = []
+    for label, value in fields:
+        normalized = "" if value is None else value.strip()
+        if normalized:
+            lines.extend([f"## {label}", "", normalized, ""])
+    if trailing_notes is not None and trailing_notes.strip():
+        lines.extend(["## Notes", "", trailing_notes.strip(), ""])
+    return "\n".join(lines).strip()
+
+
+def _print_indented(content: str, prefix: str = "   ") -> None:
+    for line in content.splitlines():
+        print(f"{prefix}{line}" if line else "")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="novel", description="Manage a local novel writing workspace.")
     parser.add_argument("--workspace", type=Path, default=default_workspace(), help="Workspace directory.")
@@ -168,6 +186,25 @@ def build_parser() -> argparse.ArgumentParser:
 
     clear_deadline = subparsers.add_parser("clear-deadline", help="Clear a project target completion date.")
     clear_deadline.add_argument("slug")
+
+    add_character = subparsers.add_parser("add-character", help="Add a structured character note.")
+    add_character.add_argument("slug")
+    add_character.add_argument("name")
+    add_character.add_argument("--role", help="Story role, such as protagonist, antagonist, mentor, or suspect.")
+    add_character.add_argument("--goal", help="What the character wants.")
+    add_character.add_argument("--conflict", help="What blocks or pressures the character.")
+    add_character.add_argument("--arc", help="How the character changes.")
+    add_character.add_argument("--notes", help="Additional character notes.")
+    add_character.add_argument("--notes-file", type=Path, help="Read additional notes from a UTF-8 text file.")
+
+    add_location = subparsers.add_parser("add-location", help="Add a structured location note.")
+    add_location.add_argument("slug")
+    add_location.add_argument("name")
+    add_location.add_argument("--description", help="What the place looks, feels, or functions like.")
+    add_location.add_argument("--mood", help="Atmosphere or emotional tone.")
+    add_location.add_argument("--importance", help="Why the location matters to the story.")
+    add_location.add_argument("--notes", help="Additional location notes.")
+    add_location.add_argument("--notes-file", type=Path, help="Read additional notes from a UTF-8 text file.")
 
     add_note = subparsers.add_parser("add-note", help="Add a project note.")
     add_note.add_argument("slug")
@@ -416,6 +453,41 @@ def run(args: argparse.Namespace) -> int:
         project = store.set_target_date(args.slug, None)
         print(f"Cleared target date for {project.slug}")
         return 0
+    if args.command == "add-character":
+        if args.notes is not None and args.notes_file is not None:
+            raise StorageError("Use either --notes or --notes-file, not both.")
+        notes = args.notes
+        if args.notes_file is not None:
+            notes = _read_text_option(args.notes_file, "Character notes")
+        content = _structured_note_content(
+            [
+                ("Role", args.role),
+                ("Goal", args.goal),
+                ("Conflict", args.conflict),
+                ("Arc", args.arc),
+            ],
+            notes,
+        )
+        note = store.add_note(args.slug, args.name, content, "character")
+        print(f"Added character {note.id}: {note.title}")
+        return 0
+    if args.command == "add-location":
+        if args.notes is not None and args.notes_file is not None:
+            raise StorageError("Use either --notes or --notes-file, not both.")
+        notes = args.notes
+        if args.notes_file is not None:
+            notes = _read_text_option(args.notes_file, "Location notes")
+        content = _structured_note_content(
+            [
+                ("Description", args.description),
+                ("Mood", args.mood),
+                ("Importance", args.importance),
+            ],
+            notes,
+        )
+        note = store.add_note(args.slug, args.name, content, "location")
+        print(f"Added location {note.id}: {note.title}")
+        return 0
     if args.command == "add-note":
         if args.content and args.content_file is not None:
             raise StorageError("Use either --content or --content-file, not both.")
@@ -433,7 +505,7 @@ def run(args: argparse.Namespace) -> int:
         for note in notes:
             print(f"{note.id}. {note.title} [{note.kind}]")
             if note.content:
-                print(f"   {note.content}")
+                _print_indented(note.content)
         return 0
     if args.command == "update-note":
         if args.content is not None and args.content_file is not None:

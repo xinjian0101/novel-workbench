@@ -51,6 +51,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Delete chapters and automatically close numbering gaps
 - Update chapter title, content, and status
 - Track project notes for characters, locations, plot, research, and general planning
+- Add structured character and location notes with dedicated commands
 - Update project notes as plans evolve
 - Log writing sessions by date and words written
 - Set a target completion date and calculate required daily writing pace
@@ -92,6 +93,8 @@ novel --workspace workspace outline moon-archive
 novel --workspace workspace plan moon-archive
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
+novel --workspace workspace add-character moon-archive "Ada" --role protagonist --goal "Decode the archive signal."
+novel --workspace workspace add-location moon-archive "Archive Vault" --description "A sealed records chamber below the city."
 novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
 novel --workspace workspace update-note moon-archive 1 --kind research --content "The lower city has sealed storm drains."
 novel --workspace workspace list-notes moon-archive
@@ -136,6 +139,8 @@ novel set-target <slug> <words>
 novel clear-target <slug>
 novel set-deadline <slug> <YYYY-MM-DD>
 novel clear-deadline <slug>
+novel add-character <slug> <name> [--role "..."] [--goal "..."] [--conflict "..."] [--arc "..."] [--notes "..."] [--notes-file path]
+novel add-location <slug> <name> [--description "..."] [--mood "..."] [--importance "..."] [--notes "..."] [--notes-file path]
 novel add-note <slug> <title> [--kind general|character|location|plot|research] [--content "..."] [--content-file path]
 novel list-notes <slug> [--kind general|character|location|plot|research]
 novel update-note <slug> <id> [--title "..."] [--kind general|character|location|plot|research] [--content "..."] [--content-file path]
