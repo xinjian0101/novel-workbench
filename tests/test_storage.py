@@ -285,6 +285,52 @@ def test_export_markdown_rejects_unknown_template(tmp_path: Path) -> None:
         store.export_markdown("first-novel", tmp_path / "book.md", template="unknown")
 
 
+def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.set_target_words("first-novel", 10)
+    store.update_project_metadata("first-novel", genre="fantasy", audience="adult")
+    store.add_chapter("first-novel", "Opening", "The story begins.", "done")
+    template = tmp_path / "template.md"
+    template.write_text(
+        "# {title}\n\n"
+        "Genre: {genre}\n"
+        "Audience: {audience}\n"
+        "Words: {words}/{target_words}\n"
+        "Remaining: {remaining_words}\n\n"
+        "{status_summary}\n\n"
+        "{chapter_table}\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "exports" / "custom.md"
+
+    store.export_markdown("first-novel", output, template_path=template)
+
+    assert output.read_text(encoding="utf-8") == (
+        "# First Novel\n\n"
+        "Genre: fantasy\n"
+        "Audience: adult\n"
+        "Words: 3/10\n"
+        "Remaining: 7\n\n"
+        "- Draft: 0 chapters / 0 words\n"
+        "- Revising: 0 chapters / 0 words\n"
+        "- Done: 1 chapters / 3 words\n\n"
+        "| # | Title | Status | Words |\n"
+        "|---:|---|---|---:|\n"
+        "| 1 | Opening | done | 3 |\n"
+    )
+
+
+def test_export_markdown_custom_template_rejects_unknown_field(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel")
+    template = tmp_path / "template.md"
+    template.write_text("{unknown}", encoding="utf-8")
+
+    with pytest.raises(StorageError, match="Unknown export template field"):
+        store.export_markdown("first-novel", tmp_path / "book.md", template_path=template)
+
+
 def test_project_stats_count_progress(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")

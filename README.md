@@ -58,6 +58,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export manuscripts to Markdown
 - Export with optional YAML front matter for publishing tools
 - Export shareable progress reports with chapter and status tables
+- Export through custom Markdown template files
 - Back up project JSON before risky edits
 - Validate workspace health before releases or migrations, with repair hints
 - Print shell completion scripts for bash, zsh, and PowerShell
@@ -124,7 +125,7 @@ novel add-chapter <slug> <title> [--content "..."] [--status draft|revising|done
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--status draft|revising|done]
 novel move-chapter <slug> <number> <new-number>
 novel delete-chapter <slug> <number>
-novel export <slug> <output.md> [--template default|frontmatter|progress]
+novel export <slug> <output.md> [--template default|frontmatter|progress] [--template-file path]
 novel backup <slug> <output-dir>
 ```
 
@@ -145,6 +146,24 @@ backups/
 ```
 
 Project files are JSON so they can be reviewed, versioned, backed up, and migrated without a proprietary database.
+
+## Custom Export Templates
+
+Use `--template-file` when you need a project-specific Markdown layout:
+
+```markdown
+# {title} Brief
+
+{synopsis}
+
+{status_summary}
+
+{chapter_table}
+```
+
+```powershell
+novel --workspace workspace export moon-archive exports/moon-archive-brief.md --template-file templates/brief.md
+```
 
 ## Markdown Import Format
 

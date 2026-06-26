@@ -50,6 +50,7 @@ See [PROJECT_SCHEMA.md](PROJECT_SCHEMA.md) for the file-level schema and validat
 - No network calls: manuscripts stay local by default.
 - No runtime dependencies: installation and maintenance stay simple.
 - Markdown import/export: manuscripts stay portable.
+- Custom export templates use explicit named fields and Python's built-in formatter.
 
 ## Compatibility
 
@@ -57,7 +58,6 @@ The Markdown parser accepts UTF-8 files with or without a BOM. This matters on W
 
 ## Future Extension Points
 
-- Export templates can be added around `ProjectStore.export_markdown`.
 - Import formats can be added beside `parse_markdown_chapters`.
 - Workspace health checks can inspect project JSON files before destructive operations.
 - Optional UI layers should call the storage API rather than duplicate persistence rules.

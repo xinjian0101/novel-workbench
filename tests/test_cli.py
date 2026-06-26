@@ -8,6 +8,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     workspace = tmp_path / "workspace"
     export_path = tmp_path / "book.md"
     backup_dir = tmp_path / "backups"
+    custom_template = tmp_path / "custom-template.md"
+    custom_export = tmp_path / "custom.md"
 
     assert main(["--workspace", str(workspace), "init"]) == 0
     assert main(["--workspace", str(workspace), "create", "first-novel", "First Novel"]) == 0
@@ -33,7 +35,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "clear-target", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "search", "renamed-novel", "hello"]) == 0
+    custom_template.write_text("# {title}\n\n{status_summary}\n", encoding="utf-8")
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(export_path)]) == 0
+    assert main(["--workspace", str(workspace), "export", "renamed-novel", str(custom_export), "--template-file", str(custom_template)]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "frontmatter.md"), "--template", "frontmatter"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
     assert main(["--workspace", str(workspace), "delete-note", "renamed-novel", "1"]) == 0
@@ -66,6 +70,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Done: 0 chapters / 0 words" in captured.out
     assert "Chapter 2: Opening [draft]" in captured.out
     assert export_path.exists()
+    assert "# Renamed Novel" in custom_export.read_text(encoding="utf-8")
+    assert "Draft: 2 chapters / 2 words" in custom_export.read_text(encoding="utf-8")
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
     assert list(backup_dir.glob("renamed-novel-*.json"))
 

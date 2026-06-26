@@ -483,16 +483,21 @@ class ProjectStore:
         shutil.copy2(self.project_path(project.slug), output_path)
         return output_path
 
-    def export_markdown(self, slug: str, output_path: Path, template: str = "default") -> Path:
+    def export_markdown(self, slug: str, output_path: Path, template: str = "default", template_path: Path | None = None) -> Path:
         project = self.get_project(slug)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        template = validate_export_template(template)
-        if template == "frontmatter":
-            lines = _frontmatter_export_lines(project)
-        elif template == "progress":
-            lines = _progress_export_lines(project)
+        if template_path is not None:
+            if not template_path.exists():
+                raise NotFoundError(f"Template file does not exist: {template_path}")
+            lines = _custom_export_lines(project, template_path.read_text(encoding="utf-8"))
         else:
-            lines = _default_export_lines(project)
+            template = validate_export_template(template)
+            if template == "frontmatter":
+                lines = _frontmatter_export_lines(project)
+            elif template == "progress":
+                lines = _progress_export_lines(project)
+            else:
+                lines = _default_export_lines(project)
         output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
         return output_path
 
@@ -587,6 +592,48 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
             "|---:|---|---|---:|",
         ]
     )
+    for chapter in sorted(project.chapters, key=lambda item: item.number):
+        title = chapter.title.replace("|", "\\|")
+        lines.append(f"| {chapter.number} | {title} | {chapter.status} | {count_words(chapter.content)} |")
+    return lines
+
+
+def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
+    stats = _stats_for_project(project)
+    values = {
+        "title": project.title,
+        "slug": project.slug,
+        "synopsis": project.synopsis,
+        "genre": project.genre,
+        "audience": project.audience,
+        "revision_notes": project.revision_notes,
+        "target_words": "" if project.target_words is None else str(project.target_words),
+        "words": str(stats["words"]),
+        "remaining_words": "" if stats["remaining_words"] is None else str(stats["remaining_words"]),
+        "progress_percent": "" if stats["progress_percent"] is None else str(stats["progress_percent"]),
+        "average_chapter_words": "" if stats["average_chapter_words"] is None else str(stats["average_chapter_words"]),
+        "chapters_markdown": "\n".join(_default_export_lines(project)).strip(),
+        "chapter_table": "\n".join(_chapter_table_lines(project)),
+        "status_summary": "\n".join(
+            [
+                f"- Draft: {stats['draft']} chapters / {stats['draft_words']} words",
+                f"- Revising: {stats['revising']} chapters / {stats['revising_words']} words",
+                f"- Done: {stats['done']} chapters / {stats['done_words']} words",
+            ]
+        ),
+    }
+    try:
+        rendered = template.format(**values)
+    except KeyError as exc:
+        allowed = ", ".join(sorted(values))
+        raise StorageError(f"Unknown export template field '{exc.args[0]}'. Allowed fields: {allowed}.") from exc
+    except ValueError as exc:
+        raise StorageError(f"Export template is invalid: {exc}") from exc
+    return rendered.splitlines()
+
+
+def _chapter_table_lines(project: NovelProject) -> list[str]:
+    lines = ["| # | Title | Status | Words |", "|---:|---|---|---:|"]
     for chapter in sorted(project.chapters, key=lambda item: item.number):
         title = chapter.title.replace("|", "\\|")
         lines.append(f"| {chapter.number} | {title} | {chapter.status} | {count_words(chapter.content)} |")

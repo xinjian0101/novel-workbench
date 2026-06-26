@@ -84,3 +84,19 @@ novel --workspace workspace starter drafts/mystery.md --template mystery
 novel --workspace workspace import-markdown working-title drafts/working-title.md
 novel --workspace workspace rename working-title first-draft --title "First Draft"
 ```
+
+Using a custom export template:
+
+```markdown
+# {title} Brief
+
+{synopsis}
+
+{status_summary}
+
+{chapter_table}
+```
+
+```powershell
+novel --workspace workspace export moon-archive exports/moon-archive-brief.md --template-file templates/brief.md
+```

@@ -189,6 +189,7 @@ def build_parser() -> argparse.ArgumentParser:
     export.add_argument("slug")
     export.add_argument("output", type=Path)
     export.add_argument("--template", default="default", help="default, frontmatter, or progress.")
+    export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
     backup.add_argument("slug")
@@ -379,7 +380,9 @@ def run(args: argparse.Namespace) -> int:
         print(f"Deleted chapter {args.number}: {chapter.title}")
         return 0
     if args.command == "export":
-        output = store.export_markdown(args.slug, args.output, args.template)
+        if args.template_file is not None and args.template != "default":
+            raise StorageError("Use either --template or --template-file, not both.")
+        output = store.export_markdown(args.slug, args.output, args.template, args.template_file)
         print(f"Exported: {output}")
         return 0
     if args.command == "backup":

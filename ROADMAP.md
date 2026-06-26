@@ -4,7 +4,6 @@ Novel Workbench is built around a small local core. Planned work is grouped by u
 
 ## Near Term
 
-- Configurable export templates
 - Better error messages for corrupted project files
 
 ## Medium Term

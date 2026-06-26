@@ -21,6 +21,12 @@ def main() -> int:
     drafts = demo_root / "drafts"
     exports = demo_root / "exports"
     backups = demo_root / "backups"
+    custom_template = demo_root / "templates" / "agent-brief.md"
+    custom_template.parent.mkdir(parents=True, exist_ok=True)
+    custom_template.write_text(
+        "# {title} Brief\n\n{synopsis}\n\n## Status\n\n{status_summary}\n\n## Chapters\n\n{chapter_table}\n",
+        encoding="utf-8",
+    )
     commands = [
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "starter", str(drafts / "working-title.md"), "--template", "hero-journey"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "import-markdown", "working-title", str(drafts / "working-title.md")],
@@ -38,6 +44,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "doctor"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "search", "moon-archive", "rain"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export", "moon-archive", str(exports / "moon-archive.md")],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export", "moon-archive", str(exports / "moon-archive-brief.md"), "--template-file", str(custom_template)],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export", "moon-archive", str(exports / "moon-archive-frontmatter.md"), "--template", "frontmatter"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export", "moon-archive", str(exports / "moon-archive-progress.md"), "--template", "progress"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "backup", "moon-archive", str(backups)],

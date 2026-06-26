@@ -254,6 +254,7 @@ Export a project to Markdown.
 
 ```powershell
 novel --workspace workspace export moon-archive exports/moon-archive.md
+novel --workspace workspace export moon-archive exports/moon-archive-brief.md --template-file templates/brief.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
 ```
@@ -263,6 +264,12 @@ Templates:
 - `default`: plain manuscript Markdown.
 - `frontmatter`: YAML front matter followed by the default Markdown body.
 - `progress`: shareable project progress report with overview, remaining words, status word counts, and a chapter table.
+
+Custom template files use Python-style named fields. Supported fields are:
+
+`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `words`, `remaining_words`, `progress_percent`, `average_chapter_words`, `chapters_markdown`, `chapter_table`, and `status_summary`.
+
+Use either `--template` or `--template-file`, not both.
 
 ## `novel backup`
 
