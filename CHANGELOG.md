@@ -31,6 +31,7 @@
 - Added clearer validation errors for unreadable or non-UTF-8 imported Markdown, content files, revision note files, and custom export templates.
 - Added a single release-quality check script and wired CI to use it.
 - Made the release-quality check script use UTF-8 subprocesses and a non-isolated build to avoid flaky local network dependency during packaging checks.
+- Declared build tooling in the development extras so local checks and CI use the same packaging prerequisites.
 - Added Dependabot configuration for GitHub Actions maintenance.
 - Added sample project generation for instant onboarding.
 - Added starter manuscript generation with three-act, hero journey, and mystery templates.

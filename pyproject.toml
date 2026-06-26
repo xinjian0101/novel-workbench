@@ -31,7 +31,9 @@ Changelog = "https://github.com/xinjian0101/novel-workbench/blob/master/CHANGELO
 
 [project.optional-dependencies]
 dev = [
+  "build>=1.0",
   "pytest>=8.0",
+  "setuptools>=68",
 ]
 
 [project.scripts]
