@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 from pathlib import Path
 
 import pytest
@@ -197,6 +198,7 @@ def test_rename_project_updates_slug_title_and_file(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel")
     store.set_target_words("first-novel", 50000)
+    store.set_target_date("first-novel", "2026-12-31")
     store.update_project_metadata(
         "first-novel",
         genre="science fiction",
@@ -210,6 +212,7 @@ def test_rename_project_updates_slug_title_and_file(tmp_path: Path) -> None:
     assert project.slug == "second-novel"
     assert project.title == "Second Novel"
     assert project.target_words == 50000
+    assert project.target_date == "2026-12-31"
     assert project.genre == "science fiction"
     assert project.audience == "adult"
     assert project.revision_notes == "Tighten the midpoint."
@@ -255,6 +258,7 @@ def test_export_markdown_frontmatter_template(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")
     store.set_target_words("first-novel", 50000)
+    store.set_target_date("first-novel", "2026-12-31")
     store.update_project_metadata(
         "first-novel",
         genre="science fiction",
@@ -275,6 +279,7 @@ def test_export_markdown_frontmatter_template(tmp_path: Path) -> None:
         'audience: "adult"\n'
         'revision_notes: "Resolve \\"Signal\\" continuity."\n'
         "target_words: 50000\n"
+        'target_date: "2026-12-31"\n'
         "---\n\n"
         "# First Novel\n\n"
         "A concise premise.\n\n"
@@ -402,8 +407,11 @@ def test_project_stats_count_progress(tmp_path: Path) -> None:
         "average_logged_words": 750,
         "best_day_words": 800,
         "target_words": None,
+        "target_date": None,
         "remaining_words": None,
         "progress_percent": None,
+        "days_until_target_date": None,
+        "required_daily_words": None,
         "average_chapter_words": 4,
         "characters": 40,
         "draft": 0,
@@ -420,6 +428,8 @@ def test_project_stats_show_target_progress(tmp_path: Path) -> None:
     store.create_project("first-novel", "First Novel")
     store.add_chapter("first-novel", "Opening", "The story begins.", "draft")
     store.set_target_words("first-novel", 10)
+    target_date = date.today() + timedelta(days=7)
+    store.set_target_date("first-novel", target_date.isoformat())
 
     stats = store.project_stats("first-novel")
 
@@ -430,8 +440,11 @@ def test_project_stats_show_target_progress(tmp_path: Path) -> None:
     assert stats["average_logged_words"] is None
     assert stats["best_day_words"] is None
     assert stats["target_words"] == 10
+    assert stats["target_date"] == target_date.isoformat()
     assert stats["remaining_words"] == 7
     assert stats["progress_percent"] == 30
+    assert stats["days_until_target_date"] == 7
+    assert stats["required_daily_words"] == 1
     assert stats["average_chapter_words"] == 3
 
 
@@ -441,6 +454,17 @@ def test_set_target_words_validates_positive_values(tmp_path: Path) -> None:
 
     with pytest.raises(StorageError):
         store.set_target_words("first-novel", 0)
+
+
+def test_set_target_date_validates_iso_date(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    project = store.set_target_date("first-novel", "2026-12-31")
+
+    assert project.target_date == "2026-12-31"
+    with pytest.raises(StorageError, match="YYYY-MM-DD"):
+        store.set_target_date("first-novel", "12/31/2026")
 
 
 def test_progress_entries_are_stored_sorted_and_validated(tmp_path: Path) -> None:
@@ -472,6 +496,17 @@ def test_clear_target_words(tmp_path: Path) -> None:
 
     assert project.target_words is None
     assert store.project_stats("first-novel")["progress_percent"] is None
+
+
+def test_clear_target_date(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.set_target_date("first-novel", "2026-12-31")
+
+    project = store.set_target_date("first-novel", None)
+
+    assert project.target_date is None
+    assert store.project_stats("first-novel")["days_until_target_date"] is None
 
 
 def test_update_project_metadata_changes_optional_fields(tmp_path: Path) -> None:
@@ -521,6 +556,7 @@ def test_existing_project_json_without_target_words_still_loads(tmp_path: Path) 
     project = store.get_project("legacy")
 
     assert project.target_words is None
+    assert project.target_date is None
     assert project.notes == []
     assert project.progress == []
     assert project.genre == ""
@@ -952,3 +988,18 @@ def test_check_workspace_reports_invalid_progress_entry(tmp_path: Path) -> None:
     assert report["checked"] == 1
     assert report["ok"] == 0
     assert "Progress words must be greater than zero" in report["errors"][0]["error"]
+
+
+def test_check_workspace_reports_invalid_target_date(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.set_target_date("first-novel", "2026-12-31")
+    path = tmp_path / "projects" / "first-novel.json"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(text.replace('"target_date": "2026-12-31"', '"target_date": "soon"'), encoding="utf-8")
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert "Target date must use YYYY-MM-DD format" in report["errors"][0]["error"]

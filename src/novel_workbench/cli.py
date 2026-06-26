@@ -25,6 +25,8 @@ COMPLETION_COMMANDS = (
     "set-metadata",
     "set-target",
     "clear-target",
+    "set-deadline",
+    "clear-deadline",
     "add-note",
     "list-notes",
     "update-note",
@@ -155,6 +157,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     clear_target = subparsers.add_parser("clear-target", help="Clear a project target word count.")
     clear_target.add_argument("slug")
+
+    set_deadline = subparsers.add_parser("set-deadline", help="Set a project target completion date.")
+    set_deadline.add_argument("slug")
+    set_deadline.add_argument("date", help="Target date in YYYY-MM-DD format.")
+
+    clear_deadline = subparsers.add_parser("clear-deadline", help="Clear a project target completion date.")
+    clear_deadline.add_argument("slug")
 
     add_note = subparsers.add_parser("add-note", help="Add a project note.")
     add_note.add_argument("slug")
@@ -357,6 +366,11 @@ def run(args: argparse.Namespace) -> int:
             print(f"Target words: {stats['target_words']}")
             print(f"Remaining words: {stats['remaining_words']}")
             print(f"Progress: {stats['progress_percent']}%")
+        if stats["target_date"] is not None:
+            print(f"Target date: {stats['target_date']}")
+            print(f"Days until target date: {stats['days_until_target_date']}")
+        if stats["required_daily_words"] is not None:
+            print(f"Required daily words: {stats['required_daily_words']}")
         if stats["average_chapter_words"] is not None:
             print(f"Average chapter words: {stats['average_chapter_words']}")
         print(f"Characters: {stats['characters']}")
@@ -385,6 +399,14 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "clear-target":
         project = store.set_target_words(args.slug, None)
         print(f"Cleared target words for {project.slug}")
+        return 0
+    if args.command == "set-deadline":
+        project = store.set_target_date(args.slug, args.date)
+        print(f"Set target date for {project.slug}: {project.target_date}")
+        return 0
+    if args.command == "clear-deadline":
+        project = store.set_target_date(args.slug, None)
+        print(f"Cleared target date for {project.slug}")
         return 0
     if args.command == "add-note":
         if args.content and args.content_file is not None:

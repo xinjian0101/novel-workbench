@@ -148,6 +148,7 @@ class NovelProject:
     audience: str = ""
     revision_notes: str = ""
     target_words: int | None = None
+    target_date: str | None = None
     chapters: list[Chapter] = field(default_factory=list)
     notes: list[ProjectNote] = field(default_factory=list)
     progress: list[ProgressEntry] = field(default_factory=list)
@@ -163,6 +164,7 @@ class NovelProject:
             "audience": self.audience,
             "revision_notes": self.revision_notes,
             "target_words": self.target_words,
+            "target_date": self.target_date,
             "chapters": [chapter.to_dict() for chapter in self.chapters],
             "notes": [note.to_dict() for note in self.notes],
             "progress": [entry.to_dict() for entry in self.progress],
@@ -180,6 +182,7 @@ class NovelProject:
             audience=str(data.get("audience", "")),
             revision_notes=str(data.get("revision_notes", "")),
             target_words=_target_words_from_dict(data),
+            target_date=_target_date_from_dict(data),
             chapters=[Chapter.from_dict(item) for item in data.get("chapters", [])],
             notes=[ProjectNote.from_dict(item) for item in data.get("notes", [])],
             progress=[ProgressEntry.from_dict(item) for item in data.get("progress", [])],
@@ -191,3 +194,8 @@ class NovelProject:
 def _target_words_from_dict(data: dict[str, Any]) -> int | None:
     value = data.get("target_words")
     return None if value is None else int(value)
+
+
+def _target_date_from_dict(data: dict[str, Any]) -> str | None:
+    value = data.get("target_date")
+    return None if value is None else str(value)

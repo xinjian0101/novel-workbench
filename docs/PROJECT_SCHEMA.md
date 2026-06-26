@@ -17,6 +17,7 @@ workspace/projects/<slug>.json
   "audience": "adult",
   "revision_notes": "Tighten the midpoint.",
   "target_words": 80000,
+  "target_date": "2026-12-31",
   "chapters": [],
   "notes": [],
   "progress": [],
@@ -34,6 +35,7 @@ Required fields:
 - `audience`: string, 240 characters or fewer
 - `revision_notes`: string
 - `target_words`: positive integer or `null`
+- `target_date`: date in `YYYY-MM-DD` format or `null`
 - `chapters`: array of chapter objects
 - `notes`: array of note objects
 - `progress`: array of progress entry objects
@@ -42,7 +44,7 @@ Required fields:
 
 The file name should match the project slug.
 
-Older project files without `genre`, `audience`, `revision_notes`, `target_words`, `notes`, or `progress` still load. Novel Workbench treats missing text metadata as empty strings, missing `target_words` as `null`, and missing `notes` or `progress` as an empty list.
+Older project files without `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `notes`, or `progress` still load. Novel Workbench treats missing text metadata as empty strings, missing `target_words` or `target_date` as `null`, and missing `notes` or `progress` as an empty list.
 
 ## Chapter Object
 
@@ -150,6 +152,6 @@ Run:
 novel --workspace workspace doctor
 ```
 
-The doctor command validates project JSON files, reports JSON syntax line and column numbers, flags invalid UTF-8, missing required fields, invalid slugs, empty or oversized titles, invalid statuses, invalid note kinds, duplicate note ids, invalid progress dates or word counts, invalid target word counts, file-name-to-slug mismatches, chapter numbering problems, and scene numbering problems, then prints repair hints for known failures.
+The doctor command validates project JSON files, reports JSON syntax line and column numbers, flags invalid UTF-8, missing required fields, invalid slugs, empty or oversized titles, invalid statuses, invalid note kinds, duplicate note ids, invalid progress dates or word counts, invalid target word counts or dates, file-name-to-slug mismatches, chapter numbering problems, and scene numbering problems, then prints repair hints for known failures.
 
 Backup files use the same schema as project files. `novel restore-backup` validates a backup before restoring it into `workspace/projects/`.

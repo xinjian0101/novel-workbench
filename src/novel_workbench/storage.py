@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 import shutil
 from datetime import date, datetime, timezone
@@ -136,6 +137,15 @@ def validate_progress_date(value: str) -> str:
         date.fromisoformat(normalized)
     except ValueError as exc:
         raise StorageError("Progress date must use YYYY-MM-DD format.") from exc
+    return normalized
+
+
+def validate_target_date(value: str) -> str:
+    normalized = value.strip()
+    try:
+        date.fromisoformat(normalized)
+    except ValueError as exc:
+        raise StorageError("Target date must use YYYY-MM-DD format.") from exc
     return normalized
 
 
@@ -535,6 +545,13 @@ class ProjectStore:
         self._write_project(project)
         return project
 
+    def set_target_date(self, slug: str, target_date: str | None) -> NovelProject:
+        project = self.get_project(slug)
+        project.target_date = None if target_date is None else validate_target_date(target_date)
+        project.updated_at = utc_now_iso()
+        self._write_project(project)
+        return project
+
     def update_project_metadata(
         self,
         slug: str,
@@ -730,6 +747,8 @@ def _frontmatter_export_lines(project: NovelProject) -> list[str]:
         lines.append(f'revision_notes: "{_escape_yaml(project.revision_notes)}"')
     if project.target_words is not None:
         lines.append(f"target_words: {project.target_words}")
+    if project.target_date is not None:
+        lines.append(f'target_date: "{_escape_yaml(project.target_date)}"')
     lines.extend(["---", ""])
     lines.extend(_default_export_lines(project))
     return lines
@@ -769,6 +788,11 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
                 f"- Progress: {stats['progress_percent']}%",
             ]
         )
+    if stats["target_date"] is not None:
+        lines.append(f"- Target date: {stats['target_date']}")
+        lines.append(f"- Days until target date: {stats['days_until_target_date']}")
+    if stats["required_daily_words"] is not None:
+        lines.append(f"- Required daily words: {stats['required_daily_words']}")
     if stats["average_chapter_words"] is not None:
         lines.append(f"- Average chapter words: {stats['average_chapter_words']}")
     if project.revision_notes:
@@ -817,11 +841,14 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
         "audience": project.audience,
         "revision_notes": project.revision_notes,
         "target_words": "" if project.target_words is None else str(project.target_words),
+        "target_date": "" if project.target_date is None else project.target_date,
         "words": str(stats["words"]),
         "logged_words": str(stats["logged_words"]),
         "writing_days": str(stats["writing_days"]),
         "remaining_words": "" if stats["remaining_words"] is None else str(stats["remaining_words"]),
         "progress_percent": "" if stats["progress_percent"] is None else str(stats["progress_percent"]),
+        "days_until_target_date": "" if stats["days_until_target_date"] is None else str(stats["days_until_target_date"]),
+        "required_daily_words": "" if stats["required_daily_words"] is None else str(stats["required_daily_words"]),
         "average_chapter_words": "" if stats["average_chapter_words"] is None else str(stats["average_chapter_words"]),
         "average_logged_words": "" if stats["average_logged_words"] is None else str(stats["average_logged_words"]),
         "best_day_words": "" if stats["best_day_words"] is None else str(stats["best_day_words"]),
@@ -866,9 +893,16 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
     words = sum(count_words(chapter.content) for chapter in project.chapters)
     progress_percent = None
     remaining_words = None
+    days_until_target_date = None
+    required_daily_words = None
     if project.target_words is not None:
         progress_percent = min(round((words / project.target_words) * 100), 999)
         remaining_words = max(project.target_words - words, 0)
+    if project.target_date is not None:
+        days_until_target_date = max((date.fromisoformat(project.target_date) - date.today()).days, 0)
+    if remaining_words is not None and days_until_target_date is not None:
+        divisor = max(days_until_target_date, 1)
+        required_daily_words = math.ceil(remaining_words / divisor)
     words_by_status = {
         status: sum(count_words(chapter.content) for chapter in project.chapters if chapter.status == status)
         for status in VALID_STATUSES
@@ -892,8 +926,11 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
         "average_logged_words": average_logged_words,
         "best_day_words": best_day_words,
         "target_words": project.target_words,
+        "target_date": project.target_date,
         "remaining_words": remaining_words,
         "progress_percent": progress_percent,
+        "days_until_target_date": days_until_target_date,
+        "required_daily_words": required_daily_words,
         "average_chapter_words": average_chapter_words,
         "characters": sum(len(chapter.content) for chapter in project.chapters),
         "draft": sum(1 for chapter in project.chapters if chapter.status == "draft"),
@@ -981,6 +1018,8 @@ def _validate_project_fields(project: NovelProject) -> None:
     validate_optional_metadata(project.audience, "Audience")
     if project.target_words is not None:
         validate_target_words(project.target_words)
+    if project.target_date is not None:
+        validate_target_date(project.target_date)
     note_ids: set[int] = set()
     progress_ids: set[int] = set()
     for chapter in project.chapters:

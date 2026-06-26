@@ -53,6 +53,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Track project notes for characters, locations, plot, research, and general planning
 - Update project notes as plans evolve
 - Log writing sessions by date and words written
+- Set a target completion date and calculate required daily writing pace
 - Show structured project outlines
 - Report chapter, word, character, status, and average chapter counts
 - Track target word count progress and remaining words
@@ -95,6 +96,7 @@ novel --workspace workspace list-notes moon-archive
 novel --workspace workspace add-progress moon-archive 1200 --date 2026-06-26 --note "Drafted the descent sequence."
 novel --workspace workspace list-progress moon-archive
 novel --workspace workspace set-target moon-archive 80000
+novel --workspace workspace set-deadline moon-archive 2026-12-31
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
 novel --workspace workspace search moon-archive rain
@@ -129,6 +131,8 @@ novel stats <slug>
 novel set-metadata <slug> [--genre "..."] [--audience "..."] [--revision-notes "..."] [--revision-notes-file path]
 novel set-target <slug> <words>
 novel clear-target <slug>
+novel set-deadline <slug> <YYYY-MM-DD>
+novel clear-deadline <slug>
 novel add-note <slug> <title> [--kind general|character|location|plot|research] [--content "..."] [--content-file path]
 novel list-notes <slug> [--kind general|character|location|plot|research]
 novel update-note <slug> <id> [--title "..."] [--kind general|character|location|plot|research] [--content "..."] [--content-file path]

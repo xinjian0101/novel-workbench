@@ -128,7 +128,7 @@ novel --workspace workspace outline moon-archive
 
 ## `novel stats`
 
-Show chapter, note, word, writing log, target, remaining word, average chapter, character, and status counts.
+Show chapter, note, word, writing log, target, deadline, required daily writing pace, average chapter, character, and status counts.
 
 ```powershell
 novel --workspace workspace stats moon-archive
@@ -161,6 +161,24 @@ Clear a project target word count.
 
 ```powershell
 novel --workspace workspace clear-target moon-archive
+```
+
+## `novel set-deadline`
+
+Set a project target completion date.
+
+```powershell
+novel --workspace workspace set-deadline moon-archive 2026-12-31
+```
+
+Dates use `YYYY-MM-DD`. When the project also has a target word count, `novel stats` reports the required daily words to reach the target by the deadline.
+
+## `novel clear-deadline`
+
+Clear a project target completion date.
+
+```powershell
+novel --workspace workspace clear-deadline moon-archive
 ```
 
 ## `novel add-note`
@@ -345,11 +363,11 @@ Templates:
 
 - `default`: plain manuscript Markdown.
 - `frontmatter`: YAML front matter followed by the default Markdown body.
-- `progress`: shareable project progress report with overview, writing log totals, remaining words, status word counts, a chapter table, and progress log entries.
+- `progress`: shareable project progress report with overview, writing log totals, target deadline pace, remaining words, status word counts, a chapter table, and progress log entries.
 
 Custom template files use Python-style named fields. Supported fields are:
 
-`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `words`, `logged_words`, `writing_days`, `remaining_words`, `progress_percent`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `chapter_table`, `status_summary`, and `progress_log`.
+`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `chapter_table`, `status_summary`, and `progress_log`.
 
 Use either `--template` or `--template-file`, not both.
 Files passed with `--template-file` must be readable UTF-8 text.

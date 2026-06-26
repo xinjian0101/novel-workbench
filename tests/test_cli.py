@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import date, timedelta
 
 from novel_workbench.cli import main
 from scripts.demo import main as demo_main
@@ -41,8 +42,11 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "outline", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "set-target", "renamed-novel", "10"]) == 0
+    deadline = (date.today() + timedelta(days=4)).isoformat()
+    assert main(["--workspace", str(workspace), "set-deadline", "renamed-novel", deadline]) == 0
     assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "clear-target", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "clear-deadline", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "search", "renamed-novel", "hello"]) == 0
     custom_template.write_text("# {title}\n\n{status_summary}\n", encoding="utf-8")
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(export_path)]) == 0
@@ -88,6 +92,10 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Target words: 10" in captured.out
     assert "Remaining words: 8" in captured.out
     assert "Progress: 20%" in captured.out
+    assert f"Set target date for renamed-novel: {deadline}" in captured.out
+    assert "Days until target date: 4" in captured.out
+    assert "Required daily words: 2" in captured.out
+    assert "Cleared target date for renamed-novel" in captured.out
     assert "Average chapter words: 1" in captured.out
     assert "Draft: 2 chapters / 2 words" in captured.out
     assert "Revising: 0 chapters / 0 words" in captured.out
@@ -188,6 +196,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "Register-ArgumentCompleter" in captured.out
     assert "import-markdown" in captured.out
     assert "set-metadata" in captured.out
+    assert "set-deadline" in captured.out
     assert "update-note" in captured.out
     assert "add-progress" in captured.out
 
