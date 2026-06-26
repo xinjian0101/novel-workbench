@@ -238,7 +238,7 @@ class ProjectStore:
     def import_markdown(self, slug: str, markdown_path: Path) -> NovelProject:
         if not markdown_path.exists():
             raise NotFoundError(f"Markdown file does not exist: {markdown_path}")
-        title, synopsis, chapters = parse_markdown_chapters(markdown_path.read_text(encoding="utf-8"))
+        title, synopsis, chapters = parse_markdown_chapters(_read_utf8_text(markdown_path, "Markdown file"))
         project = self.create_project(slug, title, synopsis)
         for chapter_title, content in chapters:
             self.add_chapter(project.slug, chapter_title, content)
@@ -489,7 +489,7 @@ class ProjectStore:
         if template_path is not None:
             if not template_path.exists():
                 raise NotFoundError(f"Template file does not exist: {template_path}")
-            lines = _custom_export_lines(project, template_path.read_text(encoding="utf-8"))
+            lines = _custom_export_lines(project, _read_utf8_text(template_path, "Template file"))
         else:
             template = validate_export_template(template)
             if template == "frontmatter":
@@ -683,6 +683,15 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
 
 def _escape_yaml(value: str) -> str:
     return value.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def _read_utf8_text(path: Path, label: str) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise StorageError(f"{label} is not valid UTF-8: {path}") from exc
+    except OSError as exc:
+        raise StorageError(f"Could not read {label.lower()}: {path} ({exc.strerror or exc})") from exc
 
 
 def _snippet(content: str, query: str, radius: int = 40) -> str:

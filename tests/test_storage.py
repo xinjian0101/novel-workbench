@@ -604,6 +604,25 @@ def test_import_markdown_rejects_missing_chapters(tmp_path: Path) -> None:
         store.import_markdown("moon-archive", markdown_path)
 
 
+def test_import_markdown_reports_invalid_utf8(tmp_path: Path) -> None:
+    markdown_path = tmp_path / "source.md"
+    markdown_path.write_bytes(b"\xff\xfe")
+    store = ProjectStore(tmp_path / "workspace")
+
+    with pytest.raises(StorageError, match="Markdown file is not valid UTF-8"):
+        store.import_markdown("moon-archive", markdown_path)
+
+
+def test_export_markdown_custom_template_reports_invalid_utf8(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel")
+    template = tmp_path / "template.md"
+    template.write_bytes(b"\xff\xfe")
+
+    with pytest.raises(StorageError, match="Template file is not valid UTF-8"):
+        store.export_markdown("first-novel", tmp_path / "book.md", template_path=template)
+
+
 def test_search_returns_matching_chapters(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")

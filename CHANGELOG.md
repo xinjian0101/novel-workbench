@@ -24,6 +24,7 @@
 - Added CLI reference, architecture notes, release template, and source distribution manifest.
 - Added workspace doctor command and project schema documentation.
 - Added detailed workspace doctor diagnostics for corrupt project files.
+- Added clearer validation errors for unreadable or non-UTF-8 imported Markdown, content files, revision note files, and custom export templates.
 - Added a single release-quality check script and wired CI to use it.
 - Added Dependabot configuration for GitHub Actions maintenance.
 - Added sample project generation for instant onboarding.

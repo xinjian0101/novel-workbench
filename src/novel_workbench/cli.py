@@ -81,6 +81,15 @@ _novel "$@"
     raise StorageError(f"Unsupported shell: {shell}")
 
 
+def _read_text_option(path: Path, label: str) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise StorageError(f"{label} file is not valid UTF-8: {path}") from exc
+    except OSError as exc:
+        raise StorageError(f"Could not read {label.lower()} file: {path} ({exc.strerror or exc})") from exc
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="novel", description="Manage a local novel writing workspace.")
     parser.add_argument("--workspace", type=Path, default=default_workspace(), help="Workspace directory.")
@@ -293,7 +302,7 @@ def run(args: argparse.Namespace) -> int:
             raise StorageError("Use either --revision-notes or --revision-notes-file, not both.")
         revision_notes = args.revision_notes
         if args.revision_notes_file is not None:
-            revision_notes = args.revision_notes_file.read_text(encoding="utf-8")
+            revision_notes = _read_text_option(args.revision_notes_file, "Revision notes")
         project = store.update_project_metadata(
             args.slug,
             genre=args.genre,
@@ -315,7 +324,7 @@ def run(args: argparse.Namespace) -> int:
             raise StorageError("Use either --content or --content-file, not both.")
         content = args.content
         if args.content_file is not None:
-            content = args.content_file.read_text(encoding="utf-8")
+            content = _read_text_option(args.content_file, "Note content")
         note = store.add_note(args.slug, args.title, content, args.kind)
         print(f"Added note {note.id}: {note.title} [{note.kind}]")
         return 0
@@ -334,7 +343,7 @@ def run(args: argparse.Namespace) -> int:
             raise StorageError("Use either --content or --content-file, not both.")
         content = args.content
         if args.content_file is not None:
-            content = args.content_file.read_text(encoding="utf-8")
+            content = _read_text_option(args.content_file, "Note content")
         note = store.update_note(args.slug, args.id, title=args.title, content=content, kind=args.kind)
         print(f"Updated note {note.id}: {note.title} [{note.kind}]")
         return 0
@@ -361,7 +370,7 @@ def run(args: argparse.Namespace) -> int:
             raise StorageError("Use either --content or --content-file, not both.")
         content = args.content
         if args.content_file is not None:
-            content = args.content_file.read_text(encoding="utf-8")
+            content = _read_text_option(args.content_file, "Chapter content")
         chapter = store.update_chapter(
             args.slug,
             args.number,

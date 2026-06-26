@@ -127,6 +127,18 @@ def test_cli_reports_validation_errors(tmp_path: Path, capsys) -> None:
     assert "Slug must use lowercase" in captured.err
 
 
+def test_cli_reports_missing_content_file_as_validation_error(tmp_path: Path, capsys) -> None:
+    workspace = tmp_path / "workspace"
+    missing = tmp_path / "missing.md"
+
+    assert main(["--workspace", str(workspace), "create", "first-novel", "First Novel"]) == 0
+    code = main(["--workspace", str(workspace), "add-note", "first-novel", "Research", "--content-file", str(missing)])
+
+    captured = capsys.readouterr()
+    assert code == 2
+    assert "Could not read note content file" in captured.err
+
+
 def test_cli_doctor_reports_invalid_workspace(tmp_path: Path, capsys) -> None:
     projects = tmp_path / "projects"
     projects.mkdir()

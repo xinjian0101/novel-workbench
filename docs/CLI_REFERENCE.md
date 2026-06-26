@@ -137,6 +137,7 @@ novel --workspace workspace set-metadata moon-archive --revision-notes-file note
 ```
 
 Use either `--revision-notes` or `--revision-notes-file`, not both. Provide at least one metadata field.
+Files passed with `--revision-notes-file` must be readable UTF-8 text.
 
 ## `novel set-target`
 
@@ -172,6 +173,7 @@ Kinds:
 - `research`
 
 Use either `--content` or `--content-file`, not both.
+Files passed with `--content-file` must be readable UTF-8 text.
 
 ## `novel list-notes`
 
@@ -192,6 +194,7 @@ novel --workspace workspace update-note moon-archive 1 --kind research --content
 ```
 
 Use either `--content` or `--content-file`, not both. Provide at least one field to update.
+Files passed with `--content-file` must be readable UTF-8 text.
 
 ## `novel delete-note`
 
@@ -227,6 +230,7 @@ novel --workspace workspace update-chapter moon-archive 1 --content-file chapter
 ```
 
 Use either `--content` or `--content-file`, not both.
+Files passed with `--content-file` must be readable UTF-8 text.
 
 ## `novel move-chapter`
 
@@ -270,6 +274,7 @@ Custom template files use Python-style named fields. Supported fields are:
 `title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `words`, `remaining_words`, `progress_percent`, `average_chapter_words`, `chapters_markdown`, `chapter_table`, and `status_summary`.
 
 Use either `--template` or `--template-file`, not both.
+Files passed with `--template-file` must be readable UTF-8 text.
 
 ## `novel backup`
 
