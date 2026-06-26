@@ -121,6 +121,9 @@ def test_delete_chapter_removes_and_renumbers(tmp_path: Path) -> None:
         (1, "Opening"),
         (2, "Ending"),
     ]
+    backups = list((tmp_path / "backups").glob("first-novel-delete-chapter-*.json"))
+    assert len(backups) == 1
+    assert '"title": "Middle"' in backups[0].read_text(encoding="utf-8")
     assert store.check_workspace() == {"checked": 1, "ok": 1, "errors": []}
 
 
@@ -168,6 +171,9 @@ def test_rename_project_updates_slug_title_and_file(tmp_path: Path) -> None:
     assert project.chapters[0].title == "Opening"
     assert not (tmp_path / "workspace" / "projects" / "first-novel.json").exists()
     assert (tmp_path / "workspace" / "projects" / "second-novel.json").exists()
+    backups = list((tmp_path / "workspace" / "backups").glob("first-novel-rename-*.json"))
+    assert len(backups) == 1
+    assert '"slug": "first-novel"' in backups[0].read_text(encoding="utf-8")
     with pytest.raises(NotFoundError):
         store.get_project("first-novel")
 
@@ -461,6 +467,9 @@ def test_add_list_and_delete_notes(tmp_path: Path) -> None:
     assert deleted.title == "Ada"
     assert [note.title for note in store.list_notes("first-novel")] == ["Dock"]
     assert store.project_stats("first-novel")["notes"] == 1
+    backups = list((tmp_path / "backups").glob("first-novel-delete-note-*.json"))
+    assert len(backups) == 1
+    assert '"title": "Ada"' in backups[0].read_text(encoding="utf-8")
 
 
 def test_update_note_changes_fields(tmp_path: Path) -> None:

@@ -59,7 +59,8 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export with optional YAML front matter for publishing tools
 - Export shareable progress reports with chapter and status tables
 - Export through custom Markdown template files
-- Back up project JSON before risky edits
+- Automatically snapshot project JSON before renames and destructive deletes
+- Back up project JSON on demand
 - Validate workspace health before releases or migrations, with repair hints
 - Print shell completion scripts for bash, zsh, and PowerShell
 - Run fully offline with no account, server, database, or telemetry
@@ -139,6 +140,8 @@ See [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md) for command details and examp
 workspace/
   projects/
     first-novel.json
+  backups/
+    first-novel-delete-chapter-20260626T120000000000Z.json
 exports/
   first-novel.md
 backups/
@@ -146,6 +149,7 @@ backups/
 ```
 
 Project files are JSON so they can be reviewed, versioned, backed up, and migrated without a proprietary database.
+Automatic safety snapshots are stored under `workspace/backups/` before project renames, chapter deletion, and note deletion. The `backup` command can still copy a project JSON file to any directory you choose.
 
 ## Custom Export Templates
 

@@ -10,7 +10,6 @@ No near-term items are currently scheduled.
 
 - Scene and outline management
 - Character and location notes
-- Snapshot backups before destructive edits
 - Cross-platform packaged releases
 
 ## Later

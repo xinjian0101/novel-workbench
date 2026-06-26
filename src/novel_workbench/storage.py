@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 import shutil
+from datetime import datetime, timezone
 from pathlib import Path
 
 from .models import Chapter, NovelProject, ProjectNote, utc_now_iso
@@ -187,6 +188,7 @@ class ProjectStore:
     def __init__(self, root: Path) -> None:
         self.root = root
         self.projects_dir = root / "projects"
+        self.backups_dir = root / "backups"
 
     def initialize(self) -> None:
         self.projects_dir.mkdir(parents=True, exist_ok=True)
@@ -265,6 +267,7 @@ class ProjectStore:
         new_path = self.project_path(normalized_slug)
         if new_path.exists() and new_path != old_path:
             raise DuplicateError(f"Project '{normalized_slug}' already exists.")
+        self._snapshot_project(project, "rename")
         project.slug = normalized_slug
         if new_title is not None:
             project.title = validate_title(new_title)
@@ -344,6 +347,7 @@ class ProjectStore:
         index = next((idx for idx, item in enumerate(chapters) if item.number == number), None)
         if index is None:
             raise NotFoundError(f"Chapter {number} does not exist in project '{project.slug}'.")
+        self._snapshot_project(project, "delete-chapter")
         chapter = chapters.pop(index)
         now = utc_now_iso()
         for idx, item in enumerate(chapters, start=1):
@@ -376,6 +380,7 @@ class ProjectStore:
         index = next((idx for idx, item in enumerate(project.notes) if item.id == note_id), None)
         if index is None:
             raise NotFoundError(f"Note {note_id} does not exist in project '{project.slug}'.")
+        self._snapshot_project(project, "delete-note")
         note = project.notes.pop(index)
         project.updated_at = utc_now_iso()
         self._write_project(project)
@@ -478,7 +483,7 @@ class ProjectStore:
     def backup_project(self, slug: str, output_dir: Path) -> Path:
         project = self.get_project(slug)
         output_dir.mkdir(parents=True, exist_ok=True)
-        timestamp = utc_now_iso().replace(":", "").replace("+", "Z")
+        timestamp = _backup_timestamp()
         output_path = output_dir / f"{project.slug}-{timestamp}.json"
         shutil.copy2(self.project_path(project.slug), output_path)
         return output_path
@@ -524,6 +529,12 @@ class ProjectStore:
         path.parent.mkdir(parents=True, exist_ok=True)
         payload = json.dumps(project.to_dict(), ensure_ascii=False, indent=2)
         path.write_text(payload + "\n", encoding="utf-8")
+
+    def _snapshot_project(self, project: NovelProject, action: str) -> Path:
+        self.backups_dir.mkdir(parents=True, exist_ok=True)
+        output_path = self.backups_dir / f"{project.slug}-{action}-{_backup_timestamp()}.json"
+        shutil.copy2(self.project_path(project.slug), output_path)
+        return output_path
 
 
 def _default_export_lines(project: NovelProject) -> list[str]:
@@ -683,6 +694,10 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
 
 def _escape_yaml(value: str) -> str:
     return value.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def _backup_timestamp() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
 
 
 def _read_utf8_text(path: Path, label: str) -> str:

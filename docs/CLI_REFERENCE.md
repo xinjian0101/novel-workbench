@@ -88,7 +88,7 @@ novel --workspace workspace rename first-novel second-novel
 novel --workspace workspace rename first-novel second-novel --title "Second Novel"
 ```
 
-The command rewrites the project JSON under the new slug, preserves chapters and progress metadata, and refuses to overwrite an existing project.
+The command writes a pre-rename safety snapshot under `workspace/backups/`, rewrites the project JSON under the new slug, preserves chapters and progress metadata, and refuses to overwrite an existing project.
 
 ## `novel import-markdown`
 
@@ -204,6 +204,8 @@ Delete a project note by id.
 novel --workspace workspace delete-note moon-archive 1
 ```
 
+The command writes a pre-delete safety snapshot under `workspace/backups/` before removing the note.
+
 ## `novel search`
 
 Search chapter titles, manuscript content, note titles, note content, and note kinds.
@@ -250,7 +252,7 @@ Delete a chapter and renumber the remaining chapters.
 novel --workspace workspace delete-chapter moon-archive 2
 ```
 
-The command removes the selected chapter and closes numbering gaps.
+The command writes a pre-delete safety snapshot under `workspace/backups/`, removes the selected chapter, and closes numbering gaps.
 
 ## `novel export`
 
@@ -283,3 +285,5 @@ Copy the project JSON file to a backup directory.
 ```powershell
 novel --workspace workspace backup moon-archive backups
 ```
+
+Rename, chapter deletion, and note deletion also create automatic safety snapshots under `workspace/backups/`. Use `backup` when you want an explicit copy in another directory.
