@@ -599,6 +599,52 @@ def test_existing_project_json_without_target_words_still_loads(tmp_path: Path) 
     assert project.genre == ""
     assert project.audience == ""
     assert project.revision_notes == ""
+    assert project.schema_version == 0
+
+
+def test_migrate_workspace_normalizes_legacy_project_and_snapshots(tmp_path: Path) -> None:
+    projects = tmp_path / "projects"
+    projects.mkdir()
+    legacy = projects / "legacy.json"
+    legacy.write_text(
+        '{\n'
+        '  "slug": "legacy",\n'
+        '  "title": "Legacy",\n'
+        '  "synopsis": "",\n'
+        '  "chapters": [],\n'
+        '  "created_at": "2026-06-25T00:00:00+00:00",\n'
+        '  "updated_at": "2026-06-25T00:00:00+00:00"\n'
+        '}\n',
+        encoding="utf-8",
+    )
+    store = ProjectStore(tmp_path)
+
+    dry_run = store.migrate_workspace(dry_run=True)
+
+    assert dry_run == {"checked": 1, "migrated": 1, "projects": ["legacy"]}
+    assert '"schema_version"' not in legacy.read_text(encoding="utf-8")
+
+    report = store.migrate_workspace()
+    migrated_text = legacy.read_text(encoding="utf-8")
+
+    assert report == {"checked": 1, "migrated": 1, "projects": ["legacy"]}
+    assert '"schema_version": 1' in migrated_text
+    assert '"target_words": null' in migrated_text
+    assert '"target_date": null' in migrated_text
+    assert '"notes": []' in migrated_text
+    assert '"progress": []' in migrated_text
+    backups = list((tmp_path / "backups").glob("legacy-migrate-*.json"))
+    assert len(backups) == 1
+    assert '"schema_version"' not in backups[0].read_text(encoding="utf-8")
+
+
+def test_migrate_workspace_reports_noop_for_current_schema(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    report = store.migrate_workspace()
+
+    assert report == {"checked": 1, "migrated": 0, "projects": []}
 
 
 def test_add_list_and_delete_notes(tmp_path: Path) -> None:

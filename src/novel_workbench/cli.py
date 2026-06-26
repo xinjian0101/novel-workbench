@@ -14,6 +14,7 @@ COMPLETION_COMMANDS = (
     "init",
     "list",
     "doctor",
+    "migrate",
     "sample",
     "starter",
     "create",
@@ -129,6 +130,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("init", help="Create the workspace directory.")
     subparsers.add_parser("list", help="List projects.")
     subparsers.add_parser("doctor", help="Validate workspace project files.")
+    migrate = subparsers.add_parser("migrate", help="Normalize project files to the current schema.")
+    migrate.add_argument("--dry-run", action="store_true", help="Report projects that would change without writing files.")
 
     sample = subparsers.add_parser("sample", help="Create a small sample project.")
     sample.add_argument("--slug", default="moon-archive", help="Sample project slug.")
@@ -349,6 +352,17 @@ def run(args: argparse.Namespace) -> int:
             if error.get("hint"):
                 print(f"  Hint: {error['hint']}")
         return 2
+    if args.command == "migrate":
+        report = store.migrate_workspace(dry_run=args.dry_run)
+        print(f"Checked: {report['checked']}")
+        print(f"Migrated: {report['migrated']}")
+        projects = report["projects"]
+        if not isinstance(projects, list):
+            raise StorageError("Invalid migration report.")
+        for slug in projects:
+            action = "Would migrate" if args.dry_run else "Migrated"
+            print(f"- {action}: {slug}")
+        return 0
     if args.command == "sample":
         project = store.create_sample_project(args.slug)
         print(f"Created sample project: {project.slug} ({len(project.chapters)} chapters)")

@@ -10,6 +10,7 @@ workspace/projects/<slug>.json
 
 ```json
 {
+  "schema_version": 1,
   "slug": "moon-archive",
   "title": "Moon Archive",
   "synopsis": "A historian finds a city under the lunar dust.",
@@ -29,6 +30,7 @@ workspace/projects/<slug>.json
 Required fields:
 
 - `slug`: lowercase letters, numbers, and single hyphens
+- `schema_version`: project schema version written by Novel Workbench
 - `title`: non-empty, 120 characters or fewer
 - `synopsis`: string
 - `genre`: string, 240 characters or fewer
@@ -44,7 +46,9 @@ Required fields:
 
 The file name should match the project slug.
 
-Older project files without `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `notes`, or `progress` still load. Novel Workbench treats missing text metadata as empty strings, missing `target_words` or `target_date` as `null`, and missing `notes` or `progress` as an empty list.
+Older project files without `schema_version`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `notes`, or `progress` still load. Novel Workbench treats missing `schema_version` as legacy version `0`, missing text metadata as empty strings, missing `target_words` or `target_date` as `null`, and missing `notes` or `progress` as an empty list.
+
+Run `novel --workspace workspace migrate` to rewrite legacy project files using the current schema. The command creates a safety snapshot before writing each migrated project.
 
 ## Chapter Object
 

@@ -69,6 +69,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Back up project JSON on demand
 - Restore project JSON from backups with explicit overwrite protection
 - Validate workspace health before releases or migrations, with repair hints
+- Migrate legacy project JSON files to the current schema with safety snapshots
 - Print shell completion scripts for bash, zsh, and PowerShell
 - Run fully offline with no account, server, database, or telemetry
 
@@ -104,6 +105,7 @@ novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace set-deadline moon-archive 2026-12-31
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
+novel --workspace workspace migrate --dry-run
 novel --workspace workspace search moon-archive rain
 novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
@@ -124,6 +126,7 @@ python scripts/demo.py
 novel init
 novel list
 novel doctor
+novel migrate [--dry-run]
 novel completion bash|zsh|powershell
 novel sample [--slug moon-archive]
 novel starter <output.md> [--template three-act|hero-journey|mystery] [--force]

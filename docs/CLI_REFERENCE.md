@@ -30,6 +30,17 @@ The command exits with `0` when the workspace is healthy and `2` when project fi
 
 For known problems such as JSON syntax errors, invalid UTF-8, missing required fields, invalid values, slug/file mismatches, and non-sequential chapter numbers, the output includes a concise repair hint.
 
+## `novel migrate`
+
+Normalize project files to the current schema.
+
+```powershell
+novel --workspace workspace migrate --dry-run
+novel --workspace workspace migrate
+```
+
+Use `--dry-run` to see which projects would change. A real migration validates each project, writes a pre-migration safety snapshot under `workspace/backups/`, then rewrites the JSON with the current schema fields and `schema_version`.
+
 ## `novel completion`
 
 Print a completion script for bash, zsh, or PowerShell.

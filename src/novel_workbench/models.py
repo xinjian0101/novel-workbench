@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
 
+CURRENT_SCHEMA_VERSION = 1
+
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
@@ -143,6 +145,7 @@ class ProgressEntry:
 class NovelProject:
     slug: str
     title: str
+    schema_version: int = CURRENT_SCHEMA_VERSION
     synopsis: str = ""
     genre: str = ""
     audience: str = ""
@@ -157,6 +160,7 @@ class NovelProject:
 
     def to_dict(self) -> dict[str, Any]:
         return {
+            "schema_version": self.schema_version,
             "slug": self.slug,
             "title": self.title,
             "synopsis": self.synopsis,
@@ -175,6 +179,7 @@ class NovelProject:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "NovelProject":
         return cls(
+            schema_version=int(data.get("schema_version", 0)),
             slug=str(data["slug"]),
             title=str(data["title"]),
             synopsis=str(data.get("synopsis", "")),

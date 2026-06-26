@@ -7,7 +7,7 @@ import shutil
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from .models import Chapter, NovelProject, ProgressEntry, ProjectNote, Scene, utc_now_iso
+from .models import CURRENT_SCHEMA_VERSION, Chapter, NovelProject, ProgressEntry, ProjectNote, Scene, utc_now_iso
 
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
@@ -247,6 +247,28 @@ class ProjectStore:
             except StorageError as exc:
                 errors.append({"file": str(path), "error": str(exc), "hint": _doctor_hint(str(exc))})
         return {"checked": checked, "ok": checked - len(errors), "errors": errors}
+
+    def migrate_workspace(self, *, dry_run: bool = False) -> dict[str, int | list[str]]:
+        self.initialize()
+        checked = 0
+        migrated: list[str] = []
+        for path in sorted(self.projects_dir.glob("*.json")):
+            checked += 1
+            project = self._read_project(path)
+            if path.stem != project.slug:
+                raise StorageError(f"File name '{path.stem}' does not match project slug '{project.slug}'.")
+            _validate_chapter_numbers(project)
+            _validate_scene_numbers(project)
+            normalized = _normalized_project_json(project)
+            current = path.read_text(encoding="utf-8")
+            if current == normalized:
+                continue
+            migrated.append(project.slug)
+            if dry_run:
+                continue
+            self._snapshot_project(project, "migrate")
+            path.write_text(normalized, encoding="utf-8")
+        return {"checked": checked, "migrated": len(migrated), "projects": migrated}
 
     def create_project(self, slug: str, title: str, synopsis: str = "") -> NovelProject:
         self.initialize()
@@ -685,8 +707,7 @@ class ProjectStore:
     def _write_project(self, project: NovelProject) -> None:
         path = self.project_path(project.slug)
         path.parent.mkdir(parents=True, exist_ok=True)
-        payload = json.dumps(project.to_dict(), ensure_ascii=False, indent=2)
-        path.write_text(payload + "\n", encoding="utf-8")
+        path.write_text(_normalized_project_json(project), encoding="utf-8")
 
     def _snapshot_project(self, project: NovelProject, action: str) -> Path:
         self.backups_dir.mkdir(parents=True, exist_ok=True)
@@ -1078,6 +1099,8 @@ def _validate_scene_numbers(project: NovelProject) -> None:
 
 
 def _validate_project_fields(project: NovelProject) -> None:
+    if project.schema_version < 0 or project.schema_version > CURRENT_SCHEMA_VERSION:
+        raise StorageError(f"Schema version must be between 0 and {CURRENT_SCHEMA_VERSION}.")
     validate_slug(project.slug)
     validate_title(project.title)
     validate_optional_metadata(project.genre, "Genre")
@@ -1125,6 +1148,8 @@ def _doctor_hint(error: str) -> str:
         return "Add the missing required field shown in the error, or restore the file from a backup."
     if "invalid field value" in error:
         return "Fix the invalid value shown in the error so it matches the project schema."
+    if "Schema version" in error:
+        return "Use a Novel Workbench version that supports this project file, or restore it from a compatible backup."
     if "Project file is invalid" in error:
         return "Restore the file from a backup or fix the JSON syntax before running other commands."
     if "non-sequential chapter numbers" in error:
@@ -1132,3 +1157,9 @@ def _doctor_hint(error: str) -> str:
     if "non-sequential scene numbers" in error:
         return "Renumber scenes so they start at 1 within each chapter and increase by 1 without gaps or duplicates."
     return "Inspect the project file, fix the reported data, then rerun `novel doctor`."
+
+
+def _normalized_project_json(project: NovelProject) -> str:
+    project.schema_version = CURRENT_SCHEMA_VERSION
+    payload = json.dumps(project.to_dict(), ensure_ascii=False, indent=2)
+    return payload + "\n"

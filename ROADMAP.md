@@ -15,7 +15,6 @@ No medium-term items are currently scheduled.
 - Plugin hooks for custom exporters
 - Optional TUI interface
 - Optional encrypted local workspace
-- Migration utilities for schema changes
 
 ## Non-Goals
 

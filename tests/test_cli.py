@@ -225,6 +225,34 @@ def test_cli_doctor_reports_invalid_workspace(tmp_path: Path, capsys) -> None:
     assert "Hint: Fix the JSON syntax" in captured.out
 
 
+def test_cli_migrates_legacy_workspace(tmp_path: Path, capsys) -> None:
+    projects = tmp_path / "projects"
+    projects.mkdir()
+    legacy = projects / "legacy.json"
+    legacy.write_text(
+        '{\n'
+        '  "slug": "legacy",\n'
+        '  "title": "Legacy",\n'
+        '  "synopsis": "",\n'
+        '  "chapters": [],\n'
+        '  "created_at": "2026-06-25T00:00:00+00:00",\n'
+        '  "updated_at": "2026-06-25T00:00:00+00:00"\n'
+        '}\n',
+        encoding="utf-8",
+    )
+
+    assert main(["--workspace", str(tmp_path), "migrate", "--dry-run"]) == 0
+    assert '"schema_version"' not in legacy.read_text(encoding="utf-8")
+    assert main(["--workspace", str(tmp_path), "migrate"]) == 0
+
+    captured = capsys.readouterr()
+    assert "Checked: 1" in captured.out
+    assert "Migrated: 1" in captured.out
+    assert "- Would migrate: legacy" in captured.out
+    assert "- Migrated: legacy" in captured.out
+    assert '"schema_version": 1' in legacy.read_text(encoding="utf-8")
+
+
 def test_cli_prints_completion_scripts(capsys) -> None:
     assert main(["completion", "bash"]) == 0
     assert main(["completion", "zsh"]) == 0
@@ -234,6 +262,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "complete -F _novel_completion novel" in captured.out
     assert "#compdef novel" in captured.out
     assert "Register-ArgumentCompleter" in captured.out
+    assert "migrate" in captured.out
     assert "import-markdown" in captured.out
     assert "plan" in captured.out
     assert "set-metadata" in captured.out
