@@ -99,6 +99,28 @@ def test_chapter_summary_is_stored_updated_and_shown_in_outline(tmp_path: Path) 
     ]
 
 
+def test_scene_crud_renumbers_and_updates_outline(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening", summary="Set the initial pressure.")
+
+    first = store.add_scene("first-novel", 1, "Arrival", "The crew reaches the archive.")
+    second = store.add_scene("first-novel", 1, "Signal", "A hidden relay wakes up.", "revising")
+    updated = store.update_scene("first-novel", 1, second.number, title="Signal Found", status="done")
+    deleted = store.delete_scene("first-novel", 1, first.number)
+    scenes = store.list_scenes("first-novel", 1)
+    project = store.get_project("first-novel")
+
+    assert first.number == 1
+    assert updated.title == "Signal Found"
+    assert updated.status == "done"
+    assert deleted.title == "Arrival"
+    assert [(scene.number, scene.title) for scene in scenes] == [(1, "Signal Found")]
+    assert "   1.1 Signal Found [done]" in outline_lines(project)
+    backups = list((tmp_path / "backups").glob("first-novel-delete-scene-*.json"))
+    assert len(backups) == 1
+
+
 def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")
@@ -661,6 +683,7 @@ def test_search_returns_matching_chapters(tmp_path: Path) -> None:
     store.add_chapter("first-novel", "Opening", "The signal arrives before sunrise.", "draft")
     store.update_chapter("first-novel", 1, summary="A hidden relay wakes up.")
     store.add_chapter("first-novel", "Aftermath", "Everyone waits.", "done")
+    store.add_scene("first-novel", 2, "Waiting Room", "The team debates the relay signal.")
     store.add_note("first-novel", "Signal origin", "The beacon is under the sea.", "plot")
 
     results = store.search("first-novel", "signal")
@@ -674,6 +697,13 @@ def test_search_returns_matching_chapters(tmp_path: Path) -> None:
             "snippet": "The signal arrives before sunrise.",
         },
         {
+            "type": "chapter",
+            "number": 2,
+            "title": "Aftermath",
+            "status": "done",
+            "snippet": "The team debates the relay signal.",
+        },
+        {
             "type": "note",
             "number": 1,
             "title": "Signal origin",
@@ -683,15 +713,9 @@ def test_search_returns_matching_chapters(tmp_path: Path) -> None:
     ]
 
     summary_results = store.search("first-novel", "relay")
-    assert summary_results == [
-        {
-            "type": "chapter",
-            "number": 1,
-            "title": "Opening",
-            "status": "draft",
-            "snippet": "A hidden relay wakes up.",
-        }
-    ]
+    assert [result["title"] for result in summary_results] == ["Opening", "Aftermath"]
+    assert summary_results[0]["snippet"] == "A hidden relay wakes up."
+    assert summary_results[1]["snippet"] == "The team debates the relay signal."
 
 
 def test_search_requires_query(tmp_path: Path) -> None:
@@ -862,3 +886,20 @@ def test_check_workspace_reports_chapter_number_hint(tmp_path: Path) -> None:
     assert report["ok"] == 0
     assert "non-sequential chapter numbers" in report["errors"][0]["error"]
     assert "Renumber chapters" in report["errors"][0]["hint"]
+
+
+def test_check_workspace_reports_scene_number_hint(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening")
+    store.add_scene("first-novel", 1, "Arrival")
+    path = tmp_path / "projects" / "first-novel.json"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(text.replace('"number": 1,\n          "title": "Arrival"', '"number": 2,\n          "title": "Arrival"'), encoding="utf-8")
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert "non-sequential scene numbers" in report["errors"][0]["error"]
+    assert "Renumber scenes" in report["errors"][0]["hint"]

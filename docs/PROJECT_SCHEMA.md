@@ -51,6 +51,7 @@ Older project files without `genre`, `audience`, `revision_notes`, `target_words
   "content": "The first signal arrived.",
   "summary": "The signal disrupts the archive shift.",
   "status": "draft",
+  "scenes": [],
   "created_at": "2026-06-25T12:00:00+00:00",
   "updated_at": "2026-06-25T12:00:00+00:00"
 }
@@ -63,12 +64,37 @@ Required fields:
 - `content`: string
 - `summary`: string
 - `status`: `draft`, `revising`, or `done`
+- `scenes`: array of scene objects
 - `created_at`: ISO timestamp
 - `updated_at`: ISO timestamp
 
 Chapter numbers should be sequential starting at `1`.
 
-Older chapter objects without `summary` still load. Novel Workbench treats missing chapter summaries as empty strings.
+Older chapter objects without `summary` or `scenes` still load. Novel Workbench treats missing chapter summaries as empty strings and missing scenes as an empty list.
+
+## Scene Object
+
+```json
+{
+  "number": 1,
+  "title": "Signal discovered",
+  "summary": "The crew finds the first active relay.",
+  "status": "draft",
+  "created_at": "2026-06-25T12:00:00+00:00",
+  "updated_at": "2026-06-25T12:00:00+00:00"
+}
+```
+
+Required fields:
+
+- `number`: one-based scene number within the chapter
+- `title`: non-empty, 120 characters or fewer
+- `summary`: string
+- `status`: `draft`, `revising`, or `done`
+- `created_at`: ISO timestamp
+- `updated_at`: ISO timestamp
+
+Scene numbers should be sequential starting at `1` within each chapter.
 
 ## Note Object
 
@@ -100,6 +126,6 @@ Run:
 novel --workspace workspace doctor
 ```
 
-The doctor command validates project JSON files, reports JSON syntax line and column numbers, flags invalid UTF-8, missing required fields, invalid slugs, empty or oversized titles, invalid statuses, invalid note kinds, duplicate note ids, invalid target word counts, file-name-to-slug mismatches, and chapter numbering problems, then prints repair hints for known failures.
+The doctor command validates project JSON files, reports JSON syntax line and column numbers, flags invalid UTF-8, missing required fields, invalid slugs, empty or oversized titles, invalid statuses, invalid note kinds, duplicate note ids, invalid target word counts, file-name-to-slug mismatches, chapter numbering problems, and scene numbering problems, then prints repair hints for known failures.
 
 Backup files use the same schema as project files. `novel restore-backup` validates a backup before restoring it into `workspace/projects/`.

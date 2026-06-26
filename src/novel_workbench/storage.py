@@ -6,7 +6,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .models import Chapter, NovelProject, ProjectNote, utc_now_iso
+from .models import Chapter, NovelProject, ProjectNote, Scene, utc_now_iso
 
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
@@ -218,6 +218,7 @@ class ProjectStore:
                         }
                     )
                 _validate_chapter_numbers(project)
+                _validate_scene_numbers(project)
             except StorageError as exc:
                 errors.append({"file": str(path), "error": str(exc), "hint": _doctor_hint(str(exc))})
         return {"checked": checked, "ok": checked - len(errors), "errors": errors}
@@ -361,6 +362,82 @@ class ProjectStore:
         self._write_project(project)
         return chapter
 
+    def add_scene(
+        self,
+        slug: str,
+        chapter_number: int,
+        title: str,
+        summary: str = "",
+        status: str = "draft",
+    ) -> Scene:
+        project = self.get_project(slug)
+        chapter = _find_chapter(project, chapter_number)
+        next_number = max((scene.number for scene in chapter.scenes), default=0) + 1
+        scene = Scene(
+            number=next_number,
+            title=validate_title(title),
+            summary=summary.strip(),
+            status=validate_status(status),
+        )
+        chapter.scenes.append(scene)
+        now = utc_now_iso()
+        chapter.updated_at = now
+        project.updated_at = now
+        self._write_project(project)
+        return scene
+
+    def list_scenes(self, slug: str, chapter_number: int) -> list[Scene]:
+        project = self.get_project(slug)
+        return sorted(_find_chapter(project, chapter_number).scenes, key=lambda item: item.number)
+
+    def update_scene(
+        self,
+        slug: str,
+        chapter_number: int,
+        scene_number: int,
+        *,
+        title: str | None = None,
+        summary: str | None = None,
+        status: str | None = None,
+    ) -> Scene:
+        if title is None and summary is None and status is None:
+            raise StorageError("Provide at least one scene field to update.")
+        project = self.get_project(slug)
+        chapter = _find_chapter(project, chapter_number)
+        scene = _find_scene(chapter, scene_number, project.slug)
+        if title is not None:
+            scene.title = validate_title(title)
+        if summary is not None:
+            scene.summary = summary.strip()
+        if status is not None:
+            scene.status = validate_status(status)
+        now = utc_now_iso()
+        scene.updated_at = now
+        chapter.updated_at = now
+        project.updated_at = now
+        self._write_project(project)
+        return scene
+
+    def delete_scene(self, slug: str, chapter_number: int, scene_number: int) -> Scene:
+        project = self.get_project(slug)
+        chapter = _find_chapter(project, chapter_number)
+        scenes = sorted(chapter.scenes, key=lambda item: item.number)
+        index = next((idx for idx, item in enumerate(scenes) if item.number == scene_number), None)
+        if index is None:
+            raise NotFoundError(
+                f"Scene {scene_number} does not exist in chapter {chapter.number} of project '{project.slug}'."
+            )
+        self._snapshot_project(project, "delete-scene")
+        scene = scenes.pop(index)
+        for idx, item in enumerate(scenes, start=1):
+            item.number = idx
+        now = utc_now_iso()
+        chapter.scenes = scenes
+        chapter.updated_at = now
+        project.updated_at = now
+        self._write_project(project)
+        return scene
+
     def add_note(self, slug: str, title: str, content: str = "", kind: str = "general") -> ProjectNote:
         project = self.get_project(slug)
         next_id = max((note.id for note in project.notes), default=0) + 1
@@ -457,10 +534,18 @@ class ProjectStore:
         project = self.get_project(slug)
         results: list[dict[str, str | int]] = []
         for chapter in project.chapters:
-            haystack = f"{chapter.title}\n{chapter.summary}\n{chapter.content}".lower()
+            scene_text = "\n".join(f"{scene.title}\n{scene.summary}" for scene in chapter.scenes)
+            haystack = f"{chapter.title}\n{chapter.summary}\n{chapter.content}\n{scene_text}".lower()
             if normalized_query not in haystack:
                 continue
-            snippet_source = _first_matching_text(normalized_query, chapter.content, chapter.summary, chapter.title)
+            snippet_source = _first_matching_text(
+                normalized_query,
+                chapter.content,
+                chapter.summary,
+                *(scene.summary for scene in chapter.scenes),
+                *(scene.title for scene in chapter.scenes),
+                chapter.title,
+            )
             results.append(
                 {
                     "type": "chapter",
@@ -589,6 +674,10 @@ def outline_lines(project: NovelProject) -> list[str]:
         lines.append(f"{chapter.number}. {chapter.title} [{chapter.status}]")
         if chapter.summary:
             lines.append(f"   {chapter.summary}")
+        for scene in sorted(chapter.scenes, key=lambda item: item.number):
+            lines.append(f"   {chapter.number}.{scene.number} {scene.title} [{scene.status}]")
+            if scene.summary:
+                lines.append(f"      {scene.summary}")
     return lines
 
 
@@ -774,11 +863,37 @@ def _first_matching_text(query: str, *values: str) -> str:
     return next((value for value in values if value), "")
 
 
+def _find_chapter(project: NovelProject, number: int) -> Chapter:
+    if number < 1:
+        raise StorageError("Chapter number must be greater than zero.")
+    chapter = next((item for item in project.chapters if item.number == number), None)
+    if chapter is None:
+        raise NotFoundError(f"Chapter {number} does not exist in project '{project.slug}'.")
+    return chapter
+
+
+def _find_scene(chapter: Chapter, number: int, slug: str) -> Scene:
+    if number < 1:
+        raise StorageError("Scene number must be greater than zero.")
+    scene = next((item for item in chapter.scenes if item.number == number), None)
+    if scene is None:
+        raise NotFoundError(f"Scene {number} does not exist in chapter {chapter.number} of project '{slug}'.")
+    return scene
+
+
 def _validate_chapter_numbers(project: NovelProject) -> None:
     numbers = [chapter.number for chapter in project.chapters]
     expected = list(range(1, len(numbers) + 1))
     if numbers != expected:
         raise StorageError(f"Project '{project.slug}' has non-sequential chapter numbers.")
+
+
+def _validate_scene_numbers(project: NovelProject) -> None:
+    for chapter in project.chapters:
+        numbers = [scene.number for scene in chapter.scenes]
+        expected = list(range(1, len(numbers) + 1))
+        if numbers != expected:
+            raise StorageError(f"Chapter {chapter.number} in project '{project.slug}' has non-sequential scene numbers.")
 
 
 def _validate_project_fields(project: NovelProject) -> None:
@@ -794,6 +909,11 @@ def _validate_project_fields(project: NovelProject) -> None:
             raise StorageError("Chapter number must be greater than zero.")
         validate_title(chapter.title)
         validate_status(chapter.status)
+        for scene in chapter.scenes:
+            if scene.number < 1:
+                raise StorageError("Scene number must be greater than zero.")
+            validate_title(scene.title)
+            validate_status(scene.status)
     for note in project.notes:
         if note.id < 1:
             raise StorageError("Note id must be greater than zero.")
@@ -817,4 +937,6 @@ def _doctor_hint(error: str) -> str:
         return "Restore the file from a backup or fix the JSON syntax before running other commands."
     if "non-sequential chapter numbers" in error:
         return "Renumber chapters so they start at 1 and increase by 1 without gaps or duplicates."
+    if "non-sequential scene numbers" in error:
+        return "Renumber scenes so they start at 1 within each chapter and increase by 1 without gaps or duplicates."
     return "Inspect the project file, fix the reported data, then rerun `novel doctor`."

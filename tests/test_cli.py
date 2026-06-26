@@ -19,6 +19,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Ending", "--content", "Goodbye"]) == 0
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Cut Scene", "--content", "Remove"]) == 0
     assert main(["--workspace", str(workspace), "update-chapter", "first-novel", "1", "--summary", "The final beat reframes the opening."]) == 0
+    assert main(["--workspace", str(workspace), "add-scene", "first-novel", "1", "First Image", "--summary", "A quiet clue appears."]) == 0
+    assert main(["--workspace", str(workspace), "update-scene", "first-novel", "1", "1", "--status", "revising"]) == 0
+    assert main(["--workspace", str(workspace), "list-scenes", "first-novel", "1"]) == 0
     assert main(["--workspace", str(workspace), "move-chapter", "first-novel", "2", "1"]) == 0
     assert main(["--workspace", str(workspace), "delete-chapter", "first-novel", "3"]) == 0
     assert main(["--workspace", str(workspace), "rename", "first-novel", "renamed-novel", "--title", "Renamed Novel"]) == 0
@@ -62,6 +65,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Moved chapter 2 to 1: Ending" in captured.out
     assert "Deleted chapter 3: Cut Scene" in captured.out
     assert "Added note 1: Ada [character]" in captured.out
+    assert "Added scene 1.1: First Image" in captured.out
+    assert "Updated scene 1.1: First Image" in captured.out
+    assert "1.1. First Image [revising]" in captured.out
     assert "1. Ada [character]" in captured.out
     assert "Updated note 1: Ada Byron [research]" in captured.out
     assert "1. Ada Byron [research]" in captured.out

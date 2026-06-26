@@ -8,6 +8,7 @@
 - Added project rename support for changing slugs and titles safely.
 - Added chapter creation and update commands.
 - Added chapter outline summaries and a structured outline command.
+- Added chapter scene outlines with add, list, update, delete, search, and doctor support.
 - Added chapter moving with automatic renumbering.
 - Added chapter deletion with automatic renumbering.
 - Added project notes for characters, locations, plot, research, and general planning.

@@ -46,6 +46,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Track project genre, audience, and revision notes
 - Add chapters with draft, revising, and done statuses
 - Add chapter outline summaries
+- Break chapters into scene outlines
 - Move chapters and keep numbering consistent
 - Delete chapters and automatically close numbering gaps
 - Update chapter title, content, and status
@@ -82,6 +83,8 @@ novel --workspace workspace rename working-title first-draft --title "First Draf
 novel --workspace workspace sample
 novel --workspace workspace set-metadata moon-archive --genre "science fiction" --audience adult --revision-notes "Lean into the discovery mystery."
 novel --workspace workspace update-chapter moon-archive 1 --summary "The discovery pulls the crew below the surface."
+novel --workspace workspace add-scene moon-archive 1 "Signal discovered" --summary "The crew finds the first active relay."
+novel --workspace workspace list-scenes moon-archive 1
 novel --workspace workspace outline moon-archive
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
@@ -132,6 +135,10 @@ novel add-chapter <slug> <title> [--content "..."] [--summary "..."] [--summary-
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel move-chapter <slug> <number> <new-number>
 novel delete-chapter <slug> <number>
+novel add-scene <slug> <chapter> <title> [--summary "..."] [--summary-file path] [--status draft|revising|done]
+novel list-scenes <slug> <chapter>
+novel update-scene <slug> <chapter> <scene> [--title "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
+novel delete-scene <slug> <chapter> <scene>
 novel export <slug> <output.md> [--template default|frontmatter|progress] [--template-file path]
 novel backup <slug> <output-dir>
 novel restore-backup <backup.json> [--force]

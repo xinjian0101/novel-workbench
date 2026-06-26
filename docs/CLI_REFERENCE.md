@@ -269,6 +269,48 @@ novel --workspace workspace delete-chapter moon-archive 2
 
 The command writes a pre-delete safety snapshot under `workspace/backups/`, removes the selected chapter, and closes numbering gaps.
 
+## `novel add-scene`
+
+Add a scene outline to a chapter.
+
+```powershell
+novel --workspace workspace add-scene moon-archive 1 "Signal discovered"
+novel --workspace workspace add-scene moon-archive 1 "Signal discovered" --summary "The crew finds the first active relay."
+novel --workspace workspace add-scene moon-archive 1 "Signal discovered" --summary-file scenes/signal.md --status revising
+```
+
+Use either `--summary` or `--summary-file`, not both. Files passed with `--summary-file` must be readable UTF-8 text.
+
+## `novel list-scenes`
+
+List scene outlines for a chapter.
+
+```powershell
+novel --workspace workspace list-scenes moon-archive 1
+```
+
+## `novel update-scene`
+
+Update a scene title, summary, or status.
+
+```powershell
+novel --workspace workspace update-scene moon-archive 1 1 --title "Signal decoded"
+novel --workspace workspace update-scene moon-archive 1 1 --summary "The clue points below the archive."
+novel --workspace workspace update-scene moon-archive 1 1 --status done
+```
+
+Use either `--summary` or `--summary-file`, not both. Provide at least one field to update.
+
+## `novel delete-scene`
+
+Delete a scene outline and renumber the remaining scenes in that chapter.
+
+```powershell
+novel --workspace workspace delete-scene moon-archive 1 2
+```
+
+The command writes a pre-delete safety snapshot under `workspace/backups/`, removes the selected scene, and closes scene numbering gaps inside the chapter.
+
 ## `novel export`
 
 Export a project to Markdown.

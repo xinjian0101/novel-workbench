@@ -33,6 +33,10 @@ COMPLETION_COMMANDS = (
     "update-chapter",
     "move-chapter",
     "delete-chapter",
+    "add-scene",
+    "list-scenes",
+    "update-scene",
+    "delete-scene",
     "export",
     "backup",
     "restore-backup",
@@ -202,6 +206,32 @@ def build_parser() -> argparse.ArgumentParser:
     delete_chapter = subparsers.add_parser("delete-chapter", help="Delete a chapter and renumber the project.")
     delete_chapter.add_argument("slug")
     delete_chapter.add_argument("number", type=int)
+
+    add_scene = subparsers.add_parser("add-scene", help="Add a scene outline to a chapter.")
+    add_scene.add_argument("slug")
+    add_scene.add_argument("chapter", type=int)
+    add_scene.add_argument("title")
+    add_scene.add_argument("--summary", default="", help="Short scene summary.")
+    add_scene.add_argument("--summary-file", type=Path, help="Read the scene summary from a UTF-8 text file.")
+    add_scene.add_argument("--status", default="draft", help="draft, revising, or done.")
+
+    list_scenes = subparsers.add_parser("list-scenes", help="List scene outlines for a chapter.")
+    list_scenes.add_argument("slug")
+    list_scenes.add_argument("chapter", type=int)
+
+    update_scene = subparsers.add_parser("update-scene", help="Update a scene outline.")
+    update_scene.add_argument("slug")
+    update_scene.add_argument("chapter", type=int)
+    update_scene.add_argument("scene", type=int)
+    update_scene.add_argument("--title")
+    update_scene.add_argument("--summary")
+    update_scene.add_argument("--summary-file", type=Path)
+    update_scene.add_argument("--status")
+
+    delete_scene = subparsers.add_parser("delete-scene", help="Delete a scene outline and renumber the chapter scenes.")
+    delete_scene.add_argument("slug")
+    delete_scene.add_argument("chapter", type=int)
+    delete_scene.add_argument("scene", type=int)
 
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
@@ -417,6 +447,45 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "delete-chapter":
         chapter = store.delete_chapter(args.slug, args.number)
         print(f"Deleted chapter {args.number}: {chapter.title}")
+        return 0
+    if args.command == "add-scene":
+        if args.summary and args.summary_file is not None:
+            raise StorageError("Use either --summary or --summary-file, not both.")
+        summary = args.summary
+        if args.summary_file is not None:
+            summary = _read_text_option(args.summary_file, "Scene summary")
+        scene = store.add_scene(args.slug, args.chapter, args.title, summary, args.status)
+        print(f"Added scene {args.chapter}.{scene.number}: {scene.title}")
+        return 0
+    if args.command == "list-scenes":
+        scenes = store.list_scenes(args.slug, args.chapter)
+        if not scenes:
+            print("No scenes found.")
+            return 0
+        for scene in scenes:
+            print(f"{args.chapter}.{scene.number}. {scene.title} [{scene.status}]")
+            if scene.summary:
+                print(f"   {scene.summary}")
+        return 0
+    if args.command == "update-scene":
+        if args.summary is not None and args.summary_file is not None:
+            raise StorageError("Use either --summary or --summary-file, not both.")
+        summary = args.summary
+        if args.summary_file is not None:
+            summary = _read_text_option(args.summary_file, "Scene summary")
+        scene = store.update_scene(
+            args.slug,
+            args.chapter,
+            args.scene,
+            title=args.title,
+            summary=summary,
+            status=args.status,
+        )
+        print(f"Updated scene {args.chapter}.{scene.number}: {scene.title}")
+        return 0
+    if args.command == "delete-scene":
+        scene = store.delete_scene(args.slug, args.chapter, args.scene)
+        print(f"Deleted scene {args.chapter}.{args.scene}: {scene.title}")
         return 0
     if args.command == "export":
         if args.template_file is not None and args.template != "default":

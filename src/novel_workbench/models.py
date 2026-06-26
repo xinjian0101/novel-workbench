@@ -10,12 +10,44 @@ def utc_now_iso() -> str:
 
 
 @dataclass(slots=True)
+class Scene:
+    number: int
+    title: str
+    summary: str = ""
+    status: str = "draft"
+    created_at: str = field(default_factory=utc_now_iso)
+    updated_at: str = field(default_factory=utc_now_iso)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "number": self.number,
+            "title": self.title,
+            "summary": self.summary,
+            "status": self.status,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "Scene":
+        return cls(
+            number=int(data["number"]),
+            title=str(data["title"]),
+            summary=str(data.get("summary", "")),
+            status=str(data.get("status", "draft")),
+            created_at=str(data.get("created_at", utc_now_iso())),
+            updated_at=str(data.get("updated_at", utc_now_iso())),
+        )
+
+
+@dataclass(slots=True)
 class Chapter:
     number: int
     title: str
     content: str = ""
     summary: str = ""
     status: str = "draft"
+    scenes: list[Scene] = field(default_factory=list)
     created_at: str = field(default_factory=utc_now_iso)
     updated_at: str = field(default_factory=utc_now_iso)
 
@@ -26,6 +58,7 @@ class Chapter:
             "content": self.content,
             "summary": self.summary,
             "status": self.status,
+            "scenes": [scene.to_dict() for scene in self.scenes],
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
@@ -38,6 +71,7 @@ class Chapter:
             content=str(data.get("content", "")),
             summary=str(data.get("summary", "")),
             status=str(data.get("status", "draft")),
+            scenes=[Scene.from_dict(item) for item in data.get("scenes", [])],
             created_at=str(data.get("created_at", utc_now_iso())),
             updated_at=str(data.get("updated_at", utc_now_iso())),
         )
