@@ -25,11 +25,12 @@ Use this checklist before making the repository public or announcing it.
 
    ```powershell
    python scripts/check.py
+   python scripts/release_check.py
    ```
 
 2. Tag the first release as `v0.1.0`.
 3. Use `docs/RELEASE_TEMPLATE.md` and the `0.1.0` section from `CHANGELOG.md` as release notes.
-4. Attach the source distribution and wheel only if you intend to distribute artifacts through GitHub Releases.
+4. Push the tag to let the Release workflow build, verify, and attach the source distribution and wheel.
 
 ## Social Preview
 

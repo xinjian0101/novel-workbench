@@ -29,6 +29,7 @@
 - Added progress report export for shareable project status snapshots.
 - Added custom Markdown export templates with named fields.
 - Added tests, README, contribution guide, security policy, roadmap, and CI workflow.
+- Added cross-platform release workflow and package install smoke testing.
 - Added a verified demo script and GitHub launch checklist.
 - Added CLI reference, architecture notes, release template, and source distribution manifest.
 - Added workspace doctor command and project schema documentation.

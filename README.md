@@ -231,7 +231,13 @@ Run checks:
 python scripts/check.py
 ```
 
-Architecture notes live in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Run the packaging smoke test by itself:
+
+```powershell
+python scripts/release_check.py
+```
+
+Architecture notes live in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Packaging and release steps live in [docs/PACKAGING.md](docs/PACKAGING.md).
 
 ## Configuration
 

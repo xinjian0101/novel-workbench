@@ -8,7 +8,7 @@ No near-term items are currently scheduled.
 
 ## Medium Term
 
-- Cross-platform packaged releases
+No medium-term items are currently scheduled.
 
 ## Later
 

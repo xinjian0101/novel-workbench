@@ -65,7 +65,7 @@ def main() -> int:
     run([sys.executable, "-m", "pytest"], root)
     run([sys.executable, "-m", "compileall", "src", "tests", "scripts"], root)
     run([sys.executable, "scripts/demo.py"], root)
-    run([sys.executable, "-m", "build", "--no-isolation"], root)
+    run([sys.executable, "scripts/release_check.py"], root)
     scan_for_debug_markers(root)
     clean_generated(root)
     print("All checks passed.")
