@@ -8,7 +8,6 @@ No near-term items are currently scheduled.
 
 ## Medium Term
 
-- Richer outline planning views
 - Character and location notes
 - Cross-platform packaged releases
 

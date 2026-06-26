@@ -40,6 +40,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "doctor"]) == 0
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "outline", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "plan", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "set-target", "renamed-novel", "10"]) == 0
     deadline = (date.today() + timedelta(days=4)).isoformat()
@@ -64,6 +65,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Updated metadata for renamed-novel" in captured.out
     assert "Renamed Novel (renamed-novel)" in captured.out
     assert "# Renamed Novel Outline" in captured.out
+    assert "# Renamed Novel Plan" in captured.out
+    assert "## Progress" in captured.out
+    assert "## Notes" in captured.out
     assert "The final beat reframes the opening." in captured.out
     assert "Genre: science fiction" in captured.out
     assert "Audience: adult" in captured.out
@@ -195,6 +199,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "#compdef novel" in captured.out
     assert "Register-ArgumentCompleter" in captured.out
     assert "import-markdown" in captured.out
+    assert "plan" in captured.out
     assert "set-metadata" in captured.out
     assert "set-deadline" in captured.out
     assert "update-note" in captured.out

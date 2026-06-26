@@ -10,6 +10,7 @@ from novel_workbench.storage import (
     StorageError,
     outline_lines,
     parse_markdown_chapters,
+    planning_lines,
 )
 
 
@@ -120,6 +121,42 @@ def test_scene_crud_renumbers_and_updates_outline(tmp_path: Path) -> None:
     assert "   1.1 Signal Found [done]" in outline_lines(project)
     backups = list((tmp_path / "backups").glob("first-novel-delete-scene-*.json"))
     assert len(backups) == 1
+
+
+def test_planning_lines_groups_project_progress_chapters_notes_and_log(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.update_project_metadata(
+        "first-novel",
+        genre="mystery",
+        audience="adult",
+        revision_notes="Keep the clue trail fair.",
+    )
+    store.set_target_words("first-novel", 10000)
+    target_date = (date.today() + timedelta(days=10)).isoformat()
+    store.set_target_date("first-novel", target_date)
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft", "Introduce the central clue.")
+    store.add_scene("first-novel", 1, "First clue", "The clue appears in plain sight.")
+    store.add_note("first-novel", "Ada", "Engineer protagonist.", "character")
+    store.add_note("first-novel", "Archive", "Underground records room.", "location")
+    store.add_progress("first-novel", 400, "2026-06-26", "Drafted opening pages.")
+
+    lines = planning_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Plan" in lines
+    assert "- Synopsis: A concise premise." in lines
+    assert "- Genre: mystery" in lines
+    assert "- Audience: adult" in lines
+    assert "Keep the clue trail fair." in lines
+    assert "- Target words: 10000" in lines
+    assert f"- Target date: {target_date}" in lines
+    assert "1. Opening [draft] - 3 words" in lines
+    assert "   1.1 First clue [draft]" in lines
+    assert "### Character" in lines
+    assert "- Ada" in lines
+    assert "### Location" in lines
+    assert "- Archive" in lines
+    assert "| 2026-06-26 | 400 | Drafted opening pages. |" in lines
 
 
 def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:

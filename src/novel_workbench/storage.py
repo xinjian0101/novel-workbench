@@ -731,6 +731,68 @@ def outline_lines(project: NovelProject) -> list[str]:
     return lines
 
 
+def planning_lines(project: NovelProject) -> list[str]:
+    stats = _stats_for_project(project)
+    lines = [f"# {project.title} Plan", ""]
+    lines.extend(["## Project", ""])
+    lines.append(f"- Slug: `{project.slug}`")
+    if project.synopsis:
+        lines.append(f"- Synopsis: {project.synopsis}")
+    if project.genre:
+        lines.append(f"- Genre: {project.genre}")
+    if project.audience:
+        lines.append(f"- Audience: {project.audience}")
+    if project.revision_notes:
+        lines.extend(["", "## Revision Notes", "", project.revision_notes])
+    lines.extend(["", "## Progress", ""])
+    lines.append(f"- Manuscript words: {stats['words']}")
+    lines.append(f"- Logged words: {stats['logged_words']}")
+    lines.append(f"- Writing days: {stats['writing_days']}")
+    if stats["target_words"] is not None:
+        lines.append(f"- Target words: {stats['target_words']}")
+        lines.append(f"- Remaining words: {stats['remaining_words']}")
+        lines.append(f"- Progress: {stats['progress_percent']}%")
+    if stats["target_date"] is not None:
+        lines.append(f"- Target date: {stats['target_date']}")
+        lines.append(f"- Days until target date: {stats['days_until_target_date']}")
+    if stats["required_daily_words"] is not None:
+        lines.append(f"- Required daily words: {stats['required_daily_words']}")
+    lines.extend(["", "## Chapters", ""])
+    if project.chapters:
+        for chapter in sorted(project.chapters, key=lambda item: item.number):
+            lines.append(f"{chapter.number}. {chapter.title} [{chapter.status}] - {count_words(chapter.content)} words")
+            if chapter.summary:
+                lines.append(f"   {chapter.summary}")
+            for scene in sorted(chapter.scenes, key=lambda item: item.number):
+                lines.append(f"   {chapter.number}.{scene.number} {scene.title} [{scene.status}]")
+                if scene.summary:
+                    lines.append(f"      {scene.summary}")
+    else:
+        lines.append("No chapters yet.")
+    lines.extend(["", "## Notes", ""])
+    if project.notes:
+        for kind in sorted(VALID_NOTE_KINDS):
+            notes = [note for note in sorted(project.notes, key=lambda item: item.id) if note.kind == kind]
+            if not notes:
+                continue
+            lines.extend([f"### {kind.title()}", ""])
+            for note in notes:
+                lines.append(f"- {note.title}")
+                if note.content:
+                    lines.append(f"  {note.content}")
+            lines.append("")
+        if lines[-1] == "":
+            lines.pop()
+    else:
+        lines.append("No notes yet.")
+    if project.progress:
+        lines.extend(["", "## Writing Log", "", "| Date | Words | Note |", "|---|---:|---|"])
+        for entry in sorted(project.progress, key=lambda item: (item.date, item.id)):
+            note = entry.note.replace("|", "\\|")
+            lines.append(f"| {entry.date} | {entry.words} | {note} |")
+    return lines
+
+
 def _frontmatter_export_lines(project: NovelProject) -> list[str]:
     lines = [
         "---",

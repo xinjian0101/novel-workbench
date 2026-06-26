@@ -55,6 +55,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Log writing sessions by date and words written
 - Set a target completion date and calculate required daily writing pace
 - Show structured project outlines
+- Show a full planning view with metadata, progress, chapters, scenes, notes, and writing logs
 - Report chapter, word, character, status, and average chapter counts
 - Track target word count progress and remaining words
 - Search across chapter titles, manuscript content, and project notes
@@ -88,6 +89,7 @@ novel --workspace workspace update-chapter moon-archive 1 --summary "The discove
 novel --workspace workspace add-scene moon-archive 1 "Signal discovered" --summary "The crew finds the first active relay."
 novel --workspace workspace list-scenes moon-archive 1
 novel --workspace workspace outline moon-archive
+novel --workspace workspace plan moon-archive
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
@@ -127,6 +129,7 @@ novel rename <slug> <new-slug> [--title "..."]
 novel import-markdown <slug> <input.md>
 novel show <slug>
 novel outline <slug>
+novel plan <slug>
 novel stats <slug>
 novel set-metadata <slug> [--genre "..."] [--audience "..."] [--revision-notes "..."] [--revision-notes-file path]
 novel set-target <slug> <words>

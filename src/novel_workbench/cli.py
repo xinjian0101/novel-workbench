@@ -7,7 +7,7 @@ from datetime import date
 from pathlib import Path
 
 from . import __version__
-from .storage import STARTER_TEMPLATES, VALID_NOTE_KINDS, ProjectStore, StorageError, outline_lines
+from .storage import STARTER_TEMPLATES, VALID_NOTE_KINDS, ProjectStore, StorageError, outline_lines, planning_lines
 
 
 COMPLETION_COMMANDS = (
@@ -21,6 +21,7 @@ COMPLETION_COMMANDS = (
     "import-markdown",
     "show",
     "outline",
+    "plan",
     "stats",
     "set-metadata",
     "set-target",
@@ -140,6 +141,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     outline = subparsers.add_parser("outline", help="Show a structured project outline.")
     outline.add_argument("slug")
+
+    plan = subparsers.add_parser("plan", help="Show a planning view with progress, chapters, scenes, and notes.")
+    plan.add_argument("slug")
 
     stats = subparsers.add_parser("stats", help="Show drafting progress for a project.")
     stats.add_argument("slug")
@@ -350,6 +354,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "outline":
         project = store.get_project(args.slug)
         print("\n".join(outline_lines(project)))
+        return 0
+    if args.command == "plan":
+        project = store.get_project(args.slug)
+        print("\n".join(planning_lines(project)))
         return 0
     if args.command == "stats":
         stats = store.project_stats(args.slug)

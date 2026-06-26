@@ -126,6 +126,16 @@ Show a structured project outline with synopsis, metadata, chapter statuses, and
 novel --workspace workspace outline moon-archive
 ```
 
+## `novel plan`
+
+Show a richer planning view with project positioning, progress targets, chapters, scenes, grouped notes, and writing log entries.
+
+```powershell
+novel --workspace workspace plan moon-archive
+```
+
+Use this when reviewing a project before drafting or revision. `outline` stays focused on chapter structure; `plan` includes the surrounding planning context.
+
 ## `novel stats`
 
 Show chapter, note, word, writing log, target, deadline, required daily writing pace, average chapter, character, and status counts.
