@@ -17,6 +17,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "move-chapter", "first-novel", "2", "1"]) == 0
     assert main(["--workspace", str(workspace), "delete-chapter", "first-novel", "3"]) == 0
     assert main(["--workspace", str(workspace), "rename", "first-novel", "renamed-novel", "--title", "Renamed Novel"]) == 0
+    assert main(["--workspace", str(workspace), "add-note", "renamed-novel", "Ada", "--kind", "character", "--content", "Engineer protagonist"]) == 0
+    assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "doctor"]) == 0
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
@@ -27,6 +29,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(export_path)]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "frontmatter.md"), "--template", "frontmatter"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
+    assert main(["--workspace", str(workspace), "delete-note", "renamed-novel", "1"]) == 0
     assert main(["--workspace", str(workspace), "backup", "renamed-novel", str(backup_dir)]) == 0
 
     captured = capsys.readouterr()
@@ -34,7 +37,11 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Renamed Novel (renamed-novel)" in captured.out
     assert "Moved chapter 2 to 1: Ending" in captured.out
     assert "Deleted chapter 3: Cut Scene" in captured.out
+    assert "Added note 1: Ada [character]" in captured.out
+    assert "1. Ada [character]" in captured.out
+    assert "Deleted note 1: Ada" in captured.out
     assert "Workspace healthy." in captured.out
+    assert "Notes: 1" in captured.out
     assert "Words: 2" in captured.out
     assert "Target words: 10" in captured.out
     assert "Progress: 20%" in captured.out
@@ -130,6 +137,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "Created sample project: moon-archive (2 chapters)" in captured.out
     assert "Moved chapter 2 to 1: Descent" in captured.out
     assert "Deleted chapter 2: Signal" in captured.out
+    assert "Added note 1: Underground rain [plot]" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out
     assert "Backed up:" in captured.out

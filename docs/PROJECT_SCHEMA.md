@@ -15,6 +15,7 @@ workspace/projects/<slug>.json
   "synopsis": "A historian finds a city under the lunar dust.",
   "target_words": 80000,
   "chapters": [],
+  "notes": [],
   "created_at": "2026-06-25T12:00:00+00:00",
   "updated_at": "2026-06-25T12:00:00+00:00"
 }
@@ -27,12 +28,13 @@ Required fields:
 - `synopsis`: string
 - `target_words`: positive integer or `null`
 - `chapters`: array of chapter objects
+- `notes`: array of note objects
 - `created_at`: ISO timestamp
 - `updated_at`: ISO timestamp
 
 The file name should match the project slug.
 
-Older project files without `target_words` still load; Novel Workbench treats the field as `null`.
+Older project files without `target_words` or `notes` still load; Novel Workbench treats missing `target_words` as `null` and missing `notes` as an empty list.
 
 ## Chapter Object
 
@@ -57,6 +59,28 @@ Required fields:
 - `updated_at`: ISO timestamp
 
 Chapter numbers should be sequential starting at `1`.
+
+## Note Object
+
+```json
+{
+  "id": 1,
+  "title": "Ada",
+  "content": "Engineer protagonist.",
+  "kind": "character",
+  "created_at": "2026-06-25T12:00:00+00:00",
+  "updated_at": "2026-06-25T12:00:00+00:00"
+}
+```
+
+Required fields:
+
+- `id`: one-based note id unique within the project
+- `title`: non-empty, 120 characters or fewer
+- `content`: string
+- `kind`: `general`, `character`, `location`, `plot`, or `research`
+- `created_at`: ISO timestamp
+- `updated_at`: ISO timestamp
 
 ## Validation
 

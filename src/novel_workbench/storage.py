@@ -5,11 +5,12 @@ import re
 import shutil
 from pathlib import Path
 
-from .models import Chapter, NovelProject, utc_now_iso
+from .models import Chapter, NovelProject, ProjectNote, utc_now_iso
 
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
+VALID_NOTE_KINDS = {"general", "character", "location", "plot", "research"}
 EXPORT_TEMPLATES = {"default", "frontmatter", "progress"}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
@@ -105,6 +106,14 @@ def validate_status(status: str) -> str:
     if normalized not in VALID_STATUSES:
         allowed = ", ".join(sorted(VALID_STATUSES))
         raise StorageError(f"Status must be one of: {allowed}.")
+    return normalized
+
+
+def validate_note_kind(kind: str) -> str:
+    normalized = kind.strip().lower()
+    if normalized not in VALID_NOTE_KINDS:
+        allowed = ", ".join(sorted(VALID_NOTE_KINDS))
+        raise StorageError(f"Note kind must be one of: {allowed}.")
     return normalized
 
 
@@ -337,6 +346,34 @@ class ProjectStore:
         self._write_project(project)
         return chapter
 
+    def add_note(self, slug: str, title: str, content: str = "", kind: str = "general") -> ProjectNote:
+        project = self.get_project(slug)
+        next_id = max((note.id for note in project.notes), default=0) + 1
+        note = ProjectNote(id=next_id, title=validate_title(title), content=content, kind=validate_note_kind(kind))
+        project.notes.append(note)
+        project.updated_at = utc_now_iso()
+        self._write_project(project)
+        return note
+
+    def list_notes(self, slug: str, kind: str | None = None) -> list[ProjectNote]:
+        project = self.get_project(slug)
+        if kind is None:
+            return sorted(project.notes, key=lambda item: item.id)
+        normalized_kind = validate_note_kind(kind)
+        return [note for note in sorted(project.notes, key=lambda item: item.id) if note.kind == normalized_kind]
+
+    def delete_note(self, slug: str, note_id: int) -> ProjectNote:
+        if note_id < 1:
+            raise StorageError("Note id must be greater than zero.")
+        project = self.get_project(slug)
+        index = next((idx for idx, item in enumerate(project.notes) if item.id == note_id), None)
+        if index is None:
+            raise NotFoundError(f"Note {note_id} does not exist in project '{project.slug}'.")
+        note = project.notes.pop(index)
+        project.updated_at = utc_now_iso()
+        self._write_project(project)
+        return note
+
     def set_target_words(self, slug: str, target_words: int | None) -> NovelProject:
         project = self.get_project(slug)
         project.target_words = None if target_words is None else validate_target_words(target_words)
@@ -438,6 +475,7 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
             "",
             f"- Slug: `{project.slug}`",
             f"- Chapters: {stats['chapters']}",
+            f"- Notes: {stats['notes']}",
             f"- Words: {stats['words']}",
             f"- Characters: {stats['characters']}",
         ]
@@ -477,6 +515,7 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
         progress_percent = min(round((words / project.target_words) * 100), 999)
     return {
         "chapters": len(project.chapters),
+        "notes": len(project.notes),
         "words": words,
         "target_words": project.target_words,
         "progress_percent": progress_percent,

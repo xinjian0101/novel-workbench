@@ -230,6 +230,7 @@ def test_export_markdown_progress_template(tmp_path: Path) -> None:
         "## Overview\n\n"
         "- Slug: `first-novel`\n"
         "- Chapters: 2\n"
+        "- Notes: 0\n"
         "- Words: 7\n"
         "- Characters: 40\n"
         "- Target words: 10\n"
@@ -262,6 +263,7 @@ def test_project_stats_count_progress(tmp_path: Path) -> None:
 
     assert store.project_stats("first-novel") == {
         "chapters": 2,
+        "notes": 0,
         "words": 7,
         "target_words": None,
         "progress_percent": None,
@@ -281,6 +283,7 @@ def test_project_stats_show_target_progress(tmp_path: Path) -> None:
     stats = store.project_stats("first-novel")
 
     assert stats["words"] == 3
+    assert stats["notes"] == 0
     assert stats["target_words"] == 10
     assert stats["progress_percent"] == 30
 
@@ -323,6 +326,39 @@ def test_existing_project_json_without_target_words_still_loads(tmp_path: Path) 
     project = store.get_project("legacy")
 
     assert project.target_words is None
+    assert project.notes == []
+
+
+def test_add_list_and_delete_notes(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    first = store.add_note("first-novel", "Ada", "Engineer protagonist", "character")
+    second = store.add_note("first-novel", "Dock", "Rainy port", "location")
+
+    assert first.id == 1
+    assert second.id == 2
+    assert [note.title for note in store.list_notes("first-novel")] == ["Ada", "Dock"]
+    assert [note.title for note in store.list_notes("first-novel", "character")] == ["Ada"]
+    assert store.project_stats("first-novel")["notes"] == 2
+
+    deleted = store.delete_note("first-novel", 1)
+
+    assert deleted.title == "Ada"
+    assert [note.title for note in store.list_notes("first-novel")] == ["Dock"]
+    assert store.project_stats("first-novel")["notes"] == 1
+
+
+def test_notes_validate_kind_and_id(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    with pytest.raises(StorageError):
+        store.add_note("first-novel", "Bad", kind="unknown")
+    with pytest.raises(StorageError):
+        store.delete_note("first-novel", 0)
+    with pytest.raises(NotFoundError):
+        store.delete_note("first-novel", 1)
 
 
 def test_parse_markdown_chapters() -> None:

@@ -119,7 +119,7 @@ novel --workspace workspace show moon-archive
 
 ## `novel stats`
 
-Show chapter, word, target, progress, character, and status counts.
+Show chapter, note, word, target, progress, character, and status counts.
 
 ```powershell
 novel --workspace workspace stats moon-archive
@@ -139,6 +139,42 @@ Clear a project target word count.
 
 ```powershell
 novel --workspace workspace clear-target moon-archive
+```
+
+## `novel add-note`
+
+Add a planning note to a project.
+
+```powershell
+novel --workspace workspace add-note moon-archive "Ada" --kind character --content "Engineer protagonist."
+novel --workspace workspace add-note moon-archive "Research" --kind research --content-file notes/research.md
+```
+
+Kinds:
+
+- `general`
+- `character`
+- `location`
+- `plot`
+- `research`
+
+Use either `--content` or `--content-file`, not both.
+
+## `novel list-notes`
+
+List project notes, optionally filtered by kind.
+
+```powershell
+novel --workspace workspace list-notes moon-archive
+novel --workspace workspace list-notes moon-archive --kind character
+```
+
+## `novel delete-note`
+
+Delete a project note by id.
+
+```powershell
+novel --workspace workspace delete-note moon-archive 1
 ```
 
 ## `novel search`

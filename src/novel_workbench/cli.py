@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
-from .storage import STARTER_TEMPLATES, ProjectStore, StorageError
+from .storage import STARTER_TEMPLATES, VALID_NOTE_KINDS, ProjectStore, StorageError
 
 
 COMPLETION_COMMANDS = (
@@ -22,6 +22,9 @@ COMPLETION_COMMANDS = (
     "stats",
     "set-target",
     "clear-target",
+    "add-note",
+    "list-notes",
+    "delete-note",
     "search",
     "add-chapter",
     "update-chapter",
@@ -120,6 +123,21 @@ def build_parser() -> argparse.ArgumentParser:
 
     clear_target = subparsers.add_parser("clear-target", help="Clear a project target word count.")
     clear_target.add_argument("slug")
+
+    add_note = subparsers.add_parser("add-note", help="Add a project note.")
+    add_note.add_argument("slug")
+    add_note.add_argument("title")
+    add_note.add_argument("--content", default="", help="Note content.")
+    add_note.add_argument("--content-file", type=Path)
+    add_note.add_argument("--kind", choices=sorted(VALID_NOTE_KINDS), default="general", help="Note kind.")
+
+    list_notes = subparsers.add_parser("list-notes", help="List project notes.")
+    list_notes.add_argument("slug")
+    list_notes.add_argument("--kind", choices=sorted(VALID_NOTE_KINDS), help="Filter by note kind.")
+
+    delete_note = subparsers.add_parser("delete-note", help="Delete a project note.")
+    delete_note.add_argument("slug")
+    delete_note.add_argument("id", type=int)
 
     search = subparsers.add_parser("search", help="Search chapter titles and content.")
     search.add_argument("slug")
@@ -228,6 +246,7 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "stats":
         stats = store.project_stats(args.slug)
         print(f"Chapters: {stats['chapters']}")
+        print(f"Notes: {stats['notes']}")
         print(f"Words: {stats['words']}")
         if stats["target_words"] is not None:
             print(f"Target words: {stats['target_words']}")
@@ -244,6 +263,29 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "clear-target":
         project = store.set_target_words(args.slug, None)
         print(f"Cleared target words for {project.slug}")
+        return 0
+    if args.command == "add-note":
+        if args.content and args.content_file is not None:
+            raise StorageError("Use either --content or --content-file, not both.")
+        content = args.content
+        if args.content_file is not None:
+            content = args.content_file.read_text(encoding="utf-8")
+        note = store.add_note(args.slug, args.title, content, args.kind)
+        print(f"Added note {note.id}: {note.title} [{note.kind}]")
+        return 0
+    if args.command == "list-notes":
+        notes = store.list_notes(args.slug, args.kind)
+        if not notes:
+            print("No notes found.")
+            return 0
+        for note in notes:
+            print(f"{note.id}. {note.title} [{note.kind}]")
+            if note.content:
+                print(f"   {note.content}")
+        return 0
+    if args.command == "delete-note":
+        note = store.delete_note(args.slug, args.id)
+        print(f"Deleted note {note.id}: {note.title}")
         return 0
     if args.command == "search":
         results = store.search(args.slug, args.query)

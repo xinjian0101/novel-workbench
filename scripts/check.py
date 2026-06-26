@@ -51,10 +51,10 @@ def clean_generated(root: Path) -> None:
     for relative in ["build", "dist", ".pytest_cache", "src/novel_workbench.egg-info"]:
         target = root / relative
         if target.exists():
-            shutil.rmtree(target)
+            shutil.rmtree(target, ignore_errors=True)
     for target in root.rglob("__pycache__"):
         if target.is_dir():
-            shutil.rmtree(target)
+            shutil.rmtree(target, ignore_errors=True)
 
 
 def main() -> int:

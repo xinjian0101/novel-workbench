@@ -12,6 +12,7 @@ Created sample project: moon-archive (2 chapters)
 
 $ novel stats moon-archive
 Chapters: 2
+Notes: 0
 Words: 15
 Target words: 80000
 Progress: 0%
@@ -44,6 +45,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Move chapters and keep numbering consistent
 - Delete chapters and automatically close numbering gaps
 - Update chapter title, content, and status
+- Track project notes for characters, locations, plot, research, and general planning
 - Show project outlines
 - Report chapter, word, character, and status counts
 - Track target word count progress
@@ -72,10 +74,12 @@ novel --workspace workspace rename working-title first-draft --title "First Draf
 novel --workspace workspace sample
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
+novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
+novel --workspace workspace list-notes moon-archive
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
-novel --workspace workspace search moon-archive signal
+novel --workspace workspace search moon-archive rain
 novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
@@ -104,6 +108,9 @@ novel show <slug>
 novel stats <slug>
 novel set-target <slug> <words>
 novel clear-target <slug>
+novel add-note <slug> <title> [--kind general|character|location|plot|research] [--content "..."] [--content-file path]
+novel list-notes <slug> [--kind general|character|location|plot|research]
+novel delete-note <slug> <id>
 novel search <slug> <query>
 novel add-chapter <slug> <title> [--content "..."] [--status draft|revising|done]
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--status draft|revising|done]

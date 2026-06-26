@@ -10,9 +10,11 @@ novel --workspace workspace rename working-title first-draft --title "First Draf
 novel --workspace workspace sample
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
+novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
+novel --workspace workspace list-notes moon-archive
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive
-novel --workspace workspace search moon-archive signal
+novel --workspace workspace search moon-archive rain
 novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
@@ -22,12 +24,13 @@ novel --workspace workspace backup moon-archive backups
 Expected statistics:
 
 ```text
-Chapters: 2
-Words: 15
+Chapters: 1
+Notes: 1
+Words: 8
 Target words: 80000
 Progress: 0%
-Characters: 77
-Draft: 2
+Characters: 43
+Draft: 1
 Revising: 0
 Done: 0
 ```
@@ -39,11 +42,7 @@ Expected export:
 
 A historian finds a city under the lunar dust.
 
-## Chapter 1: Signal
-
-The first signal arrived at 03:17.
-
-## Chapter 2: Descent
+## Chapter 1: Descent
 
 They opened the hatch and heard rain below.
 ```
@@ -55,8 +54,9 @@ Expected progress report:
 
 ## Overview
 
-- Chapters: 2
-- Words: 15
+- Chapters: 1
+- Notes: 1
+- Words: 8
 - Target words: 80000
 - Progress: 0%
 ```
