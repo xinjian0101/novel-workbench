@@ -137,7 +137,8 @@ def test_cli_doctor_reports_invalid_workspace(tmp_path: Path, capsys) -> None:
     captured = capsys.readouterr()
     assert code == 2
     assert "Errors: 1" in captured.out
-    assert "Hint: Restore the file from a backup" in captured.out
+    assert "JSON syntax error at line 1" in captured.out
+    assert "Hint: Fix the JSON syntax" in captured.out
 
 
 def test_cli_prints_completion_scripts(capsys) -> None:

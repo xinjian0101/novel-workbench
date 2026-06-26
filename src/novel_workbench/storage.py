@@ -503,10 +503,21 @@ class ProjectStore:
 
     def _read_project(self, path: Path) -> NovelProject:
         try:
-            data = json.loads(path.read_text(encoding="utf-8"))
+            raw = path.read_text(encoding="utf-8")
+            data = json.loads(raw)
             return NovelProject.from_dict(data)
-        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
-            raise StorageError(f"Project file is invalid: {path}") from exc
+        except UnicodeDecodeError as exc:
+            raise StorageError(f"Project file is invalid: {path} (file is not valid UTF-8)") from exc
+        except json.JSONDecodeError as exc:
+            raise StorageError(
+                f"Project file is invalid: {path} (JSON syntax error at line {exc.lineno}, column {exc.colno}: {exc.msg})"
+            ) from exc
+        except KeyError as exc:
+            field = str(exc.args[0])
+            raise StorageError(f"Project file is invalid: {path} (missing required field: {field})") from exc
+        except (TypeError, ValueError) as exc:
+            detail = str(exc) or exc.__class__.__name__
+            raise StorageError(f"Project file is invalid: {path} (invalid field value: {detail})") from exc
 
     def _write_project(self, project: NovelProject) -> None:
         path = self.project_path(project.slug)
@@ -694,6 +705,14 @@ def _validate_chapter_numbers(project: NovelProject) -> None:
 
 
 def _doctor_hint(error: str) -> str:
+    if "JSON syntax error" in error:
+        return "Fix the JSON syntax at the reported line and column, or restore the file from a backup."
+    if "not valid UTF-8" in error:
+        return "Save the file as UTF-8 JSON, or restore it from a backup."
+    if "missing required field" in error:
+        return "Add the missing required field shown in the error, or restore the file from a backup."
+    if "invalid field value" in error:
+        return "Fix the invalid value shown in the error so it matches the project schema."
     if "Project file is invalid" in error:
         return "Restore the file from a backup or fix the JSON syntax before running other commands."
     if "non-sequential chapter numbers" in error:

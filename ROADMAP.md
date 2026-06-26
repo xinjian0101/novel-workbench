@@ -4,7 +4,7 @@ Novel Workbench is built around a small local core. Planned work is grouped by u
 
 ## Near Term
 
-- Better error messages for corrupted project files
+No near-term items are currently scheduled.
 
 ## Medium Term
 

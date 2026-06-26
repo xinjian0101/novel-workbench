@@ -28,7 +28,7 @@ novel --workspace workspace doctor
 
 The command exits with `0` when the workspace is healthy and `2` when project files are invalid.
 
-For known problems such as corrupt JSON, slug/file mismatches, and non-sequential chapter numbers, the output includes a concise repair hint.
+For known problems such as JSON syntax errors, invalid UTF-8, missing required fields, invalid values, slug/file mismatches, and non-sequential chapter numbers, the output includes a concise repair hint.
 
 ## `novel completion`
 

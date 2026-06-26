@@ -667,7 +667,53 @@ def test_check_workspace_reports_invalid_project_files(tmp_path: Path) -> None:
     assert report["checked"] == 1
     assert report["ok"] == 0
     assert report["errors"]
-    assert "Restore the file from a backup" in report["errors"][0]["hint"]
+    assert "JSON syntax error at line 1" in report["errors"][0]["error"]
+    assert "reported line and column" in report["errors"][0]["hint"]
+
+
+def test_check_workspace_reports_missing_required_field(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.initialize()
+    (tmp_path / "projects" / "missing-title.json").write_text(
+        '{\n'
+        '  "slug": "missing-title",\n'
+        '  "chapters": [],\n'
+        '  "created_at": "2026-06-25T00:00:00+00:00",\n'
+        '  "updated_at": "2026-06-25T00:00:00+00:00"\n'
+        '}\n',
+        encoding="utf-8",
+    )
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert "missing required field: title" in report["errors"][0]["error"]
+    assert "Add the missing required field" in report["errors"][0]["hint"]
+
+
+def test_check_workspace_reports_invalid_field_value(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.initialize()
+    (tmp_path / "projects" / "bad-target.json").write_text(
+        '{\n'
+        '  "slug": "bad-target",\n'
+        '  "title": "Bad Target",\n'
+        '  "synopsis": "",\n'
+        '  "target_words": "many",\n'
+        '  "chapters": [],\n'
+        '  "created_at": "2026-06-25T00:00:00+00:00",\n'
+        '  "updated_at": "2026-06-25T00:00:00+00:00"\n'
+        '}\n',
+        encoding="utf-8",
+    )
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert "invalid field value" in report["errors"][0]["error"]
+    assert "matches the project schema" in report["errors"][0]["hint"]
 
 
 def test_check_workspace_reports_slug_mismatch(tmp_path: Path) -> None:
