@@ -14,6 +14,7 @@ class Chapter:
     number: int
     title: str
     content: str = ""
+    summary: str = ""
     status: str = "draft"
     created_at: str = field(default_factory=utc_now_iso)
     updated_at: str = field(default_factory=utc_now_iso)
@@ -23,6 +24,7 @@ class Chapter:
             "number": self.number,
             "title": self.title,
             "content": self.content,
+            "summary": self.summary,
             "status": self.status,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
@@ -34,6 +36,7 @@ class Chapter:
             number=int(data["number"]),
             title=str(data["title"]),
             content=str(data.get("content", "")),
+            summary=str(data.get("summary", "")),
             status=str(data.get("status", "draft")),
             created_at=str(data.get("created_at", utc_now_iso())),
             updated_at=str(data.get("updated_at", utc_now_iso())),

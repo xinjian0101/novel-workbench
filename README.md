@@ -45,12 +45,13 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Rename project slugs and titles without losing chapters
 - Track project genre, audience, and revision notes
 - Add chapters with draft, revising, and done statuses
+- Add chapter outline summaries
 - Move chapters and keep numbering consistent
 - Delete chapters and automatically close numbering gaps
 - Update chapter title, content, and status
 - Track project notes for characters, locations, plot, research, and general planning
 - Update project notes as plans evolve
-- Show project outlines
+- Show structured project outlines
 - Report chapter, word, character, status, and average chapter counts
 - Track target word count progress and remaining words
 - Search across chapter titles, manuscript content, and project notes
@@ -80,6 +81,8 @@ novel --workspace workspace import-markdown working-title drafts/working-title.m
 novel --workspace workspace rename working-title first-draft --title "First Draft"
 novel --workspace workspace sample
 novel --workspace workspace set-metadata moon-archive --genre "science fiction" --audience adult --revision-notes "Lean into the discovery mystery."
+novel --workspace workspace update-chapter moon-archive 1 --summary "The discovery pulls the crew below the surface."
+novel --workspace workspace outline moon-archive
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
@@ -115,6 +118,7 @@ novel create <slug> <title> [--synopsis "..."] [--genre "..."] [--audience "..."
 novel rename <slug> <new-slug> [--title "..."]
 novel import-markdown <slug> <input.md>
 novel show <slug>
+novel outline <slug>
 novel stats <slug>
 novel set-metadata <slug> [--genre "..."] [--audience "..."] [--revision-notes "..."] [--revision-notes-file path]
 novel set-target <slug> <words>
@@ -124,8 +128,8 @@ novel list-notes <slug> [--kind general|character|location|plot|research]
 novel update-note <slug> <id> [--title "..."] [--kind general|character|location|plot|research] [--content "..."] [--content-file path]
 novel delete-note <slug> <id>
 novel search <slug> <query>
-novel add-chapter <slug> <title> [--content "..."] [--status draft|revising|done]
-novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--status draft|revising|done]
+novel add-chapter <slug> <title> [--content "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
+novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel move-chapter <slug> <number> <new-number>
 novel delete-chapter <slug> <number>
 novel export <slug> <output.md> [--template default|frontmatter|progress] [--template-file path]

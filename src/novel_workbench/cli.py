@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
-from .storage import STARTER_TEMPLATES, VALID_NOTE_KINDS, ProjectStore, StorageError
+from .storage import STARTER_TEMPLATES, VALID_NOTE_KINDS, ProjectStore, StorageError, outline_lines
 
 
 COMPLETION_COMMANDS = (
@@ -19,6 +19,7 @@ COMPLETION_COMMANDS = (
     "rename",
     "import-markdown",
     "show",
+    "outline",
     "stats",
     "set-metadata",
     "set-target",
@@ -128,6 +129,9 @@ def build_parser() -> argparse.ArgumentParser:
     show = subparsers.add_parser("show", help="Show project details.")
     show.add_argument("slug")
 
+    outline = subparsers.add_parser("outline", help="Show a structured project outline.")
+    outline.add_argument("slug")
+
     stats = subparsers.add_parser("stats", help="Show drafting progress for a project.")
     stats.add_argument("slug")
 
@@ -176,6 +180,8 @@ def build_parser() -> argparse.ArgumentParser:
     add_chapter.add_argument("slug")
     add_chapter.add_argument("title")
     add_chapter.add_argument("--content", default="", help="Initial chapter content.")
+    add_chapter.add_argument("--summary", default="", help="Short chapter outline summary.")
+    add_chapter.add_argument("--summary-file", type=Path, help="Read the chapter summary from a UTF-8 text file.")
     add_chapter.add_argument("--status", default="draft", help="draft, revising, or done.")
 
     update_chapter = subparsers.add_parser("update-chapter", help="Update an existing chapter.")
@@ -184,6 +190,8 @@ def build_parser() -> argparse.ArgumentParser:
     update_chapter.add_argument("--title")
     update_chapter.add_argument("--content")
     update_chapter.add_argument("--content-file", type=Path)
+    update_chapter.add_argument("--summary")
+    update_chapter.add_argument("--summary-file", type=Path)
     update_chapter.add_argument("--status")
 
     move_chapter = subparsers.add_parser("move-chapter", help="Move a chapter to a new number.")
@@ -285,6 +293,12 @@ def run(args: argparse.Namespace) -> int:
             print(project.revision_notes)
         for chapter in sorted(project.chapters, key=lambda item: item.number):
             print(f"{chapter.number}. {chapter.title} [{chapter.status}]")
+            if chapter.summary:
+                print(f"   {chapter.summary}")
+        return 0
+    if args.command == "outline":
+        project = store.get_project(args.slug)
+        print("\n".join(outline_lines(project)))
         return 0
     if args.command == "stats":
         stats = store.project_stats(args.slug)
@@ -367,20 +381,31 @@ def run(args: argparse.Namespace) -> int:
             print(f"   {result['snippet']}")
         return 0
     if args.command == "add-chapter":
-        chapter = store.add_chapter(args.slug, args.title, args.content, args.status)
+        if args.summary and args.summary_file is not None:
+            raise StorageError("Use either --summary or --summary-file, not both.")
+        summary = args.summary
+        if args.summary_file is not None:
+            summary = _read_text_option(args.summary_file, "Chapter summary")
+        chapter = store.add_chapter(args.slug, args.title, args.content, args.status, summary)
         print(f"Added chapter {chapter.number}: {chapter.title}")
         return 0
     if args.command == "update-chapter":
         if args.content is not None and args.content_file is not None:
             raise StorageError("Use either --content or --content-file, not both.")
+        if args.summary is not None and args.summary_file is not None:
+            raise StorageError("Use either --summary or --summary-file, not both.")
         content = args.content
         if args.content_file is not None:
             content = _read_text_option(args.content_file, "Chapter content")
+        summary = args.summary
+        if args.summary_file is not None:
+            summary = _read_text_option(args.summary_file, "Chapter summary")
         chapter = store.update_chapter(
             args.slug,
             args.number,
             title=args.title,
             content=content,
+            summary=summary,
             status=args.status,
         )
         print(f"Updated chapter {chapter.number}: {chapter.title}")

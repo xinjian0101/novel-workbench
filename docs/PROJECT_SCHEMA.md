@@ -49,6 +49,7 @@ Older project files without `genre`, `audience`, `revision_notes`, `target_words
   "number": 1,
   "title": "Signal",
   "content": "The first signal arrived.",
+  "summary": "The signal disrupts the archive shift.",
   "status": "draft",
   "created_at": "2026-06-25T12:00:00+00:00",
   "updated_at": "2026-06-25T12:00:00+00:00"
@@ -60,11 +61,14 @@ Required fields:
 - `number`: one-based chapter number
 - `title`: non-empty, 120 characters or fewer
 - `content`: string
+- `summary`: string
 - `status`: `draft`, `revising`, or `done`
 - `created_at`: ISO timestamp
 - `updated_at`: ISO timestamp
 
 Chapter numbers should be sequential starting at `1`.
+
+Older chapter objects without `summary` still load. Novel Workbench treats missing chapter summaries as empty strings.
 
 ## Note Object
 

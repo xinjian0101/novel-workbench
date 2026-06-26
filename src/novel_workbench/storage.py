@@ -277,13 +277,14 @@ class ProjectStore:
             old_path.unlink()
         return self.get_project(project.slug)
 
-    def add_chapter(self, slug: str, title: str, content: str = "", status: str = "draft") -> Chapter:
+    def add_chapter(self, slug: str, title: str, content: str = "", status: str = "draft", summary: str = "") -> Chapter:
         project = self.get_project(slug)
         next_number = max((chapter.number for chapter in project.chapters), default=0) + 1
         chapter = Chapter(
             number=next_number,
             title=validate_title(title),
             content=content,
+            summary=summary.strip(),
             status=validate_status(status),
         )
         project.chapters.append(chapter)
@@ -298,6 +299,7 @@ class ProjectStore:
         *,
         title: str | None = None,
         content: str | None = None,
+        summary: str | None = None,
         status: str | None = None,
     ) -> Chapter:
         if number < 1:
@@ -310,6 +312,8 @@ class ProjectStore:
             chapter.title = validate_title(title)
         if content is not None:
             chapter.content = content
+        if summary is not None:
+            chapter.summary = summary.strip()
         if status is not None:
             chapter.status = validate_status(status)
         chapter.updated_at = utc_now_iso()
@@ -453,16 +457,17 @@ class ProjectStore:
         project = self.get_project(slug)
         results: list[dict[str, str | int]] = []
         for chapter in project.chapters:
-            haystack = f"{chapter.title}\n{chapter.content}".lower()
+            haystack = f"{chapter.title}\n{chapter.summary}\n{chapter.content}".lower()
             if normalized_query not in haystack:
                 continue
+            snippet_source = _first_matching_text(normalized_query, chapter.content, chapter.summary, chapter.title)
             results.append(
                 {
                     "type": "chapter",
                     "number": chapter.number,
                     "title": chapter.title,
                     "status": chapter.status,
-                    "snippet": _snippet(chapter.content or chapter.title, normalized_query),
+                    "snippet": _snippet(snippet_source, normalized_query),
                 }
             )
         for note in project.notes:
@@ -561,6 +566,29 @@ def _default_export_lines(project: NovelProject) -> list[str]:
         lines.extend([project.synopsis, ""])
     for chapter in sorted(project.chapters, key=lambda item: item.number):
         lines.extend([f"## Chapter {chapter.number}: {chapter.title}", "", chapter.content.strip(), ""])
+    return lines
+
+
+def outline_lines(project: NovelProject) -> list[str]:
+    lines = [f"# {project.title} Outline", ""]
+    if project.synopsis:
+        lines.extend([project.synopsis, ""])
+    if project.genre or project.audience:
+        lines.append("## Metadata")
+        lines.append("")
+        if project.genre:
+            lines.append(f"- Genre: {project.genre}")
+        if project.audience:
+            lines.append(f"- Audience: {project.audience}")
+        lines.append("")
+    lines.extend(["## Chapters", ""])
+    if not project.chapters:
+        lines.append("No chapters yet.")
+        return lines
+    for chapter in sorted(project.chapters, key=lambda item: item.number):
+        lines.append(f"{chapter.number}. {chapter.title} [{chapter.status}]")
+        if chapter.summary:
+            lines.append(f"   {chapter.summary}")
     return lines
 
 
@@ -737,6 +765,13 @@ def _snippet(content: str, query: str, radius: int = 40) -> str:
     prefix = "..." if start > 0 else ""
     suffix = "..." if end < len(content) else ""
     return f"{prefix}{content[start:end].strip()}{suffix}"
+
+
+def _first_matching_text(query: str, *values: str) -> str:
+    for value in values:
+        if query in value.lower():
+            return value
+    return next((value for value in values if value), "")
 
 
 def _validate_chapter_numbers(project: NovelProject) -> None:

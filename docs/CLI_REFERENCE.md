@@ -118,6 +118,14 @@ Show project metadata and chapter outline.
 novel --workspace workspace show moon-archive
 ```
 
+## `novel outline`
+
+Show a structured project outline with synopsis, metadata, chapter statuses, and chapter summaries.
+
+```powershell
+novel --workspace workspace outline moon-archive
+```
+
 ## `novel stats`
 
 Show chapter, note, word, target, remaining word, average chapter, character, and status counts.
@@ -220,7 +228,11 @@ Append a chapter.
 
 ```powershell
 novel --workspace workspace add-chapter moon-archive "Signal" --content "The first signal arrived."
+novel --workspace workspace add-chapter moon-archive "Signal" --summary "The first signal disrupts the archive shift."
+novel --workspace workspace add-chapter moon-archive "Signal" --summary-file outlines/signal.md
 ```
+
+Use either `--summary` or `--summary-file`, not both. Files passed with `--summary-file` must be readable UTF-8 text.
 
 ## `novel update-chapter`
 
@@ -229,10 +241,13 @@ Update an existing chapter.
 ```powershell
 novel --workspace workspace update-chapter moon-archive 1 --status revising
 novel --workspace workspace update-chapter moon-archive 1 --content-file chapter-1.md
+novel --workspace workspace update-chapter moon-archive 1 --summary "The opening clue now points below the city."
 ```
 
 Use either `--content` or `--content-file`, not both.
 Files passed with `--content-file` must be readable UTF-8 text.
+Use either `--summary` or `--summary-file`, not both.
+Files passed with `--summary-file` must be readable UTF-8 text.
 
 ## `novel move-chapter`
 

@@ -7,6 +7,7 @@ from novel_workbench.storage import (
     NotFoundError,
     ProjectStore,
     StorageError,
+    outline_lines,
     parse_markdown_chapters,
 )
 
@@ -74,6 +75,28 @@ def test_update_chapter_from_existing_project(tmp_path: Path) -> None:
 
     assert updated.content == "Revised."
     assert updated.status == "done"
+
+
+def test_chapter_summary_is_stored_updated_and_shown_in_outline(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft", "Introduce the protagonist.")
+
+    updated = store.update_chapter("first-novel", 1, summary="Reveal the first pressure point.")
+    project = store.get_project("first-novel")
+
+    assert updated.summary == "Reveal the first pressure point."
+    assert project.chapters[0].summary == "Reveal the first pressure point."
+    assert outline_lines(project) == [
+        "# First Novel Outline",
+        "",
+        "A concise premise.",
+        "",
+        "## Chapters",
+        "",
+        "1. Opening [draft]",
+        "   Reveal the first pressure point.",
+    ]
 
 
 def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:
@@ -636,6 +659,7 @@ def test_search_returns_matching_chapters(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")
     store.add_chapter("first-novel", "Opening", "The signal arrives before sunrise.", "draft")
+    store.update_chapter("first-novel", 1, summary="A hidden relay wakes up.")
     store.add_chapter("first-novel", "Aftermath", "Everyone waits.", "done")
     store.add_note("first-novel", "Signal origin", "The beacon is under the sea.", "plot")
 
@@ -656,6 +680,17 @@ def test_search_returns_matching_chapters(tmp_path: Path) -> None:
             "status": "plot",
             "snippet": "The beacon is under the sea.",
         },
+    ]
+
+    summary_results = store.search("first-novel", "relay")
+    assert summary_results == [
+        {
+            "type": "chapter",
+            "number": 1,
+            "title": "Opening",
+            "status": "draft",
+            "snippet": "A hidden relay wakes up.",
+        }
     ]
 
 

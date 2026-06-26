@@ -7,6 +7,7 @@
 - Added project genre, audience, and revision note metadata.
 - Added project rename support for changing slugs and titles safely.
 - Added chapter creation and update commands.
+- Added chapter outline summaries and a structured outline command.
 - Added chapter moving with automatic renumbering.
 - Added chapter deletion with automatic renumbering.
 - Added project notes for characters, locations, plot, research, and general planning.
@@ -29,6 +30,7 @@
 - Added detailed workspace doctor diagnostics for corrupt project files.
 - Added clearer validation errors for unreadable or non-UTF-8 imported Markdown, content files, revision note files, and custom export templates.
 - Added a single release-quality check script and wired CI to use it.
+- Made the release-quality check script use UTF-8 subprocesses and a non-isolated build to avoid flaky local network dependency during packaging checks.
 - Added Dependabot configuration for GitHub Actions maintenance.
 - Added sample project generation for instant onboarding.
 - Added starter manuscript generation with three-act, hero journey, and mystery templates.

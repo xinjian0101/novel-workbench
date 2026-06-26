@@ -3,6 +3,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
+import os
 from pathlib import Path
 
 SCAN_PATTERNS = [
@@ -26,7 +27,9 @@ EXCLUDED_SUFFIXES = {".egg-info"}
 
 def run(command: list[str], cwd: Path) -> None:
     print(f"$ {' '.join(command)}")
-    subprocess.run(command, cwd=cwd, check=True)
+    env = os.environ.copy()
+    env.setdefault("PYTHONUTF8", "1")
+    subprocess.run(command, cwd=cwd, check=True, env=env)
 
 
 def scan_for_debug_markers(root: Path) -> None:
@@ -62,7 +65,7 @@ def main() -> int:
     run([sys.executable, "-m", "pytest"], root)
     run([sys.executable, "-m", "compileall", "src", "tests", "scripts"], root)
     run([sys.executable, "scripts/demo.py"], root)
-    run([sys.executable, "-m", "build"], root)
+    run([sys.executable, "-m", "build", "--no-isolation"], root)
     scan_for_debug_markers(root)
     clean_generated(root)
     print("All checks passed.")

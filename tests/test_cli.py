@@ -13,9 +13,12 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
 
     assert main(["--workspace", str(workspace), "init"]) == 0
     assert main(["--workspace", str(workspace), "create", "first-novel", "First Novel"]) == 0
-    assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Opening", "--content", "Hello"]) == 0
+    summary_file = tmp_path / "summary.md"
+    summary_file.write_text("A quiet opening turns dangerous.", encoding="utf-8")
+    assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Opening", "--content", "Hello", "--summary-file", str(summary_file)]) == 0
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Ending", "--content", "Goodbye"]) == 0
     assert main(["--workspace", str(workspace), "add-chapter", "first-novel", "Cut Scene", "--content", "Remove"]) == 0
+    assert main(["--workspace", str(workspace), "update-chapter", "first-novel", "1", "--summary", "The final beat reframes the opening."]) == 0
     assert main(["--workspace", str(workspace), "move-chapter", "first-novel", "2", "1"]) == 0
     assert main(["--workspace", str(workspace), "delete-chapter", "first-novel", "3"]) == 0
     assert main(["--workspace", str(workspace), "rename", "first-novel", "renamed-novel", "--title", "Renamed Novel"]) == 0
@@ -30,6 +33,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "doctor"]) == 0
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "outline", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "set-target", "renamed-novel", "10"]) == 0
     assert main(["--workspace", str(workspace), "stats", "renamed-novel"]) == 0
@@ -50,6 +54,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Renamed project: renamed-novel" in captured.out
     assert "Updated metadata for renamed-novel" in captured.out
     assert "Renamed Novel (renamed-novel)" in captured.out
+    assert "# Renamed Novel Outline" in captured.out
+    assert "The final beat reframes the opening." in captured.out
     assert "Genre: science fiction" in captured.out
     assert "Audience: adult" in captured.out
     assert "Raise the stakes in act two." in captured.out
