@@ -34,6 +34,7 @@ COMPLETION_COMMANDS = (
     "delete-chapter",
     "export",
     "backup",
+    "restore-backup",
     "completion",
 )
 
@@ -203,6 +204,10 @@ def build_parser() -> argparse.ArgumentParser:
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
     backup.add_argument("slug")
     backup.add_argument("output_dir", type=Path)
+
+    restore_backup = subparsers.add_parser("restore-backup", help="Restore a project JSON file from a backup.")
+    restore_backup.add_argument("backup", type=Path)
+    restore_backup.add_argument("--force", action="store_true", help="Overwrite an existing project with the same slug.")
 
     completion = subparsers.add_parser("completion", help="Print a shell completion script.")
     completion.add_argument("shell", choices=("bash", "zsh", "powershell"), help="Shell name.")
@@ -397,6 +402,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "backup":
         output = store.backup_project(args.slug, args.output_dir)
         print(f"Backed up: {output}")
+        return 0
+    if args.command == "restore-backup":
+        project = store.restore_backup(args.backup, overwrite=args.force)
+        print(f"Restored project: {project.slug}")
         return 0
     raise StorageError(f"Unknown command: {args.command}")
 

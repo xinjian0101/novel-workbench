@@ -488,6 +488,19 @@ class ProjectStore:
         shutil.copy2(self.project_path(project.slug), output_path)
         return output_path
 
+    def restore_backup(self, backup_path: Path, *, overwrite: bool = False) -> NovelProject:
+        if not backup_path.exists():
+            raise NotFoundError(f"Backup file does not exist: {backup_path}")
+        project = self._read_project(backup_path)
+        target_path = self.project_path(project.slug)
+        if target_path.exists():
+            if not overwrite:
+                raise DuplicateError(f"Project '{project.slug}' already exists. Use --force to overwrite it.")
+            current = self._read_project(target_path)
+            self._snapshot_project(current, "restore")
+        self._write_project(project)
+        return project
+
     def export_markdown(self, slug: str, output_path: Path, template: str = "default", template_path: Path | None = None) -> Path:
         project = self.get_project(slug)
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -510,7 +523,7 @@ class ProjectStore:
         try:
             raw = path.read_text(encoding="utf-8")
             data = json.loads(raw)
-            return NovelProject.from_dict(data)
+            project = NovelProject.from_dict(data)
         except UnicodeDecodeError as exc:
             raise StorageError(f"Project file is invalid: {path} (file is not valid UTF-8)") from exc
         except json.JSONDecodeError as exc:
@@ -523,6 +536,11 @@ class ProjectStore:
         except (TypeError, ValueError) as exc:
             detail = str(exc) or exc.__class__.__name__
             raise StorageError(f"Project file is invalid: {path} (invalid field value: {detail})") from exc
+        try:
+            _validate_project_fields(project)
+        except StorageError as exc:
+            raise StorageError(f"Project file is invalid: {path} (invalid field value: {exc})") from exc
+        return project
 
     def _write_project(self, project: NovelProject) -> None:
         path = self.project_path(project.slug)
@@ -726,6 +744,29 @@ def _validate_chapter_numbers(project: NovelProject) -> None:
     expected = list(range(1, len(numbers) + 1))
     if numbers != expected:
         raise StorageError(f"Project '{project.slug}' has non-sequential chapter numbers.")
+
+
+def _validate_project_fields(project: NovelProject) -> None:
+    validate_slug(project.slug)
+    validate_title(project.title)
+    validate_optional_metadata(project.genre, "Genre")
+    validate_optional_metadata(project.audience, "Audience")
+    if project.target_words is not None:
+        validate_target_words(project.target_words)
+    note_ids: set[int] = set()
+    for chapter in project.chapters:
+        if chapter.number < 1:
+            raise StorageError("Chapter number must be greater than zero.")
+        validate_title(chapter.title)
+        validate_status(chapter.status)
+    for note in project.notes:
+        if note.id < 1:
+            raise StorageError("Note id must be greater than zero.")
+        if note.id in note_ids:
+            raise StorageError(f"Note id {note.id} is duplicated.")
+        note_ids.add(note.id)
+        validate_title(note.title)
+        validate_note_kind(note.kind)
 
 
 def _doctor_hint(error: str) -> str:

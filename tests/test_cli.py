@@ -42,6 +42,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
     assert main(["--workspace", str(workspace), "delete-note", "renamed-novel", "1"]) == 0
     assert main(["--workspace", str(workspace), "backup", "renamed-novel", str(backup_dir)]) == 0
+    backup_file = next(backup_dir.glob("renamed-novel-*.json"))
+    assert main(["--workspace", str(workspace), "set-metadata", "renamed-novel", "--revision-notes", "Temporary change."]) == 0
+    assert main(["--workspace", str(workspace), "restore-backup", str(backup_file), "--force"]) == 0
 
     captured = capsys.readouterr()
     assert "Renamed project: renamed-novel" in captured.out
@@ -58,6 +61,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "1. Ada Byron [research]" in captured.out
     assert "Updated protagonist notes" in captured.out
     assert "Deleted note 1: Ada Byron" in captured.out
+    assert "Restored project: renamed-novel" in captured.out
     assert "Workspace healthy." in captured.out
     assert "Notes: 1" in captured.out
     assert "Words: 2" in captured.out
@@ -73,7 +77,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "# Renamed Novel" in custom_export.read_text(encoding="utf-8")
     assert "Draft: 2 chapters / 2 words" in custom_export.read_text(encoding="utf-8")
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
-    assert list(backup_dir.glob("renamed-novel-*.json"))
+    assert backup_file.exists()
 
 
 def test_cli_writes_starter_and_imports_it(tmp_path: Path, capsys) -> None:

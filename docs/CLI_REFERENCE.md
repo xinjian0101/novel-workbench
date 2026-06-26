@@ -287,3 +287,14 @@ novel --workspace workspace backup moon-archive backups
 ```
 
 Rename, chapter deletion, and note deletion also create automatic safety snapshots under `workspace/backups/`. Use `backup` when you want an explicit copy in another directory.
+
+## `novel restore-backup`
+
+Restore a project JSON file from a backup.
+
+```powershell
+novel --workspace workspace restore-backup backups/moon-archive-20260626T120000000000Z.json
+novel --workspace workspace restore-backup backups/moon-archive-20260626T120000000000Z.json --force
+```
+
+The command validates the backup file before writing it into `workspace/projects/`. If a project with the same slug already exists, the command refuses to overwrite it unless `--force` is passed. Forced restores create a pre-restore safety snapshot under `workspace/backups/`.

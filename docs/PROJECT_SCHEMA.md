@@ -96,4 +96,6 @@ Run:
 novel --workspace workspace doctor
 ```
 
-The doctor command validates project JSON files, reports JSON syntax line and column numbers, flags invalid UTF-8, missing required fields, invalid field values, file-name-to-slug mismatches, and chapter numbering problems, then prints repair hints for known failures.
+The doctor command validates project JSON files, reports JSON syntax line and column numbers, flags invalid UTF-8, missing required fields, invalid slugs, empty or oversized titles, invalid statuses, invalid note kinds, duplicate note ids, invalid target word counts, file-name-to-slug mismatches, and chapter numbering problems, then prints repair hints for known failures.
+
+Backup files use the same schema as project files. `novel restore-backup` validates a backup before restoring it into `workspace/projects/`.

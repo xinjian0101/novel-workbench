@@ -61,6 +61,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export through custom Markdown template files
 - Automatically snapshot project JSON before renames and destructive deletes
 - Back up project JSON on demand
+- Restore project JSON from backups with explicit overwrite protection
 - Validate workspace health before releases or migrations, with repair hints
 - Print shell completion scripts for bash, zsh, and PowerShell
 - Run fully offline with no account, server, database, or telemetry
@@ -92,6 +93,7 @@ novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
 novel --workspace workspace backup moon-archive backups
+novel --workspace workspace restore-backup backups/moon-archive-20260626T120000000000Z.json --force
 ```
 
 Run the bundled demo:
@@ -128,6 +130,7 @@ novel move-chapter <slug> <number> <new-number>
 novel delete-chapter <slug> <number>
 novel export <slug> <output.md> [--template default|frontmatter|progress] [--template-file path]
 novel backup <slug> <output-dir>
+novel restore-backup <backup.json> [--force]
 ```
 
 Use `--workspace <dir>` with any command to choose the workspace directory. If omitted, the tool uses `NOVEL_WORKBENCH_HOME`, then falls back to `./workspace`.
@@ -150,6 +153,7 @@ backups/
 
 Project files are JSON so they can be reviewed, versioned, backed up, and migrated without a proprietary database.
 Automatic safety snapshots are stored under `workspace/backups/` before project renames, chapter deletion, and note deletion. The `backup` command can still copy a project JSON file to any directory you choose.
+Use `restore-backup` to restore a project JSON file. If a project with the same slug already exists, pass `--force`; Novel Workbench snapshots the current project before overwriting it.
 
 ## Custom Export Templates
 

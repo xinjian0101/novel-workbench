@@ -677,6 +677,44 @@ def test_backup_project_copies_json(tmp_path: Path) -> None:
     assert '"title": "First Novel"' in backup_path.read_text(encoding="utf-8")
 
 
+def test_restore_backup_creates_project_from_backup(tmp_path: Path) -> None:
+    source = ProjectStore(tmp_path / "source")
+    source.create_project("first-novel", "First Novel", "A concise premise.")
+    source.add_chapter("first-novel", "Opening", "The story begins.")
+    backup_path = source.backup_project("first-novel", tmp_path / "backups")
+    restored = ProjectStore(tmp_path / "restored")
+
+    project = restored.restore_backup(backup_path)
+
+    assert project.slug == "first-novel"
+    assert restored.get_project("first-novel").chapters[0].title == "Opening"
+
+
+def test_restore_backup_requires_force_before_overwrite(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "Original")
+    backup_path = store.backup_project("first-novel", tmp_path / "backups")
+    store.update_project_metadata("first-novel", revision_notes="Changed after backup.")
+
+    with pytest.raises(DuplicateError):
+        store.restore_backup(backup_path)
+
+
+def test_restore_backup_force_overwrites_and_snapshots_current_project(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "Original")
+    store.add_chapter("first-novel", "Original Chapter", "Keep me in the restore snapshot.")
+    backup_path = store.backup_project("first-novel", tmp_path / "backups")
+    store.update_chapter("first-novel", 1, title="Changed Chapter")
+
+    project = store.restore_backup(backup_path, overwrite=True)
+
+    assert project.chapters[0].title == "Original Chapter"
+    backups = list((tmp_path / "workspace" / "backups").glob("first-novel-restore-*.json"))
+    assert len(backups) == 1
+    assert '"title": "Changed Chapter"' in backups[0].read_text(encoding="utf-8")
+
+
 def test_check_workspace_reports_healthy_projects(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")
@@ -741,6 +779,22 @@ def test_check_workspace_reports_invalid_field_value(tmp_path: Path) -> None:
     assert report["checked"] == 1
     assert report["ok"] == 0
     assert "invalid field value" in report["errors"][0]["error"]
+    assert "matches the project schema" in report["errors"][0]["hint"]
+
+
+def test_check_workspace_reports_invalid_chapter_status(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening")
+    path = tmp_path / "projects" / "first-novel.json"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(text.replace('"status": "draft"', '"status": "blocked"'), encoding="utf-8")
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert "Status must be one of" in report["errors"][0]["error"]
     assert "matches the project schema" in report["errors"][0]["hint"]
 
 

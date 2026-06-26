@@ -17,6 +17,8 @@
 - Added manuscript search.
 - Added project JSON backups.
 - Added automatic safety snapshots before project renames, chapter deletion, and note deletion.
+- Added backup restore support with overwrite protection and pre-restore snapshots.
+- Added stricter project file validation for loaded project JSON and restored backups.
 - Added Markdown export.
 - Added progress report export for shareable project status snapshots.
 - Added custom Markdown export templates with named fields.
