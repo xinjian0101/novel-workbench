@@ -22,8 +22,12 @@ Each project contains:
 - `slug`
 - `title`
 - `synopsis`
+- `genre`
+- `audience`
+- `revision_notes`
 - `target_words`
 - `chapters`
+- `notes`
 - `created_at`
 - `updated_at`
 

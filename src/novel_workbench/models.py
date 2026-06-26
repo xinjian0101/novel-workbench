@@ -76,6 +76,9 @@ class NovelProject:
     slug: str
     title: str
     synopsis: str = ""
+    genre: str = ""
+    audience: str = ""
+    revision_notes: str = ""
     target_words: int | None = None
     chapters: list[Chapter] = field(default_factory=list)
     notes: list[ProjectNote] = field(default_factory=list)
@@ -87,6 +90,9 @@ class NovelProject:
             "slug": self.slug,
             "title": self.title,
             "synopsis": self.synopsis,
+            "genre": self.genre,
+            "audience": self.audience,
+            "revision_notes": self.revision_notes,
             "target_words": self.target_words,
             "chapters": [chapter.to_dict() for chapter in self.chapters],
             "notes": [note.to_dict() for note in self.notes],
@@ -100,6 +106,9 @@ class NovelProject:
             slug=str(data["slug"]),
             title=str(data["title"]),
             synopsis=str(data.get("synopsis", "")),
+            genre=str(data.get("genre", "")),
+            audience=str(data.get("audience", "")),
+            revision_notes=str(data.get("revision_notes", "")),
             target_words=_target_words_from_dict(data),
             chapters=[Chapter.from_dict(item) for item in data.get("chapters", [])],
             notes=[ProjectNote.from_dict(item) for item in data.get("notes", [])],

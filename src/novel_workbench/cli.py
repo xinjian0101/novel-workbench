@@ -20,6 +20,7 @@ COMPLETION_COMMANDS = (
     "import-markdown",
     "show",
     "stats",
+    "set-metadata",
     "set-target",
     "clear-target",
     "add-note",
@@ -102,6 +103,8 @@ def build_parser() -> argparse.ArgumentParser:
     create.add_argument("slug", help="Lowercase project identifier, for example: first-novel.")
     create.add_argument("title", help="Project title.")
     create.add_argument("--synopsis", default="", help="Short project synopsis.")
+    create.add_argument("--genre", default="", help="Project genre.")
+    create.add_argument("--audience", default="", help="Intended audience.")
 
     rename = subparsers.add_parser("rename", help="Rename a project slug and optionally its title.")
     rename.add_argument("slug")
@@ -117,6 +120,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     stats = subparsers.add_parser("stats", help="Show drafting progress for a project.")
     stats.add_argument("slug")
+
+    set_metadata = subparsers.add_parser("set-metadata", help="Set project genre, audience, or revision notes.")
+    set_metadata.add_argument("slug")
+    set_metadata.add_argument("--genre")
+    set_metadata.add_argument("--audience")
+    set_metadata.add_argument("--revision-notes")
+    set_metadata.add_argument("--revision-notes-file", type=Path)
 
     set_target = subparsers.add_parser("set-target", help="Set a project target word count.")
     set_target.add_argument("slug")
@@ -234,6 +244,8 @@ def run(args: argparse.Namespace) -> int:
         return 0
     if args.command == "create":
         project = store.create_project(args.slug, args.title, args.synopsis)
+        if args.genre or args.audience:
+            project = store.update_project_metadata(project.slug, genre=args.genre, audience=args.audience)
         print(f"Created project: {project.slug}")
         return 0
     if args.command == "rename":
@@ -249,6 +261,13 @@ def run(args: argparse.Namespace) -> int:
         print(f"{project.title} ({project.slug})")
         if project.synopsis:
             print(project.synopsis)
+        if project.genre:
+            print(f"Genre: {project.genre}")
+        if project.audience:
+            print(f"Audience: {project.audience}")
+        if project.revision_notes:
+            print("Revision notes:")
+            print(project.revision_notes)
         for chapter in sorted(project.chapters, key=lambda item: item.number):
             print(f"{chapter.number}. {chapter.title} [{chapter.status}]")
         return 0
@@ -264,6 +283,20 @@ def run(args: argparse.Namespace) -> int:
         print(f"Draft: {stats['draft']}")
         print(f"Revising: {stats['revising']}")
         print(f"Done: {stats['done']}")
+        return 0
+    if args.command == "set-metadata":
+        if args.revision_notes is not None and args.revision_notes_file is not None:
+            raise StorageError("Use either --revision-notes or --revision-notes-file, not both.")
+        revision_notes = args.revision_notes
+        if args.revision_notes_file is not None:
+            revision_notes = args.revision_notes_file.read_text(encoding="utf-8")
+        project = store.update_project_metadata(
+            args.slug,
+            genre=args.genre,
+            audience=args.audience,
+            revision_notes=revision_notes,
+        )
+        print(f"Updated metadata for {project.slug}")
         return 0
     if args.command == "set-target":
         project = store.set_target_words(args.slug, args.words)

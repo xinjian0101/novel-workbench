@@ -41,6 +41,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Create a sample project for instant exploration
 - Generate an importable starter manuscript template
 - Rename project slugs and titles without losing chapters
+- Track project genre, audience, and revision notes
 - Add chapters with draft, revising, and done statuses
 - Move chapters and keep numbering consistent
 - Delete chapters and automatically close numbering gaps
@@ -73,6 +74,7 @@ novel --workspace workspace starter drafts/working-title.md --template three-act
 novel --workspace workspace import-markdown working-title drafts/working-title.md
 novel --workspace workspace rename working-title first-draft --title "First Draft"
 novel --workspace workspace sample
+novel --workspace workspace set-metadata moon-archive --genre "science fiction" --audience adult --revision-notes "Lean into the discovery mystery."
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
@@ -103,11 +105,12 @@ novel doctor
 novel completion bash|zsh|powershell
 novel sample [--slug moon-archive]
 novel starter <output.md> [--template three-act|hero-journey|mystery] [--force]
-novel create <slug> <title> [--synopsis "..."]
+novel create <slug> <title> [--synopsis "..."] [--genre "..."] [--audience "..."]
 novel rename <slug> <new-slug> [--title "..."]
 novel import-markdown <slug> <input.md>
 novel show <slug>
 novel stats <slug>
+novel set-metadata <slug> [--genre "..."] [--audience "..."] [--revision-notes "..."] [--revision-notes-file path]
 novel set-target <slug> <words>
 novel clear-target <slug>
 novel add-note <slug> <title> [--kind general|character|location|plot|research] [--content "..."] [--content-file path]

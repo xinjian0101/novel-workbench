@@ -76,6 +76,7 @@ Create an empty project.
 
 ```powershell
 novel --workspace workspace create first-novel "First Novel" --synopsis "A concise premise."
+novel --workspace workspace create moon-archive "Moon Archive" --genre "science fiction" --audience adult
 ```
 
 ## `novel rename`
@@ -124,6 +125,18 @@ Show chapter, note, word, target, progress, character, and status counts.
 ```powershell
 novel --workspace workspace stats moon-archive
 ```
+
+## `novel set-metadata`
+
+Set optional project positioning and revision metadata.
+
+```powershell
+novel --workspace workspace set-metadata moon-archive --genre "science fiction"
+novel --workspace workspace set-metadata moon-archive --audience adult --revision-notes "Tighten the midpoint."
+novel --workspace workspace set-metadata moon-archive --revision-notes-file notes/revision.md
+```
+
+Use either `--revision-notes` or `--revision-notes-file`, not both. Provide at least one metadata field.
 
 ## `novel set-target`
 

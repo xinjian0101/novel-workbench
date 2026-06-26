@@ -5,7 +5,6 @@ Novel Workbench is built around a small local core. Planned work is grouped by u
 ## Near Term
 
 - Richer progress analytics by chapter status and target word count
-- Project metadata fields for genre, audience, and revision notes
 - Configurable export templates
 - Better error messages for corrupted project files
 

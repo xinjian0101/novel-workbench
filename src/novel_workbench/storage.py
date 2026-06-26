@@ -123,6 +123,13 @@ def validate_target_words(target_words: int) -> int:
     return target_words
 
 
+def validate_optional_metadata(value: str, field_name: str) -> str:
+    normalized = value.strip()
+    if len(normalized) > 240:
+        raise StorageError(f"{field_name} must be 240 characters or fewer.")
+    return normalized
+
+
 def validate_export_template(template: str) -> str:
     normalized = template.strip().lower()
     if normalized not in EXPORT_TEMPLATES:
@@ -409,6 +416,27 @@ class ProjectStore:
         self._write_project(project)
         return project
 
+    def update_project_metadata(
+        self,
+        slug: str,
+        *,
+        genre: str | None = None,
+        audience: str | None = None,
+        revision_notes: str | None = None,
+    ) -> NovelProject:
+        if genre is None and audience is None and revision_notes is None:
+            raise StorageError("Provide at least one metadata field to update.")
+        project = self.get_project(slug)
+        if genre is not None:
+            project.genre = validate_optional_metadata(genre, "Genre")
+        if audience is not None:
+            project.audience = validate_optional_metadata(audience, "Audience")
+        if revision_notes is not None:
+            project.revision_notes = revision_notes.strip()
+        project.updated_at = utc_now_iso()
+        self._write_project(project)
+        return project
+
     def project_stats(self, slug: str) -> dict[str, int | None]:
         project = self.get_project(slug)
         return _stats_for_project(project)
@@ -499,6 +527,12 @@ def _frontmatter_export_lines(project: NovelProject) -> list[str]:
     ]
     if project.synopsis:
         lines.append(f'synopsis: "{_escape_yaml(project.synopsis)}"')
+    if project.genre:
+        lines.append(f'genre: "{_escape_yaml(project.genre)}"')
+    if project.audience:
+        lines.append(f'audience: "{_escape_yaml(project.audience)}"')
+    if project.revision_notes:
+        lines.append(f'revision_notes: "{_escape_yaml(project.revision_notes)}"')
     if project.target_words is not None:
         lines.append(f"target_words: {project.target_words}")
     lines.extend(["---", ""])
@@ -522,6 +556,10 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
             f"- Characters: {stats['characters']}",
         ]
     )
+    if project.genre:
+        lines.append(f"- Genre: {project.genre}")
+    if project.audience:
+        lines.append(f"- Audience: {project.audience}")
     if stats["target_words"] is not None:
         lines.extend(
             [
@@ -529,6 +567,8 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
                 f"- Progress: {stats['progress_percent']}%",
             ]
         )
+    if project.revision_notes:
+        lines.extend(["", "## Revision Notes", "", project.revision_notes])
     lines.extend(
         [
             "",

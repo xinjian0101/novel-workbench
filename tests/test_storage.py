@@ -149,6 +149,12 @@ def test_rename_project_updates_slug_title_and_file(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel")
     store.set_target_words("first-novel", 50000)
+    store.update_project_metadata(
+        "first-novel",
+        genre="science fiction",
+        audience="adult",
+        revision_notes="Tighten the midpoint.",
+    )
     store.add_chapter("first-novel", "Opening", "The story begins.")
 
     project = store.rename_project("first-novel", "second-novel", "Second Novel")
@@ -156,6 +162,9 @@ def test_rename_project_updates_slug_title_and_file(tmp_path: Path) -> None:
     assert project.slug == "second-novel"
     assert project.title == "Second Novel"
     assert project.target_words == 50000
+    assert project.genre == "science fiction"
+    assert project.audience == "adult"
+    assert project.revision_notes == "Tighten the midpoint."
     assert project.chapters[0].title == "Opening"
     assert not (tmp_path / "workspace" / "projects" / "first-novel.json").exists()
     assert (tmp_path / "workspace" / "projects" / "second-novel.json").exists()
@@ -195,6 +204,12 @@ def test_export_markdown_frontmatter_template(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")
     store.set_target_words("first-novel", 50000)
+    store.update_project_metadata(
+        "first-novel",
+        genre="science fiction",
+        audience="adult",
+        revision_notes='Resolve "Signal" continuity.',
+    )
     store.add_chapter("first-novel", "Opening", "The story begins.")
     output = tmp_path / "exports" / "first-novel.md"
 
@@ -205,6 +220,9 @@ def test_export_markdown_frontmatter_template(tmp_path: Path) -> None:
         'title: "First Novel"\n'
         'slug: "first-novel"\n'
         'synopsis: "A concise premise."\n'
+        'genre: "science fiction"\n'
+        'audience: "adult"\n'
+        'revision_notes: "Resolve \\"Signal\\" continuity."\n'
         "target_words: 50000\n"
         "---\n\n"
         "# First Novel\n\n"
@@ -218,6 +236,12 @@ def test_export_markdown_progress_template(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")
     store.set_target_words("first-novel", 10)
+    store.update_project_metadata(
+        "first-novel",
+        genre="mystery",
+        audience="young adult",
+        revision_notes="Make the clue trail fair.",
+    )
     store.add_chapter("first-novel", "Opening", "The story begins.", "done")
     store.add_chapter("first-novel", "Middle", "A second scene unfolds.", "revising")
     output = tmp_path / "reports" / "first-novel-progress.md"
@@ -233,8 +257,12 @@ def test_export_markdown_progress_template(tmp_path: Path) -> None:
         "- Notes: 0\n"
         "- Words: 7\n"
         "- Characters: 40\n"
+        "- Genre: mystery\n"
+        "- Audience: young adult\n"
         "- Target words: 10\n"
         "- Progress: 70%\n\n"
+        "## Revision Notes\n\n"
+        "Make the clue trail fair.\n\n"
         "## Status\n\n"
         "- Draft: 0\n"
         "- Revising: 1\n"
@@ -307,6 +335,34 @@ def test_clear_target_words(tmp_path: Path) -> None:
     assert store.project_stats("first-novel")["progress_percent"] is None
 
 
+def test_update_project_metadata_changes_optional_fields(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    project = store.update_project_metadata(
+        "first-novel",
+        genre=" fantasy ",
+        audience=" adult ",
+        revision_notes="  Cut chapter three.  ",
+    )
+    loaded = store.get_project("first-novel")
+
+    assert project.genre == "fantasy"
+    assert project.audience == "adult"
+    assert project.revision_notes == "Cut chapter three."
+    assert loaded.genre == "fantasy"
+    assert loaded.audience == "adult"
+    assert loaded.revision_notes == "Cut chapter three."
+
+
+def test_update_project_metadata_requires_a_field(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    with pytest.raises(StorageError):
+        store.update_project_metadata("first-novel")
+
+
 def test_existing_project_json_without_target_words_still_loads(tmp_path: Path) -> None:
     projects = tmp_path / "projects"
     projects.mkdir()
@@ -327,6 +383,9 @@ def test_existing_project_json_without_target_words_still_loads(tmp_path: Path) 
 
     assert project.target_words is None
     assert project.notes == []
+    assert project.genre == ""
+    assert project.audience == ""
+    assert project.revision_notes == ""
 
 
 def test_add_list_and_delete_notes(tmp_path: Path) -> None:

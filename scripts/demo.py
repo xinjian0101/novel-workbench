@@ -26,6 +26,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "import-markdown", "working-title", str(drafts / "working-title.md")],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "rename", "working-title", "journey-draft", "--title", "Journey Draft"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "sample"],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-metadata", "moon-archive", "--genre", "science fiction", "--audience", "adult", "--revision-notes", "Lean into the discovery mystery."],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "move-chapter", "moon-archive", "2", "1"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "delete-chapter", "moon-archive", "2"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "add-note", "moon-archive", "Underground rain", "--kind", "plot", "--content", "The moon city has weather below the dust."],

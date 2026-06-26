@@ -8,6 +8,7 @@ novel --workspace workspace starter drafts/working-title.md --template three-act
 novel --workspace workspace import-markdown working-title drafts/working-title.md
 novel --workspace workspace rename working-title first-draft --title "First Draft"
 novel --workspace workspace sample
+novel --workspace workspace set-metadata moon-archive --genre "science fiction" --audience adult --revision-notes "Lean into the discovery mystery."
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
@@ -58,6 +59,9 @@ Expected progress report:
 - Chapters: 1
 - Notes: 1
 - Words: 8
+- Characters: 43
+- Genre: science fiction
+- Audience: adult
 - Target words: 80000
 - Progress: 0%
 ```

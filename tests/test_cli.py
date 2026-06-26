@@ -17,6 +17,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "move-chapter", "first-novel", "2", "1"]) == 0
     assert main(["--workspace", str(workspace), "delete-chapter", "first-novel", "3"]) == 0
     assert main(["--workspace", str(workspace), "rename", "first-novel", "renamed-novel", "--title", "Renamed Novel"]) == 0
+    revision_file = tmp_path / "revision.md"
+    revision_file.write_text("Raise the stakes in act two.", encoding="utf-8")
+    assert main(["--workspace", str(workspace), "set-metadata", "renamed-novel", "--genre", "science fiction", "--audience", "adult", "--revision-notes-file", str(revision_file)]) == 0
     assert main(["--workspace", str(workspace), "add-note", "renamed-novel", "Ada", "--kind", "character", "--content", "Engineer protagonist"]) == 0
     assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
     note_file = tmp_path / "note.md"
@@ -38,7 +41,11 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
 
     captured = capsys.readouterr()
     assert "Renamed project: renamed-novel" in captured.out
+    assert "Updated metadata for renamed-novel" in captured.out
     assert "Renamed Novel (renamed-novel)" in captured.out
+    assert "Genre: science fiction" in captured.out
+    assert "Audience: adult" in captured.out
+    assert "Raise the stakes in act two." in captured.out
     assert "Moved chapter 2 to 1: Ending" in captured.out
     assert "Deleted chapter 3: Cut Scene" in captured.out
     assert "Added note 1: Ada [character]" in captured.out
@@ -132,6 +139,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "#compdef novel" in captured.out
     assert "Register-ArgumentCompleter" in captured.out
     assert "import-markdown" in captured.out
+    assert "set-metadata" in captured.out
     assert "update-note" in captured.out
 
 

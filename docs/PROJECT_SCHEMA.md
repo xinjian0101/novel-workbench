@@ -13,6 +13,9 @@ workspace/projects/<slug>.json
   "slug": "moon-archive",
   "title": "Moon Archive",
   "synopsis": "A historian finds a city under the lunar dust.",
+  "genre": "science fiction",
+  "audience": "adult",
+  "revision_notes": "Tighten the midpoint.",
   "target_words": 80000,
   "chapters": [],
   "notes": [],
@@ -26,6 +29,9 @@ Required fields:
 - `slug`: lowercase letters, numbers, and single hyphens
 - `title`: non-empty, 120 characters or fewer
 - `synopsis`: string
+- `genre`: string, 240 characters or fewer
+- `audience`: string, 240 characters or fewer
+- `revision_notes`: string
 - `target_words`: positive integer or `null`
 - `chapters`: array of chapter objects
 - `notes`: array of note objects
@@ -34,7 +40,7 @@ Required fields:
 
 The file name should match the project slug.
 
-Older project files without `target_words` or `notes` still load; Novel Workbench treats missing `target_words` as `null` and missing `notes` as an empty list.
+Older project files without `genre`, `audience`, `revision_notes`, `target_words`, or `notes` still load. Novel Workbench treats missing text metadata as empty strings, missing `target_words` as `null`, and missing `notes` as an empty list.
 
 ## Chapter Object
 
