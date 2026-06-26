@@ -15,11 +15,13 @@ Chapters: 2
 Notes: 0
 Words: 15
 Target words: 80000
+Remaining words: 79985
 Progress: 0%
+Average chapter words: 8
 Characters: 77
-Draft: 2
-Revising: 0
-Done: 0
+Draft: 2 chapters / 15 words
+Revising: 0 chapters / 0 words
+Done: 0 chapters / 0 words
 
 $ novel search moon-archive signal
 Chapter 1: Signal [draft]
@@ -49,8 +51,8 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Track project notes for characters, locations, plot, research, and general planning
 - Update project notes as plans evolve
 - Show project outlines
-- Report chapter, word, character, and status counts
-- Track target word count progress
+- Report chapter, word, character, status, and average chapter counts
+- Track target word count progress and remaining words
 - Search across chapter titles, manuscript content, and project notes
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown

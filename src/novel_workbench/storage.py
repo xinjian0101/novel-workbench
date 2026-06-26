@@ -564,9 +564,12 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
         lines.extend(
             [
                 f"- Target words: {stats['target_words']}",
+                f"- Remaining words: {stats['remaining_words']}",
                 f"- Progress: {stats['progress_percent']}%",
             ]
         )
+    if stats["average_chapter_words"] is not None:
+        lines.append(f"- Average chapter words: {stats['average_chapter_words']}")
     if project.revision_notes:
         lines.extend(["", "## Revision Notes", "", project.revision_notes])
     lines.extend(
@@ -574,9 +577,9 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
             "",
             "## Status",
             "",
-            f"- Draft: {stats['draft']}",
-            f"- Revising: {stats['revising']}",
-            f"- Done: {stats['done']}",
+            f"- Draft: {stats['draft']} chapters / {stats['draft_words']} words",
+            f"- Revising: {stats['revising']} chapters / {stats['revising_words']} words",
+            f"- Done: {stats['done']} chapters / {stats['done_words']} words",
             "",
             "## Chapters",
             "",
@@ -593,18 +596,30 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
 def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
     words = sum(count_words(chapter.content) for chapter in project.chapters)
     progress_percent = None
+    remaining_words = None
     if project.target_words is not None:
         progress_percent = min(round((words / project.target_words) * 100), 999)
+        remaining_words = max(project.target_words - words, 0)
+    words_by_status = {
+        status: sum(count_words(chapter.content) for chapter in project.chapters if chapter.status == status)
+        for status in VALID_STATUSES
+    }
+    average_chapter_words = None if not project.chapters else round(words / len(project.chapters))
     return {
         "chapters": len(project.chapters),
         "notes": len(project.notes),
         "words": words,
         "target_words": project.target_words,
+        "remaining_words": remaining_words,
         "progress_percent": progress_percent,
+        "average_chapter_words": average_chapter_words,
         "characters": sum(len(chapter.content) for chapter in project.chapters),
         "draft": sum(1 for chapter in project.chapters if chapter.status == "draft"),
         "revising": sum(1 for chapter in project.chapters if chapter.status == "revising"),
         "done": sum(1 for chapter in project.chapters if chapter.status == "done"),
+        "draft_words": words_by_status["draft"],
+        "revising_words": words_by_status["revising"],
+        "done_words": words_by_status["done"],
     }
 
 

@@ -58,7 +58,12 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Notes: 1" in captured.out
     assert "Words: 2" in captured.out
     assert "Target words: 10" in captured.out
+    assert "Remaining words: 8" in captured.out
     assert "Progress: 20%" in captured.out
+    assert "Average chapter words: 1" in captured.out
+    assert "Draft: 2 chapters / 2 words" in captured.out
+    assert "Revising: 0 chapters / 0 words" in captured.out
+    assert "Done: 0 chapters / 0 words" in captured.out
     assert "Chapter 2: Opening [draft]" in captured.out
     assert export_path.exists()
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")

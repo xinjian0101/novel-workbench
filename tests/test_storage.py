@@ -260,13 +260,15 @@ def test_export_markdown_progress_template(tmp_path: Path) -> None:
         "- Genre: mystery\n"
         "- Audience: young adult\n"
         "- Target words: 10\n"
-        "- Progress: 70%\n\n"
+        "- Remaining words: 3\n"
+        "- Progress: 70%\n"
+        "- Average chapter words: 4\n\n"
         "## Revision Notes\n\n"
         "Make the clue trail fair.\n\n"
         "## Status\n\n"
-        "- Draft: 0\n"
-        "- Revising: 1\n"
-        "- Done: 1\n\n"
+        "- Draft: 0 chapters / 0 words\n"
+        "- Revising: 1 chapters / 4 words\n"
+        "- Done: 1 chapters / 3 words\n\n"
         "## Chapters\n\n"
         "| # | Title | Status | Words |\n"
         "|---:|---|---|---:|\n"
@@ -294,11 +296,16 @@ def test_project_stats_count_progress(tmp_path: Path) -> None:
         "notes": 0,
         "words": 7,
         "target_words": None,
+        "remaining_words": None,
         "progress_percent": None,
+        "average_chapter_words": 4,
         "characters": 40,
         "draft": 0,
         "revising": 1,
         "done": 1,
+        "draft_words": 0,
+        "revising_words": 4,
+        "done_words": 3,
     }
 
 
@@ -313,7 +320,9 @@ def test_project_stats_show_target_progress(tmp_path: Path) -> None:
     assert stats["words"] == 3
     assert stats["notes"] == 0
     assert stats["target_words"] == 10
+    assert stats["remaining_words"] == 7
     assert stats["progress_percent"] == 30
+    assert stats["average_chapter_words"] == 3
 
 
 def test_set_target_words_validates_positive_values(tmp_path: Path) -> None:

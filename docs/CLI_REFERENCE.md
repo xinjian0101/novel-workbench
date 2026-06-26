@@ -120,7 +120,7 @@ novel --workspace workspace show moon-archive
 
 ## `novel stats`
 
-Show chapter, note, word, target, progress, character, and status counts.
+Show chapter, note, word, target, remaining word, average chapter, character, and status counts.
 
 ```powershell
 novel --workspace workspace stats moon-archive
@@ -262,7 +262,7 @@ Templates:
 
 - `default`: plain manuscript Markdown.
 - `frontmatter`: YAML front matter followed by the default Markdown body.
-- `progress`: shareable project progress report with overview, status counts, and a chapter table.
+- `progress`: shareable project progress report with overview, remaining words, status word counts, and a chapter table.
 
 ## `novel backup`
 

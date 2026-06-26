@@ -30,11 +30,13 @@ Chapters: 1
 Notes: 1
 Words: 8
 Target words: 80000
+Remaining words: 79992
 Progress: 0%
+Average chapter words: 8
 Characters: 43
-Draft: 1
-Revising: 0
-Done: 0
+Draft: 1 chapters / 8 words
+Revising: 0 chapters / 0 words
+Done: 0 chapters / 0 words
 ```
 
 Expected export:
@@ -63,7 +65,9 @@ Expected progress report:
 - Genre: science fiction
 - Audience: adult
 - Target words: 80000
+- Remaining words: 79992
 - Progress: 0%
+- Average chapter words: 8
 ```
 
 Importing from Markdown:

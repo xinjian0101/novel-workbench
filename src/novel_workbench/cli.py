@@ -278,11 +278,14 @@ def run(args: argparse.Namespace) -> int:
         print(f"Words: {stats['words']}")
         if stats["target_words"] is not None:
             print(f"Target words: {stats['target_words']}")
+            print(f"Remaining words: {stats['remaining_words']}")
             print(f"Progress: {stats['progress_percent']}%")
+        if stats["average_chapter_words"] is not None:
+            print(f"Average chapter words: {stats['average_chapter_words']}")
         print(f"Characters: {stats['characters']}")
-        print(f"Draft: {stats['draft']}")
-        print(f"Revising: {stats['revising']}")
-        print(f"Done: {stats['done']}")
+        print(f"Draft: {stats['draft']} chapters / {stats['draft_words']} words")
+        print(f"Revising: {stats['revising']} chapters / {stats['revising_words']} words")
+        print(f"Done: {stats['done']} chapters / {stats['done_words']} words")
         return 0
     if args.command == "set-metadata":
         if args.revision_notes is not None and args.revision_notes_file is not None:
