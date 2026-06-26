@@ -24,6 +24,7 @@ COMPLETION_COMMANDS = (
     "clear-target",
     "add-note",
     "list-notes",
+    "update-note",
     "delete-note",
     "search",
     "add-chapter",
@@ -135,11 +136,19 @@ def build_parser() -> argparse.ArgumentParser:
     list_notes.add_argument("slug")
     list_notes.add_argument("--kind", choices=sorted(VALID_NOTE_KINDS), help="Filter by note kind.")
 
+    update_note = subparsers.add_parser("update-note", help="Update a project note.")
+    update_note.add_argument("slug")
+    update_note.add_argument("id", type=int)
+    update_note.add_argument("--title")
+    update_note.add_argument("--content")
+    update_note.add_argument("--content-file", type=Path)
+    update_note.add_argument("--kind", choices=sorted(VALID_NOTE_KINDS))
+
     delete_note = subparsers.add_parser("delete-note", help="Delete a project note.")
     delete_note.add_argument("slug")
     delete_note.add_argument("id", type=int)
 
-    search = subparsers.add_parser("search", help="Search chapter titles and content.")
+    search = subparsers.add_parser("search", help="Search chapters and project notes.")
     search.add_argument("slug")
     search.add_argument("query")
 
@@ -282,6 +291,15 @@ def run(args: argparse.Namespace) -> int:
             print(f"{note.id}. {note.title} [{note.kind}]")
             if note.content:
                 print(f"   {note.content}")
+        return 0
+    if args.command == "update-note":
+        if args.content is not None and args.content_file is not None:
+            raise StorageError("Use either --content or --content-file, not both.")
+        content = args.content
+        if args.content_file is not None:
+            content = args.content_file.read_text(encoding="utf-8")
+        note = store.update_note(args.slug, args.id, title=args.title, content=content, kind=args.kind)
+        print(f"Updated note {note.id}: {note.title} [{note.kind}]")
         return 0
     if args.command == "delete-note":
         note = store.delete_note(args.slug, args.id)

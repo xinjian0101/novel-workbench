@@ -11,6 +11,7 @@ novel --workspace workspace sample
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
+novel --workspace workspace update-note moon-archive 1 --kind research --content "The lower city has sealed storm drains."
 novel --workspace workspace list-notes moon-archive
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive

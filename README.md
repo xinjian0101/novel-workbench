@@ -22,7 +22,7 @@ Revising: 0
 Done: 0
 
 $ novel search moon-archive signal
-1. Signal [draft]
+Chapter 1: Signal [draft]
    The first signal arrived at 03:17.
 ```
 
@@ -46,6 +46,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Delete chapters and automatically close numbering gaps
 - Update chapter title, content, and status
 - Track project notes for characters, locations, plot, research, and general planning
+- Update project notes as plans evolve
 - Show project outlines
 - Report chapter, word, character, and status counts
 - Track target word count progress
@@ -75,6 +76,7 @@ novel --workspace workspace sample
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
+novel --workspace workspace update-note moon-archive 1 --kind research --content "The lower city has sealed storm drains."
 novel --workspace workspace list-notes moon-archive
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive
@@ -110,6 +112,7 @@ novel set-target <slug> <words>
 novel clear-target <slug>
 novel add-note <slug> <title> [--kind general|character|location|plot|research] [--content "..."] [--content-file path]
 novel list-notes <slug> [--kind general|character|location|plot|research]
+novel update-note <slug> <id> [--title "..."] [--kind general|character|location|plot|research] [--content "..."] [--content-file path]
 novel delete-note <slug> <id>
 novel search <slug> <query>
 novel add-chapter <slug> <title> [--content "..."] [--status draft|revising|done]

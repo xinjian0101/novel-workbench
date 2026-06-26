@@ -374,6 +374,34 @@ class ProjectStore:
         self._write_project(project)
         return note
 
+    def update_note(
+        self,
+        slug: str,
+        note_id: int,
+        *,
+        title: str | None = None,
+        content: str | None = None,
+        kind: str | None = None,
+    ) -> ProjectNote:
+        if note_id < 1:
+            raise StorageError("Note id must be greater than zero.")
+        if title is None and content is None and kind is None:
+            raise StorageError("Provide at least one note field to update.")
+        project = self.get_project(slug)
+        note = next((item for item in project.notes if item.id == note_id), None)
+        if note is None:
+            raise NotFoundError(f"Note {note_id} does not exist in project '{project.slug}'.")
+        if title is not None:
+            note.title = validate_title(title)
+        if content is not None:
+            note.content = content
+        if kind is not None:
+            note.kind = validate_note_kind(kind)
+        note.updated_at = utc_now_iso()
+        project.updated_at = note.updated_at
+        self._write_project(project)
+        return note
+
     def set_target_words(self, slug: str, target_words: int | None) -> NovelProject:
         project = self.get_project(slug)
         project.target_words = None if target_words is None else validate_target_words(target_words)

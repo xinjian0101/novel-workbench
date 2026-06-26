@@ -349,16 +349,45 @@ def test_add_list_and_delete_notes(tmp_path: Path) -> None:
     assert store.project_stats("first-novel")["notes"] == 1
 
 
+def test_update_note_changes_fields(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    note = store.add_note("first-novel", "Ada", "Engineer protagonist", "character")
+
+    updated = store.update_note(
+        "first-novel",
+        note.id,
+        title="Ada Byron",
+        content="Lead systems engineer",
+        kind="research",
+    )
+    loaded = store.list_notes("first-novel")[0]
+
+    assert updated.title == "Ada Byron"
+    assert updated.content == "Lead systems engineer"
+    assert updated.kind == "research"
+    assert loaded.title == "Ada Byron"
+    assert loaded.content == "Lead systems engineer"
+    assert loaded.kind == "research"
+
+
 def test_notes_validate_kind_and_id(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")
 
     with pytest.raises(StorageError):
         store.add_note("first-novel", "Bad", kind="unknown")
+    note = store.add_note("first-novel", "Ada")
+    with pytest.raises(StorageError):
+        store.update_note("first-novel", note.id)
+    with pytest.raises(StorageError):
+        store.update_note("first-novel", 0, title="Bad")
+    with pytest.raises(StorageError):
+        store.update_note("first-novel", note.id, kind="unknown")
     with pytest.raises(StorageError):
         store.delete_note("first-novel", 0)
     with pytest.raises(NotFoundError):
-        store.delete_note("first-novel", 1)
+        store.delete_note("first-novel", 99)
 
 
 def test_parse_markdown_chapters() -> None:

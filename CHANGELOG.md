@@ -9,6 +9,7 @@
 - Added chapter moving with automatic renumbering.
 - Added chapter deletion with automatic renumbering.
 - Added project notes for characters, locations, plot, research, and general planning.
+- Added project note updates for revising note titles, kinds, and content.
 - Added progress statistics.
 - Added Markdown manuscript import.
 - Added manuscript search.

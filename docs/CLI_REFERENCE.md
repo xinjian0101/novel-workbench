@@ -169,6 +169,17 @@ novel --workspace workspace list-notes moon-archive
 novel --workspace workspace list-notes moon-archive --kind character
 ```
 
+## `novel update-note`
+
+Update a project note title, kind, or content.
+
+```powershell
+novel --workspace workspace update-note moon-archive 1 --title "Ada Byron"
+novel --workspace workspace update-note moon-archive 1 --kind research --content-file notes/research.md
+```
+
+Use either `--content` or `--content-file`, not both. Provide at least one field to update.
+
 ## `novel delete-note`
 
 Delete a project note by id.

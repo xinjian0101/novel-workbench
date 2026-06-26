@@ -29,6 +29,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "move-chapter", "moon-archive", "2", "1"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "delete-chapter", "moon-archive", "2"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "add-note", "moon-archive", "Underground rain", "--kind", "plot", "--content", "The moon city has weather below the dust."],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "update-note", "moon-archive", "1", "--kind", "research", "--content", "The lower city has sealed storm drains."],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "list-notes", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-target", "moon-archive", "80000"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "show", "moon-archive"],
