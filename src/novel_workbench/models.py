@@ -109,6 +109,37 @@ class ProjectNote:
 
 
 @dataclass(slots=True)
+class ProgressEntry:
+    id: int
+    date: str
+    words: int
+    note: str = ""
+    created_at: str = field(default_factory=utc_now_iso)
+    updated_at: str = field(default_factory=utc_now_iso)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "date": self.date,
+            "words": self.words,
+            "note": self.note,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ProgressEntry":
+        return cls(
+            id=int(data["id"]),
+            date=str(data["date"]),
+            words=int(data["words"]),
+            note=str(data.get("note", "")),
+            created_at=str(data.get("created_at", utc_now_iso())),
+            updated_at=str(data.get("updated_at", utc_now_iso())),
+        )
+
+
+@dataclass(slots=True)
 class NovelProject:
     slug: str
     title: str
@@ -119,6 +150,7 @@ class NovelProject:
     target_words: int | None = None
     chapters: list[Chapter] = field(default_factory=list)
     notes: list[ProjectNote] = field(default_factory=list)
+    progress: list[ProgressEntry] = field(default_factory=list)
     created_at: str = field(default_factory=utc_now_iso)
     updated_at: str = field(default_factory=utc_now_iso)
 
@@ -133,6 +165,7 @@ class NovelProject:
             "target_words": self.target_words,
             "chapters": [chapter.to_dict() for chapter in self.chapters],
             "notes": [note.to_dict() for note in self.notes],
+            "progress": [entry.to_dict() for entry in self.progress],
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
@@ -149,6 +182,7 @@ class NovelProject:
             target_words=_target_words_from_dict(data),
             chapters=[Chapter.from_dict(item) for item in data.get("chapters", [])],
             notes=[ProjectNote.from_dict(item) for item in data.get("notes", [])],
+            progress=[ProgressEntry.from_dict(item) for item in data.get("progress", [])],
             created_at=str(data.get("created_at", utc_now_iso())),
             updated_at=str(data.get("updated_at", utc_now_iso())),
         )

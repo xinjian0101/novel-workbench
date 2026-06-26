@@ -19,6 +19,7 @@ workspace/projects/<slug>.json
   "target_words": 80000,
   "chapters": [],
   "notes": [],
+  "progress": [],
   "created_at": "2026-06-25T12:00:00+00:00",
   "updated_at": "2026-06-25T12:00:00+00:00"
 }
@@ -35,12 +36,13 @@ Required fields:
 - `target_words`: positive integer or `null`
 - `chapters`: array of chapter objects
 - `notes`: array of note objects
+- `progress`: array of progress entry objects
 - `created_at`: ISO timestamp
 - `updated_at`: ISO timestamp
 
 The file name should match the project slug.
 
-Older project files without `genre`, `audience`, `revision_notes`, `target_words`, or `notes` still load. Novel Workbench treats missing text metadata as empty strings, missing `target_words` as `null`, and missing `notes` as an empty list.
+Older project files without `genre`, `audience`, `revision_notes`, `target_words`, `notes`, or `progress` still load. Novel Workbench treats missing text metadata as empty strings, missing `target_words` as `null`, and missing `notes` or `progress` as an empty list.
 
 ## Chapter Object
 
@@ -118,6 +120,28 @@ Required fields:
 - `created_at`: ISO timestamp
 - `updated_at`: ISO timestamp
 
+## Progress Entry Object
+
+```json
+{
+  "id": 1,
+  "date": "2026-06-26",
+  "words": 1200,
+  "note": "Drafted the descent sequence.",
+  "created_at": "2026-06-26T12:00:00+00:00",
+  "updated_at": "2026-06-26T12:00:00+00:00"
+}
+```
+
+Required fields:
+
+- `id`: one-based progress id unique within the project
+- `date`: writing date in `YYYY-MM-DD` format
+- `words`: positive integer
+- `note`: string
+- `created_at`: ISO timestamp
+- `updated_at`: ISO timestamp
+
 ## Validation
 
 Run:
@@ -126,6 +150,6 @@ Run:
 novel --workspace workspace doctor
 ```
 
-The doctor command validates project JSON files, reports JSON syntax line and column numbers, flags invalid UTF-8, missing required fields, invalid slugs, empty or oversized titles, invalid statuses, invalid note kinds, duplicate note ids, invalid target word counts, file-name-to-slug mismatches, chapter numbering problems, and scene numbering problems, then prints repair hints for known failures.
+The doctor command validates project JSON files, reports JSON syntax line and column numbers, flags invalid UTF-8, missing required fields, invalid slugs, empty or oversized titles, invalid statuses, invalid note kinds, duplicate note ids, invalid progress dates or word counts, invalid target word counts, file-name-to-slug mismatches, chapter numbering problems, and scene numbering problems, then prints repair hints for known failures.
 
 Backup files use the same schema as project files. `novel restore-backup` validates a backup before restoring it into `workspace/projects/`.

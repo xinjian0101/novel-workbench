@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from datetime import date
 from pathlib import Path
 
 from . import __version__
@@ -28,6 +29,8 @@ COMPLETION_COMMANDS = (
     "list-notes",
     "update-note",
     "delete-note",
+    "add-progress",
+    "list-progress",
     "search",
     "add-chapter",
     "update-chapter",
@@ -175,6 +178,15 @@ def build_parser() -> argparse.ArgumentParser:
     delete_note = subparsers.add_parser("delete-note", help="Delete a project note.")
     delete_note.add_argument("slug")
     delete_note.add_argument("id", type=int)
+
+    add_progress = subparsers.add_parser("add-progress", help="Log words written on a date.")
+    add_progress.add_argument("slug")
+    add_progress.add_argument("words", type=int)
+    add_progress.add_argument("--date", help="Writing date in YYYY-MM-DD format. Defaults to today.")
+    add_progress.add_argument("--note", default="", help="Optional progress note.")
+
+    list_progress = subparsers.add_parser("list-progress", help="List writing progress entries.")
+    list_progress.add_argument("slug")
 
     search = subparsers.add_parser("search", help="Search chapters and project notes.")
     search.add_argument("slug")
@@ -335,6 +347,12 @@ def run(args: argparse.Namespace) -> int:
         print(f"Chapters: {stats['chapters']}")
         print(f"Notes: {stats['notes']}")
         print(f"Words: {stats['words']}")
+        print(f"Logged words: {stats['logged_words']}")
+        print(f"Writing days: {stats['writing_days']}")
+        if stats["average_logged_words"] is not None:
+            print(f"Average logged words: {stats['average_logged_words']}")
+        if stats["best_day_words"] is not None:
+            print(f"Best writing day: {stats['best_day_words']} words")
         if stats["target_words"] is not None:
             print(f"Target words: {stats['target_words']}")
             print(f"Remaining words: {stats['remaining_words']}")
@@ -399,6 +417,22 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "delete-note":
         note = store.delete_note(args.slug, args.id)
         print(f"Deleted note {note.id}: {note.title}")
+        return 0
+    if args.command == "add-progress":
+        entry_date = args.date or date.today().isoformat()
+        entry = store.add_progress(args.slug, args.words, entry_date, args.note)
+        print(f"Logged progress {entry.id}: {entry.date} +{entry.words} words")
+        return 0
+    if args.command == "list-progress":
+        entries = store.list_progress(args.slug)
+        if not entries:
+            print("No progress entries found.")
+            return 0
+        for entry in entries:
+            line = f"{entry.id}. {entry.date}: +{entry.words} words"
+            if entry.note:
+                line = f"{line} - {entry.note}"
+            print(line)
         return 0
     if args.command == "search":
         results = store.search(args.slug, args.query)

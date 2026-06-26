@@ -30,6 +30,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "set-metadata", "renamed-novel", "--genre", "science fiction", "--audience", "adult", "--revision-notes-file", str(revision_file)]) == 0
     assert main(["--workspace", str(workspace), "add-note", "renamed-novel", "Ada", "--kind", "character", "--content", "Engineer protagonist"]) == 0
     assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "add-progress", "renamed-novel", "450", "--date", "2026-06-25", "--note", "Drafted the new opening."]) == 0
+    assert main(["--workspace", str(workspace), "list-progress", "renamed-novel"]) == 0
     note_file = tmp_path / "note.md"
     note_file.write_text("Updated protagonist notes", encoding="utf-8")
     assert main(["--workspace", str(workspace), "update-note", "renamed-novel", "1", "--title", "Ada Byron", "--kind", "research", "--content-file", str(note_file)]) == 0
@@ -65,6 +67,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Moved chapter 2 to 1: Ending" in captured.out
     assert "Deleted chapter 3: Cut Scene" in captured.out
     assert "Added note 1: Ada [character]" in captured.out
+    assert "Logged progress 1: 2026-06-25 +450 words" in captured.out
+    assert "1. 2026-06-25: +450 words - Drafted the new opening." in captured.out
     assert "Added scene 1.1: First Image" in captured.out
     assert "Updated scene 1.1: First Image" in captured.out
     assert "1.1. First Image [revising]" in captured.out
@@ -77,6 +81,10 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Workspace healthy." in captured.out
     assert "Notes: 1" in captured.out
     assert "Words: 2" in captured.out
+    assert "Logged words: 450" in captured.out
+    assert "Writing days: 1" in captured.out
+    assert "Average logged words: 450" in captured.out
+    assert "Best writing day: 450 words" in captured.out
     assert "Target words: 10" in captured.out
     assert "Remaining words: 8" in captured.out
     assert "Progress: 20%" in captured.out
@@ -181,6 +189,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "import-markdown" in captured.out
     assert "set-metadata" in captured.out
     assert "update-note" in captured.out
+    assert "add-progress" in captured.out
 
 
 def test_demo_script_runs(capsys) -> None:

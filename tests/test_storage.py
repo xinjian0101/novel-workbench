@@ -308,6 +308,8 @@ def test_export_markdown_progress_template(tmp_path: Path) -> None:
         "- Notes: 0\n"
         "- Words: 7\n"
         "- Characters: 40\n"
+        "- Logged writing days: 0\n"
+        "- Logged words: 0\n"
         "- Genre: mystery\n"
         "- Audience: young adult\n"
         "- Target words: 10\n"
@@ -387,11 +389,18 @@ def test_project_stats_count_progress(tmp_path: Path) -> None:
     store.create_project("first-novel", "First Novel")
     store.add_chapter("first-novel", "Opening", "The story begins.", "done")
     store.add_chapter("first-novel", "Middle", "A second scene unfolds.", "revising")
+    store.add_progress("first-novel", 500, "2026-06-25", "Drafted the opening.")
+    store.add_progress("first-novel", 300, "2026-06-25")
+    store.add_progress("first-novel", 700, "2026-06-26", "Expanded the middle.")
 
     assert store.project_stats("first-novel") == {
         "chapters": 2,
         "notes": 0,
         "words": 7,
+        "logged_words": 1500,
+        "writing_days": 2,
+        "average_logged_words": 750,
+        "best_day_words": 800,
         "target_words": None,
         "remaining_words": None,
         "progress_percent": None,
@@ -416,6 +425,10 @@ def test_project_stats_show_target_progress(tmp_path: Path) -> None:
 
     assert stats["words"] == 3
     assert stats["notes"] == 0
+    assert stats["logged_words"] == 0
+    assert stats["writing_days"] == 0
+    assert stats["average_logged_words"] is None
+    assert stats["best_day_words"] is None
     assert stats["target_words"] == 10
     assert stats["remaining_words"] == 7
     assert stats["progress_percent"] == 30
@@ -428,6 +441,26 @@ def test_set_target_words_validates_positive_values(tmp_path: Path) -> None:
 
     with pytest.raises(StorageError):
         store.set_target_words("first-novel", 0)
+
+
+def test_progress_entries_are_stored_sorted_and_validated(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    second = store.add_progress("first-novel", 200, "2026-06-26", "Second session.")
+    first = store.add_progress("first-novel", 100, "2026-06-25", "First session.")
+
+    assert second.id == 1
+    assert first.id == 2
+    assert [(entry.date, entry.words, entry.note) for entry in store.list_progress("first-novel")] == [
+        ("2026-06-25", 100, "First session."),
+        ("2026-06-26", 200, "Second session."),
+    ]
+
+    with pytest.raises(StorageError, match="greater than zero"):
+        store.add_progress("first-novel", 0, "2026-06-27")
+    with pytest.raises(StorageError, match="YYYY-MM-DD"):
+        store.add_progress("first-novel", 100, "06/27/2026")
 
 
 def test_clear_target_words(tmp_path: Path) -> None:
@@ -489,6 +522,7 @@ def test_existing_project_json_without_target_words_still_loads(tmp_path: Path) 
 
     assert project.target_words is None
     assert project.notes == []
+    assert project.progress == []
     assert project.genre == ""
     assert project.audience == ""
     assert project.revision_notes == ""
@@ -903,3 +937,18 @@ def test_check_workspace_reports_scene_number_hint(tmp_path: Path) -> None:
     assert report["ok"] == 0
     assert "non-sequential scene numbers" in report["errors"][0]["error"]
     assert "Renumber scenes" in report["errors"][0]["hint"]
+
+
+def test_check_workspace_reports_invalid_progress_entry(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_progress("first-novel", 100, "2026-06-25")
+    path = tmp_path / "projects" / "first-novel.json"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(text.replace('"words": 100', '"words": 0'), encoding="utf-8")
+
+    report = store.check_workspace()
+
+    assert report["checked"] == 1
+    assert report["ok"] == 0
+    assert "Progress words must be greater than zero" in report["errors"][0]["error"]

@@ -13,6 +13,7 @@
 - Added chapter deletion with automatic renumbering.
 - Added project notes for characters, locations, plot, research, and general planning.
 - Added project note updates for revising note titles, kinds, and content.
+- Added writing progress logs with dated word-count entries and summary statistics.
 - Added progress statistics.
 - Added richer progress analytics with status word counts, average chapter words, and remaining target words.
 - Added Markdown manuscript import.

@@ -52,6 +52,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Update chapter title, content, and status
 - Track project notes for characters, locations, plot, research, and general planning
 - Update project notes as plans evolve
+- Log writing sessions by date and words written
 - Show structured project outlines
 - Report chapter, word, character, status, and average chapter counts
 - Track target word count progress and remaining words
@@ -91,6 +92,8 @@ novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace add-note moon-archive "Underground rain" --kind plot --content "The moon city has weather below the dust."
 novel --workspace workspace update-note moon-archive 1 --kind research --content "The lower city has sealed storm drains."
 novel --workspace workspace list-notes moon-archive
+novel --workspace workspace add-progress moon-archive 1200 --date 2026-06-26 --note "Drafted the descent sequence."
+novel --workspace workspace list-progress moon-archive
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
@@ -130,6 +133,8 @@ novel add-note <slug> <title> [--kind general|character|location|plot|research] 
 novel list-notes <slug> [--kind general|character|location|plot|research]
 novel update-note <slug> <id> [--title "..."] [--kind general|character|location|plot|research] [--content "..."] [--content-file path]
 novel delete-note <slug> <id>
+novel add-progress <slug> <words> [--date YYYY-MM-DD] [--note "..."]
+novel list-progress <slug>
 novel search <slug> <query>
 novel add-chapter <slug> <title> [--content "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--summary "..."] [--summary-file path] [--status draft|revising|done]

@@ -128,7 +128,7 @@ novel --workspace workspace outline moon-archive
 
 ## `novel stats`
 
-Show chapter, note, word, target, remaining word, average chapter, character, and status counts.
+Show chapter, note, word, writing log, target, remaining word, average chapter, character, and status counts.
 
 ```powershell
 novel --workspace workspace stats moon-archive
@@ -213,6 +213,25 @@ novel --workspace workspace delete-note moon-archive 1
 ```
 
 The command writes a pre-delete safety snapshot under `workspace/backups/` before removing the note.
+
+## `novel add-progress`
+
+Log words written on a specific date.
+
+```powershell
+novel --workspace workspace add-progress moon-archive 1200
+novel --workspace workspace add-progress moon-archive 1200 --date 2026-06-26 --note "Drafted the descent sequence."
+```
+
+Dates use `YYYY-MM-DD`. If `--date` is omitted, the command uses the current local date.
+
+## `novel list-progress`
+
+List writing progress entries sorted by date.
+
+```powershell
+novel --workspace workspace list-progress moon-archive
+```
 
 ## `novel search`
 
@@ -326,11 +345,11 @@ Templates:
 
 - `default`: plain manuscript Markdown.
 - `frontmatter`: YAML front matter followed by the default Markdown body.
-- `progress`: shareable project progress report with overview, remaining words, status word counts, and a chapter table.
+- `progress`: shareable project progress report with overview, writing log totals, remaining words, status word counts, a chapter table, and progress log entries.
 
 Custom template files use Python-style named fields. Supported fields are:
 
-`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `words`, `remaining_words`, `progress_percent`, `average_chapter_words`, `chapters_markdown`, `chapter_table`, and `status_summary`.
+`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `words`, `logged_words`, `writing_days`, `remaining_words`, `progress_percent`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `chapter_table`, `status_summary`, and `progress_log`.
 
 Use either `--template` or `--template-file`, not both.
 Files passed with `--template-file` must be readable UTF-8 text.

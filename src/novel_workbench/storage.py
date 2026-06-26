@@ -3,10 +3,10 @@ from __future__ import annotations
 import json
 import re
 import shutil
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
-from .models import Chapter, NovelProject, ProjectNote, Scene, utc_now_iso
+from .models import Chapter, NovelProject, ProgressEntry, ProjectNote, Scene, utc_now_iso
 
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
@@ -122,6 +122,21 @@ def validate_target_words(target_words: int) -> int:
     if target_words < 1:
         raise StorageError("Target word count must be greater than zero.")
     return target_words
+
+
+def validate_progress_words(words: int) -> int:
+    if words < 1:
+        raise StorageError("Progress words must be greater than zero.")
+    return words
+
+
+def validate_progress_date(value: str) -> str:
+    normalized = value.strip()
+    try:
+        date.fromisoformat(normalized)
+    except ValueError as exc:
+        raise StorageError("Progress date must use YYYY-MM-DD format.") from exc
+    return normalized
 
 
 def validate_optional_metadata(value: str, field_name: str) -> str:
@@ -495,6 +510,24 @@ class ProjectStore:
         self._write_project(project)
         return note
 
+    def add_progress(self, slug: str, words: int, entry_date: str, note: str = "") -> ProgressEntry:
+        project = self.get_project(slug)
+        next_id = max((entry.id for entry in project.progress), default=0) + 1
+        entry = ProgressEntry(
+            id=next_id,
+            date=validate_progress_date(entry_date),
+            words=validate_progress_words(words),
+            note=note.strip(),
+        )
+        project.progress.append(entry)
+        project.updated_at = utc_now_iso()
+        self._write_project(project)
+        return entry
+
+    def list_progress(self, slug: str) -> list[ProgressEntry]:
+        project = self.get_project(slug)
+        return sorted(project.progress, key=lambda item: (item.date, item.id))
+
     def set_target_words(self, slug: str, target_words: int | None) -> NovelProject:
         project = self.get_project(slug)
         project.target_words = None if target_words is None else validate_target_words(target_words)
@@ -716,8 +749,14 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
             f"- Notes: {stats['notes']}",
             f"- Words: {stats['words']}",
             f"- Characters: {stats['characters']}",
+            f"- Logged writing days: {stats['writing_days']}",
+            f"- Logged words: {stats['logged_words']}",
         ]
     )
+    if stats["average_logged_words"] is not None:
+        lines.append(f"- Average logged words: {stats['average_logged_words']}")
+    if stats["best_day_words"] is not None:
+        lines.append(f"- Best writing day: {stats['best_day_words']} words")
     if project.genre:
         lines.append(f"- Genre: {project.genre}")
     if project.audience:
@@ -752,6 +791,19 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
     for chapter in sorted(project.chapters, key=lambda item: item.number):
         title = chapter.title.replace("|", "\\|")
         lines.append(f"| {chapter.number} | {title} | {chapter.status} | {count_words(chapter.content)} |")
+    if project.progress:
+        lines.extend(
+            [
+                "",
+                "## Progress Log",
+                "",
+                "| Date | Words | Note |",
+                "|---|---:|---|",
+            ]
+        )
+        for entry in sorted(project.progress, key=lambda item: (item.date, item.id)):
+            note = entry.note.replace("|", "\\|")
+            lines.append(f"| {entry.date} | {entry.words} | {note} |")
     return lines
 
 
@@ -766,9 +818,13 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
         "revision_notes": project.revision_notes,
         "target_words": "" if project.target_words is None else str(project.target_words),
         "words": str(stats["words"]),
+        "logged_words": str(stats["logged_words"]),
+        "writing_days": str(stats["writing_days"]),
         "remaining_words": "" if stats["remaining_words"] is None else str(stats["remaining_words"]),
         "progress_percent": "" if stats["progress_percent"] is None else str(stats["progress_percent"]),
         "average_chapter_words": "" if stats["average_chapter_words"] is None else str(stats["average_chapter_words"]),
+        "average_logged_words": "" if stats["average_logged_words"] is None else str(stats["average_logged_words"]),
+        "best_day_words": "" if stats["best_day_words"] is None else str(stats["best_day_words"]),
         "chapters_markdown": "\n".join(_default_export_lines(project)).strip(),
         "chapter_table": "\n".join(_chapter_table_lines(project)),
         "status_summary": "\n".join(
@@ -778,6 +834,7 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
                 f"- Done: {stats['done']} chapters / {stats['done_words']} words",
             ]
         ),
+        "progress_log": "\n".join(_progress_log_lines(project)),
     }
     try:
         rendered = template.format(**values)
@@ -797,6 +854,14 @@ def _chapter_table_lines(project: NovelProject) -> list[str]:
     return lines
 
 
+def _progress_log_lines(project: NovelProject) -> list[str]:
+    lines = ["| Date | Words | Note |", "|---|---:|---|"]
+    for entry in sorted(project.progress, key=lambda item: (item.date, item.id)):
+        note = entry.note.replace("|", "\\|")
+        lines.append(f"| {entry.date} | {entry.words} | {note} |")
+    return lines
+
+
 def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
     words = sum(count_words(chapter.content) for chapter in project.chapters)
     progress_percent = None
@@ -808,11 +873,24 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
         status: sum(count_words(chapter.content) for chapter in project.chapters if chapter.status == status)
         for status in VALID_STATUSES
     }
+    logged_words = sum(entry.words for entry in project.progress)
+    writing_days = len({entry.date for entry in project.progress})
     average_chapter_words = None if not project.chapters else round(words / len(project.chapters))
+    average_logged_words = None if writing_days == 0 else round(logged_words / writing_days)
+    best_day_words = None
+    if project.progress:
+        words_by_date: dict[str, int] = {}
+        for entry in project.progress:
+            words_by_date[entry.date] = words_by_date.get(entry.date, 0) + entry.words
+        best_day_words = max(words_by_date.values())
     return {
         "chapters": len(project.chapters),
         "notes": len(project.notes),
         "words": words,
+        "logged_words": logged_words,
+        "writing_days": writing_days,
+        "average_logged_words": average_logged_words,
+        "best_day_words": best_day_words,
         "target_words": project.target_words,
         "remaining_words": remaining_words,
         "progress_percent": progress_percent,
@@ -904,6 +982,7 @@ def _validate_project_fields(project: NovelProject) -> None:
     if project.target_words is not None:
         validate_target_words(project.target_words)
     note_ids: set[int] = set()
+    progress_ids: set[int] = set()
     for chapter in project.chapters:
         if chapter.number < 1:
             raise StorageError("Chapter number must be greater than zero.")
@@ -922,6 +1001,14 @@ def _validate_project_fields(project: NovelProject) -> None:
         note_ids.add(note.id)
         validate_title(note.title)
         validate_note_kind(note.kind)
+    for entry in project.progress:
+        if entry.id < 1:
+            raise StorageError("Progress id must be greater than zero.")
+        if entry.id in progress_ids:
+            raise StorageError(f"Progress id {entry.id} is duplicated.")
+        progress_ids.add(entry.id)
+        validate_progress_date(entry.date)
+        validate_progress_words(entry.words)
 
 
 def _doctor_hint(error: str) -> str:
