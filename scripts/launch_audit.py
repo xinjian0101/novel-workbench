@@ -70,6 +70,8 @@ REQUIRED_TEXT = {
     ],
     "docs/GITHUB_LAUNCH.md": [
         "Pages",
+        "good first issue",
+        "help wanted",
         "python scripts/check.py",
         "python scripts/build_pages_demo.py public",
     ],
@@ -82,6 +84,8 @@ REQUIRED_TEXT = {
         "Live demo",
         "Launch posts",
         "assets/terminal-demo.svg",
+        "good first issue",
+        "help wanted",
         "Star pitch",
         "Submission checklist",
     ],
@@ -139,6 +143,14 @@ REQUIRED_TEXT = {
         "AI or Editor Handoff",
         "Static Project Demo",
         "Not a Fit",
+    ],
+    "docs/COMMUNITY.md": [
+        "Current Contributor Entry Points",
+        "https://github.com/xinjian0101/novel-workbench/issues/8",
+        "https://github.com/xinjian0101/novel-workbench/issues/9",
+        "https://github.com/xinjian0101/novel-workbench/issues/10",
+        "good first issue",
+        "help wanted",
     ],
     "pyproject.toml": [
         "Live Demo",

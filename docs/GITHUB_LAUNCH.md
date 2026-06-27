@@ -26,6 +26,7 @@ Use this checklist before making the repository public or announcing it.
 - The Pages demo builds with `python scripts/build_pages_demo.py public`.
 - The showcase assets in `docs/SHOWCASE.md` render in the README and social preview.
 - The issue forms and pull request template make first contributions easy to scope.
+- The repository has open contributor entry points, including `good first issue` and `help wanted` issues.
 - Quick Start works on a clean checkout.
 - No temporary or example-only GitHub URLs remain.
 - Security and contribution links resolve.

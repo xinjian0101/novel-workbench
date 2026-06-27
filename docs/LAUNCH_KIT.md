@@ -91,6 +91,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 - GitHub topics match `writing`, `novel`, `markdown`, `cli`, `local-first`, `author-tools`, and `python`.
 - Issues and Discussions are enabled.
 - Bug, feature, and question issue forms are available.
+- At least one open `good first issue` and one open `help wanted` issue are available.
 - The pull request template asks for `python scripts/check.py`.
 - PyPI publishing prep is documented without claiming the package is already published.
 - `python scripts/check.py` passes.
