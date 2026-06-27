@@ -1455,8 +1455,8 @@ def pitch_lines(project: NovelProject) -> list[str]:
 
     lines.extend(["", "## Share Copy", ""])
     if project.synopsis.strip():
-        descriptor = project.genre.strip() or "novel"
-        audience = f" for {project.audience.strip()}" if project.audience.strip() else ""
+        descriptor = f"{project.genre.strip()} project" if project.genre.strip() else "novel project"
+        audience = f" for {project.audience.strip()} readers" if project.audience.strip() else ""
         lines.append(f"{project.title} is a {descriptor}{audience}: {project.synopsis.strip()}")
     else:
         lines.append(f"{project.title} is ready for a sharper public pitch once synopsis, genre, and audience are set.")

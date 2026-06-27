@@ -460,6 +460,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "# Moon Archive Handoff" in captured.out
     assert "# Moon Archive Momentum" in captured.out
     assert "# Moon Archive Status Board" in captured.out
+    assert "# Moon Archive Pitch" in captured.out
     assert "# Moon Archive Review" in captured.out
     assert "# Moon Archive Revision Checklist" in captured.out
     assert "Words:" in captured.out
@@ -468,6 +469,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
     assert "moon-archive\tMoon Archive\t1\t8\t1250\t" in captured.out
     assert "moon-archive-outline.md" in captured.out
+    assert "moon-archive-pitch.md" in captured.out
     assert "Exported pack:" in captured.out
     assert "Backed up:" in captured.out
 

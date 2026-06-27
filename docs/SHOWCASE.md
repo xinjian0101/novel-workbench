@@ -29,6 +29,7 @@ Use this page as the source of truth for visual and demo assets.
 - GitHub Pages can publish a working static project dashboard.
 - The static site includes a "Try Novel Workbench" callout with the install command and `novel --workspace workspace tour --output-dir exports`.
 - The output examples show generated Markdown, handoff, context JSON, static site, and report-pack shapes.
+- The bundled terminal demo prints a project pitch and writes `moon-archive-pitch.md`, so launch reviewers can inspect share copy from one command.
 - The README and use-case guide explain who should try or star the project.
 - The FAQ answers privacy, install, import, export, and package-index questions.
 - The GitHub Discussion announcement provides a public launch thread for questions and sharing.

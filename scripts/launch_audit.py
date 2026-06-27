@@ -45,6 +45,7 @@ REQUIRED_FILES = [
     ".github/pull_request_template.md",
     "docs/MAINTAINER_GUIDE.md",
     "scripts/build_pages_demo.py",
+    "scripts/demo.py",
     "scripts/verify_public_links.py",
 ]
 
@@ -214,6 +215,7 @@ REQUIRED_TEXT = {
         "assets/terminal-demo.svg",
         "assets/social-preview.svg",
         "Try Novel Workbench",
+        "moon-archive-pitch.md",
         "scene summaries",
         "Open Graph",
         "Twitter summary metadata",
@@ -228,6 +230,7 @@ REQUIRED_TEXT = {
         "Live HTML Demo",
         "novel templates",
         "Pitch brief",
+        "moon-archive-pitch.md",
         "romance",
         "sci-fi",
         "thriller",
@@ -242,6 +245,12 @@ REQUIRED_TEXT = {
         "sitemap.xml",
         "robots.txt",
         "python scripts/check.py",
+    ],
+    "scripts/demo.py": [
+        "pitch",
+        "moon-archive-pitch.md",
+        "--template",
+        "pitch",
     ],
     "docs/FAQ.md": [
         "Does Novel Workbench upload manuscripts?",

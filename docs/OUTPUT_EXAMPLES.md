@@ -220,6 +220,8 @@ Run the bundled demo script:
 python scripts/demo.py
 ```
 
+The demo prints `# Moon Archive Pitch` and writes `moon-archive-pitch.md` alongside the other Markdown exports, so the shareable project pitch can be inspected without preparing your own manuscript first.
+
 Starter manuscript templates are available for `three-act`, `hero-journey`, `mystery`, `romance`, `sci-fi`, and `thriller` projects:
 
 ```powershell

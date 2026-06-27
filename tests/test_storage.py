@@ -377,7 +377,7 @@ def test_pitch_lines_builds_shareable_project_pitch(tmp_path: Path) -> None:
     assert "- Characters: Ada" in lines
     assert "- Locations: Moon Archive" in lines
     assert "- Next chapter: 1. Opening [draft]" in lines
-    assert "First Novel is a mystery for adult: A detective follows a signal into a flooded archive." in lines
+    assert "First Novel is a mystery project for adult readers: A detective follows a signal into a flooded archive." in lines
 
 
 def test_project_context_builds_machine_readable_agent_payload(tmp_path: Path) -> None:
@@ -949,7 +949,7 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "## Current Hook\n\n"
         "- Draft chapters are marked done; use the review report to prepare the next pitch pass.\n\n"
         "## Share Copy\n\n"
-        "First Novel is a fantasy for adult: A concise premise.\n\n"
+        "First Novel is a fantasy project for adult readers: A concise premise.\n\n"
         "# First Novel Review\n\n"
         "## Summary\n\n"
         "- Chapters: 1\n"
