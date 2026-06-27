@@ -7,6 +7,7 @@
 - Added a workspace dashboard command for comparing project progress.
 - Added Markdown export for workspace dashboard reports.
 - Added writing focus briefs for choosing the next drafting or revision move.
+- Added writing momentum reports with weekly totals and recent progress entries.
 - Added chapter status board output and export for draft, revising, and done work.
 - Added manuscript readiness review reports with author-facing findings and strengths.
 - Added project genre, audience, and revision note metadata.

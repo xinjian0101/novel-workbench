@@ -13,7 +13,17 @@ SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
 VALID_NOTE_KINDS = {"general", "character", "location", "plot", "research"}
-EXPORT_TEMPLATES = {"board", "default", "focus", "frontmatter", "outline", "progress", "review", "revision"}
+EXPORT_TEMPLATES = {
+    "board",
+    "default",
+    "focus",
+    "frontmatter",
+    "momentum",
+    "outline",
+    "progress",
+    "review",
+    "revision",
+}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -743,6 +753,8 @@ class ProjectStore:
                 lines = board_lines(project)
             elif template == "focus":
                 lines = focus_lines(project)
+            elif template == "momentum":
+                lines = momentum_lines(project)
             elif template == "outline":
                 lines = outline_lines(project)
             elif template == "progress":
@@ -939,6 +951,53 @@ def focus_lines(project: NovelProject) -> list[str]:
     revision_notes = project.revision_notes.strip()
     if revision_notes:
         lines.extend(["", "## Revision Reminder", "", revision_notes])
+    return lines
+
+
+def momentum_lines(project: NovelProject) -> list[str]:
+    stats = _stats_for_project(project)
+    lines = [f"# {project.title} Momentum", ""]
+    lines.extend(
+        [
+            "## Overview",
+            "",
+            f"- Manuscript words: {stats['words']}",
+            f"- Logged words: {stats['logged_words']}",
+            f"- Writing days: {stats['writing_days']}",
+            f"- Current streak: {stats['current_streak_days']} days",
+            f"- Longest streak: {stats['longest_streak_days']} days",
+        ]
+    )
+    if stats["average_logged_words"] is not None:
+        lines.append(f"- Average logged words: {stats['average_logged_words']}")
+    if stats["best_day_words"] is not None:
+        lines.append(f"- Best writing day: {stats['best_day_words']} words")
+    if stats["target_words"] is not None:
+        lines.append(f"- Target words: {stats['target_words']}")
+        lines.append(f"- Remaining words: {stats['remaining_words']}")
+        lines.append(f"- Progress: {stats['progress_percent']}%")
+    if stats["required_daily_words"] is not None:
+        lines.append(f"- Required daily words: {stats['required_daily_words']}")
+
+    lines.extend(["", "## Weekly Totals", ""])
+    if not project.progress:
+        lines.append("No progress entries yet.")
+        return lines
+
+    weekly: dict[tuple[int, int], int] = {}
+    for entry in project.progress:
+        year, week, _ = date.fromisoformat(entry.date).isocalendar()
+        key = (year, week)
+        weekly[key] = weekly.get(key, 0) + entry.words
+
+    lines.extend(["| Week | Words |", "|---|---:|"])
+    for year, week in sorted(weekly, reverse=True):
+        lines.append(f"| {year}-W{week:02d} | {weekly[(year, week)]} |")
+
+    lines.extend(["", "## Recent Entries", "", "| Date | Words | Note |", "|---|---:|---|"])
+    for entry in sorted(project.progress, key=lambda item: (item.date, item.id), reverse=True)[:7]:
+        note = _escape_table_cell(entry.note)
+        lines.append(f"| {entry.date} | {entry.words} | {note} |")
     return lines
 
 
@@ -1272,6 +1331,7 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
         "best_day_words": "" if stats["best_day_words"] is None else str(stats["best_day_words"]),
         "chapters_markdown": "\n".join(_default_export_lines(project)).strip(),
         "focus_brief": "\n".join(focus_lines(project)),
+        "momentum_report": "\n".join(momentum_lines(project)),
         "status_board": "\n".join(board_lines(project)),
         "chapter_table": "\n".join(_chapter_table_lines(project)),
         "status_summary": "\n".join(

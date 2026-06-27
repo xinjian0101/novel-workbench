@@ -14,6 +14,7 @@ from .storage import (
     StorageError,
     board_lines,
     focus_lines,
+    momentum_lines,
     outline_lines,
     planning_lines,
     review_lines,
@@ -35,6 +36,7 @@ COMPLETION_COMMANDS = (
     "import-markdown",
     "show",
     "focus",
+    "momentum",
     "board",
     "outline",
     "plan",
@@ -184,6 +186,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     focus = subparsers.add_parser("focus", help="Show the next writing focus for a project.")
     focus.add_argument("slug")
+
+    momentum = subparsers.add_parser("momentum", help="Show writing momentum and weekly progress.")
+    momentum.add_argument("slug")
 
     board = subparsers.add_parser("board", help="Show a chapter status board.")
     board.add_argument("slug")
@@ -346,7 +351,7 @@ def build_parser() -> argparse.ArgumentParser:
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
     export.add_argument("output", type=Path)
-    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, outline, progress, review, or revision.")
+    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, momentum, outline, progress, review, or revision.")
     export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
@@ -468,6 +473,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "focus":
         project = store.get_project(args.slug)
         print("\n".join(focus_lines(project)))
+        return 0
+    if args.command == "momentum":
+        project = store.get_project(args.slug)
+        print("\n".join(momentum_lines(project)))
         return 0
     if args.command == "board":
         project = store.get_project(args.slug)

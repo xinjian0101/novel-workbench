@@ -10,6 +10,7 @@ from novel_workbench.storage import (
     StorageError,
     board_lines,
     focus_lines,
+    momentum_lines,
     outline_lines,
     parse_markdown_chapters,
     planning_lines,
@@ -314,6 +315,42 @@ def test_focus_lines_handles_finished_or_empty_project(tmp_path: Path) -> None:
     assert "- Add the first chapter." in empty_lines
     assert "No progress entries yet." in empty_lines
     assert "- All chapters are marked done. Review the revision checklist or export the manuscript." in done_lines
+
+
+def test_momentum_lines_groups_progress_by_week(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.set_target_words("first-novel", 1000)
+    store.set_target_date("first-novel", (date.today() + timedelta(days=10)).isoformat())
+    store.add_chapter("first-novel", "Opening", "The story begins.")
+    store.add_progress("first-novel", 300, "2026-06-22", "Opened the week.")
+    store.add_progress("first-novel", 450, "2026-06-23", "Drafted the midpoint.")
+    store.add_progress("first-novel", 200, "2026-06-29", "Started next week.")
+
+    lines = momentum_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Momentum" in lines
+    assert "- Logged words: 950" in lines
+    assert "- Writing days: 3" in lines
+    assert "- Average logged words: 317" in lines
+    assert "- Best writing day: 450 words" in lines
+    assert "- Target words: 1000" in lines
+    assert "| Week | Words |" in lines
+    assert "| 2026-W27 | 200 |" in lines
+    assert "| 2026-W26 | 750 |" in lines
+    assert "| 2026-06-29 | 200 | Started next week. |" in lines
+    assert "| 2026-06-23 | 450 | Drafted the midpoint. |" in lines
+
+
+def test_momentum_lines_handles_missing_progress(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    lines = momentum_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Momentum" in lines
+    assert "- Logged words: 0" in lines
+    assert "No progress entries yet." in lines
 
 
 def test_review_lines_reports_manuscript_readiness_findings(tmp_path: Path) -> None:
@@ -622,6 +659,7 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "Streak: {current_streak_days}/{longest_streak_days}\n\n"
         "{status_summary}\n\n"
         "{focus_brief}\n\n"
+        "{momentum_report}\n\n"
         "{status_board}\n\n"
         "{chapter_table}\n\n"
         "{review_report}\n\n"
@@ -652,6 +690,18 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "## Next Writing Move\n\n"
         "- All chapters are marked done. Review the revision checklist or export the manuscript.\n\n"
         "## Recent Writing\n\n"
+        "No progress entries yet.\n\n"
+        "# First Novel Momentum\n\n"
+        "## Overview\n\n"
+        "- Manuscript words: 3\n"
+        "- Logged words: 0\n"
+        "- Writing days: 0\n"
+        "- Current streak: 0 days\n"
+        "- Longest streak: 0 days\n"
+        "- Target words: 10\n"
+        "- Remaining words: 7\n"
+        "- Progress: 30%\n\n"
+        "## Weekly Totals\n\n"
         "No progress entries yet.\n\n"
         "# First Novel Status Board\n\n"
         "## Draft\n\n"
