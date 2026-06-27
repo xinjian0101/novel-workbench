@@ -52,11 +52,12 @@ python -m pip install -e ".[dev]"
 novel --workspace workspace sample
 novel --workspace workspace focus moon-archive
 novel --workspace workspace handoff moon-archive
+novel --workspace workspace context moon-archive
 novel --workspace workspace momentum moon-archive
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 ```
 
-The tour creates a sample novel workspace, shows the next writing move, prepares an AI/editor handoff brief, summarizes drafting momentum, and writes a complete Markdown report pack.
+The tour creates a sample novel workspace, shows the next writing move, prepares an AI/editor handoff brief, prints machine-readable project context JSON, summarizes drafting momentum, and writes a complete Markdown report pack.
 
 ## Why It Exists
 
@@ -91,6 +92,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export workspace dashboard reports to Markdown
 - Show a daily focus brief with the next writing move and recent progress
 - Show an AI/editor handoff brief with project context and a continuation prompt
+- Print machine-readable AI/editor project context JSON for automation and handoffs
 - Show writing momentum reports with weekly totals and recent entries
 - Group chapters into a status board for draft, revising, and done work
 - Show structured project outlines
@@ -103,6 +105,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown
 - Export a complete project report pack in one command
+- Export AI/editor project context JSON for tools that need structured project state
 - Export with optional YAML front matter for publishing tools
 - Export shareable outline documents with chapter summaries and scene beats
 - Export shareable writing momentum reports with weekly progress rollups
@@ -155,6 +158,7 @@ novel --workspace workspace dashboard
 novel --workspace workspace export-dashboard exports/workspace-dashboard.md
 novel --workspace workspace focus moon-archive
 novel --workspace workspace handoff moon-archive
+novel --workspace workspace context moon-archive
 novel --workspace workspace momentum moon-archive
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
@@ -170,6 +174,7 @@ novel --workspace workspace export moon-archive exports/moon-archive-frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
 novel --workspace workspace export moon-archive exports/moon-archive-review.md --template review
 novel --workspace workspace export moon-archive exports/moon-archive-revision.md --template revision
+novel --workspace workspace export-context moon-archive exports/moon-archive-context.json
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 novel --workspace workspace backup moon-archive backups
 novel --workspace workspace restore-backup backups/moon-archive-20260626T120000000000Z.json --force
@@ -199,6 +204,7 @@ novel import-markdown <slug> <input.md>
 novel show <slug>
 novel focus <slug>
 novel handoff <slug>
+novel context <slug>
 novel momentum <slug>
 novel board <slug>
 novel outline <slug>
@@ -231,6 +237,7 @@ novel list-scenes <slug> <chapter>
 novel update-scene <slug> <chapter> <scene> [--title "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel delete-scene <slug> <chapter> <scene>
 novel export <slug> <output.md> [--template board|default|focus|frontmatter|handoff|momentum|outline|progress|review|revision] [--template-file path]
+novel export-context <slug> <output.json>
 novel export-pack <slug> <output-dir>
 novel backup <slug> <output-dir>
 novel restore-backup <backup.json> [--force]

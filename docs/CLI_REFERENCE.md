@@ -171,6 +171,16 @@ novel --workspace workspace export moon-archive exports/moon-archive-handoff.md 
 
 The handoff brief includes a project snapshot, next action, continuity notes, chapter state, recent progress, and a continuation prompt. Use it when moving from the CLI into an AI assistant, editor, or critique workflow.
 
+## `novel context`
+
+Print a machine-readable AI/editor project context JSON document.
+
+```powershell
+novel --workspace workspace context moon-archive
+```
+
+The context document includes the full project JSON, calculated stats, the next recommended action, chapter state with word counts and scene labels, recent progress, and continuity note previews. Use it when an editor, script, or AI workflow needs structured state instead of a human-readable Markdown handoff.
+
 ## `novel momentum`
 
 Show writing momentum and weekly progress for a project.
@@ -537,6 +547,16 @@ Custom template files use Python-style named fields. Supported fields are:
 
 Use either `--template` or `--template-file`, not both.
 Files passed with `--template-file` must be readable UTF-8 text.
+
+## `novel export-context`
+
+Export a machine-readable AI/editor project context JSON document.
+
+```powershell
+novel --workspace workspace export-context moon-archive exports/moon-archive-context.json
+```
+
+The exported file uses the same payload as `novel context`, with `format` set to `novel-workbench-project-context` and `format_version` set to `1`.
 
 ## `novel export-pack`
 

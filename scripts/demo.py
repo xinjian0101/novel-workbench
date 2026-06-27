@@ -50,6 +50,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "show", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "focus", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "handoff", "moon-archive"],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "context", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "momentum", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "board", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "plan", "moon-archive"],
@@ -69,6 +70,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export", "moon-archive", str(exports / "moon-archive-progress.md"), "--template", "progress"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export", "moon-archive", str(exports / "moon-archive-review.md"), "--template", "review"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export", "moon-archive", str(exports / "moon-archive-revision.md"), "--template", "revision"],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export-context", "moon-archive", str(exports / "moon-archive-context.json")],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export-pack", "moon-archive", str(exports / "moon-archive-pack")],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "backup", "moon-archive", str(backups)],
     ]

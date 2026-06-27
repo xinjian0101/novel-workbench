@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from datetime import date
@@ -38,6 +39,7 @@ COMPLETION_COMMANDS = (
     "show",
     "focus",
     "handoff",
+    "context",
     "momentum",
     "board",
     "outline",
@@ -70,6 +72,7 @@ COMPLETION_COMMANDS = (
     "update-scene",
     "delete-scene",
     "export",
+    "export-context",
     "export-pack",
     "backup",
     "restore-backup",
@@ -192,6 +195,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     handoff = subparsers.add_parser("handoff", help="Show an AI/editor handoff brief for a project.")
     handoff.add_argument("slug")
+
+    context = subparsers.add_parser("context", help="Print an AI/editor project context JSON document.")
+    context.add_argument("slug")
 
     momentum = subparsers.add_parser("momentum", help="Show writing momentum and weekly progress.")
     momentum.add_argument("slug")
@@ -360,6 +366,10 @@ def build_parser() -> argparse.ArgumentParser:
     export.add_argument("--template", default="default", help="board, default, focus, frontmatter, handoff, momentum, outline, progress, review, or revision.")
     export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
 
+    export_context = subparsers.add_parser("export-context", help="Export an AI/editor project context JSON document.")
+    export_context.add_argument("slug")
+    export_context.add_argument("output", type=Path)
+
     export_pack = subparsers.add_parser("export-pack", help="Export all standard Markdown reports for a project.")
     export_pack.add_argument("slug")
     export_pack.add_argument("output_dir", type=Path)
@@ -487,6 +497,9 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "handoff":
         project = store.get_project(args.slug)
         print("\n".join(handoff_lines(project)))
+        return 0
+    if args.command == "context":
+        print(json.dumps(store.project_context(args.slug), indent=2, ensure_ascii=False))
         return 0
     if args.command == "momentum":
         project = store.get_project(args.slug)
@@ -754,6 +767,10 @@ def run(args: argparse.Namespace) -> int:
             raise StorageError("Use either --template or --template-file, not both.")
         output = store.export_markdown(args.slug, args.output, args.template, args.template_file)
         print(f"Exported: {output}")
+        return 0
+    if args.command == "export-context":
+        output = store.export_context_json(args.slug, args.output)
+        print(f"Exported context: {output}")
         return 0
     if args.command == "export-pack":
         outputs = store.export_pack(args.slug, args.output_dir)

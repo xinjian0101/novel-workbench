@@ -687,6 +687,16 @@ class ProjectStore:
         project = self.get_project(slug)
         return _stats_for_project(project)
 
+    def project_context(self, slug: str) -> dict[str, object]:
+        project = self.get_project(slug)
+        return _context_for_project(project)
+
+    def export_context_json(self, slug: str, output_path: Path) -> Path:
+        context = self.project_context(slug)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(json.dumps(context, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        return output_path
+
     def search(self, slug: str, query: str) -> list[dict[str, str | int]]:
         normalized_query = query.strip().lower()
         if not normalized_query:
@@ -1551,6 +1561,74 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
         "revising_words": words_by_status["revising"],
         "done_words": words_by_status["done"],
     }
+
+
+def _context_for_project(project: NovelProject) -> dict[str, object]:
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    next_chapter = next((chapter for chapter in chapters if chapter.status != "done"), None)
+    recent_progress = sorted(project.progress, key=lambda item: (item.date, item.id), reverse=True)[:5]
+    continuity_notes = sorted(project.notes, key=lambda item: item.id)[:8]
+    return {
+        "format": "novel-workbench-project-context",
+        "format_version": 1,
+        "project": project.to_dict(),
+        "stats": _stats_for_project(project),
+        "next_action": _context_next_action(project, next_chapter),
+        "chapter_state": [_context_chapter(chapter) for chapter in chapters],
+        "recent_progress": [entry.to_dict() for entry in recent_progress],
+        "continuity_notes": [_context_note(note) for note in continuity_notes],
+    }
+
+
+def _context_next_action(project: NovelProject, chapter: Chapter | None) -> dict[str, object]:
+    if chapter is None:
+        if project.chapters:
+            return {
+                "kind": "review_manuscript",
+                "prompt": "Review the manuscript using the project snapshot, continuity notes, and chapter state.",
+            }
+        return {
+            "kind": "start_project",
+            "prompt": "Propose the first chapter from the project snapshot.",
+        }
+
+    open_scenes = [scene for scene in sorted(chapter.scenes, key=lambda item: item.number) if scene.status != "done"]
+    return {
+        "kind": "continue_chapter",
+        "chapter_number": chapter.number,
+        "chapter_title": chapter.title,
+        "chapter_status": chapter.status,
+        "chapter_words": count_words(chapter.content),
+        "chapter_summary": chapter.summary,
+        "open_scenes": [scene.to_dict() for scene in open_scenes],
+        "prompt": (
+            f"Continue Chapter {chapter.number}: {chapter.title}. "
+            "Preserve the synopsis, continuity notes, current chapter status, and recent progress."
+        ),
+    }
+
+
+def _context_chapter(chapter: Chapter) -> dict[str, object]:
+    return {
+        "number": chapter.number,
+        "title": chapter.title,
+        "status": chapter.status,
+        "words": count_words(chapter.content),
+        "summary": chapter.summary,
+        "scenes": [
+            {
+                **scene.to_dict(),
+                "label": f"{chapter.number}.{scene.number}",
+            }
+            for scene in sorted(chapter.scenes, key=lambda item: item.number)
+        ],
+    }
+
+
+def _context_note(note: ProjectNote) -> dict[str, object]:
+    data = note.to_dict()
+    data["preview"] = _note_preview(note.content) if note.content.strip() else ""
+    return data
 
 
 def _progress_streaks(progress_dates: set[str]) -> tuple[int, int]:

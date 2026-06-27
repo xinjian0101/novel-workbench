@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from datetime import date, timedelta
 
@@ -77,6 +78,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "focus", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "handoff", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "context", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "momentum", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "board", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "outline", "renamed-novel"]) == 0
@@ -103,6 +105,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "review.md"), "--template", "review"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "revision.md"), "--template", "revision"]) == 0
+    assert main(["--workspace", str(workspace), "export-context", "renamed-novel", str(tmp_path / "context.json")]) == 0
     assert main(["--workspace", str(workspace), "export-pack", "renamed-novel", str(tmp_path / "pack")]) == 0
     assert main(["--workspace", str(workspace), "delete-note", "renamed-novel", "1"]) == 0
     assert main(["--workspace", str(workspace), "backup", "renamed-novel", str(backup_dir)]) == 0
@@ -151,6 +154,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
     assert "renamed-novel\tRenamed Novel\t2\t2\t500\t1\t-\t-" in captured.out
     assert "Exported dashboard:" in captured.out
+    assert '"format": "novel-workbench-project-context"' in captured.out
+    assert "Exported context:" in captured.out
     assert "Exported pack:" in captured.out
     assert "Notes: 3" in captured.out
     assert "Words: 2" in captured.out
@@ -184,6 +189,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Review" in (tmp_path / "review.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "revision.md").read_text(encoding="utf-8")
+    context = json.loads((tmp_path / "context.json").read_text(encoding="utf-8"))
+    assert context["project"]["slug"] == "renamed-novel"
+    assert context["next_action"]["kind"] == "continue_chapter"
     assert "# Renamed Novel Momentum" in (tmp_path / "pack" / "renamed-novel-momentum.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Handoff" in (tmp_path / "pack" / "renamed-novel-handoff.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "pack" / "renamed-novel-revision.md").read_text(encoding="utf-8")
@@ -341,6 +349,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "import-markdown" in captured.out
     assert "focus" in captured.out
     assert "handoff" in captured.out
+    assert "context" in captured.out
     assert "momentum" in captured.out
     assert "board" in captured.out
     assert "plan" in captured.out
@@ -354,6 +363,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "add-progress" in captured.out
     assert "update-progress" in captured.out
     assert "delete-progress" in captured.out
+    assert "export-context" in captured.out
     assert "export-pack" in captured.out
 
 

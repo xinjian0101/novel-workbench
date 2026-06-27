@@ -1,3 +1,4 @@
+import json
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -347,6 +348,36 @@ def test_handoff_lines_builds_ai_ready_project_context(tmp_path: Path) -> None:
     assert "| 1 | Opening | revising | 3 | Introduce the central clue. |" in lines
     assert "| 2026-06-26 | 300 | Drafted the opening. |" in lines
     assert "Continue Chapter 1: Opening. Preserve the synopsis, continuity notes, current chapter status, and recent progress." in lines
+
+
+def test_project_context_builds_machine_readable_agent_payload(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.update_project_metadata(
+        "first-novel",
+        genre="mystery",
+        audience="adult",
+        revision_notes="Keep the clue trail fair.",
+    )
+    store.set_target_words("first-novel", 1000)
+    store.add_chapter("first-novel", "Opening", "The story begins.", "revising", "Introduce the central clue.")
+    store.add_scene("first-novel", 1, "First clue", "A clue appears in plain sight.", "draft")
+    store.add_note("first-novel", "Ada", "Detective protagonist.", "character")
+    store.add_progress("first-novel", 300, "2026-06-26", "Drafted the opening.")
+
+    context = store.project_context("first-novel")
+
+    assert context["format"] == "novel-workbench-project-context"
+    assert context["format_version"] == 1
+    assert context["project"]["slug"] == "first-novel"
+    assert context["stats"]["words"] == 3
+    assert context["next_action"]["kind"] == "continue_chapter"
+    assert context["next_action"]["chapter_number"] == 1
+    assert context["next_action"]["open_scenes"][0]["title"] == "First clue"
+    assert context["chapter_state"][0]["words"] == 3
+    assert context["chapter_state"][0]["scenes"][0]["label"] == "1.1"
+    assert context["recent_progress"][0]["note"] == "Drafted the opening."
+    assert context["continuity_notes"][0]["preview"] == "Detective protagonist."
 
 
 def test_momentum_lines_groups_progress_by_week(tmp_path: Path) -> None:
@@ -704,6 +735,21 @@ def test_export_pack_writes_all_standard_reports(tmp_path: Path) -> None:
     assert "# First Novel Handoff" in (output_dir / "first-novel-handoff.md").read_text(encoding="utf-8")
     assert "# First Novel Momentum" in (output_dir / "first-novel-momentum.md").read_text(encoding="utf-8")
     assert "# First Novel Review" in (output_dir / "first-novel-review.md").read_text(encoding="utf-8")
+
+
+def test_export_context_json_writes_agent_payload(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft")
+    output = tmp_path / "first-novel-context.json"
+
+    result = store.export_context_json("first-novel", output)
+
+    assert result == output
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    assert payload["format"] == "novel-workbench-project-context"
+    assert payload["project"]["title"] == "First Novel"
+    assert payload["next_action"]["kind"] == "continue_chapter"
 
 
 def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
