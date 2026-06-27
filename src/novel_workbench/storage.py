@@ -13,7 +13,7 @@ SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
 VALID_NOTE_KINDS = {"general", "character", "location", "plot", "research"}
-EXPORT_TEMPLATES = {"default", "frontmatter", "progress"}
+EXPORT_TEMPLATES = {"default", "frontmatter", "outline", "progress"}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -734,6 +734,8 @@ class ProjectStore:
             template = validate_export_template(template)
             if template == "frontmatter":
                 lines = _frontmatter_export_lines(project)
+            elif template == "outline":
+                lines = outline_lines(project)
             elif template == "progress":
                 lines = _progress_export_lines(project)
             else:

@@ -30,6 +30,7 @@
 - Added stricter project file validation for loaded project JSON and restored backups.
 - Added schema versioning and a workspace migration command for legacy project files.
 - Added Markdown export.
+- Added outline export for shareable chapter and scene planning documents.
 - Added progress report export for shareable project status snapshots.
 - Added custom Markdown export templates with named fields.
 - Added tests, README, contribution guide, security policy, roadmap, and CI workflow.

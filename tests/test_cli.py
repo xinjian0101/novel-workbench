@@ -87,6 +87,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     custom_template.write_text("# {title}\n\n{status_summary}\n", encoding="utf-8")
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(export_path)]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(custom_export), "--template-file", str(custom_template)]) == 0
+    assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "outline.md"), "--template", "outline"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "frontmatter.md"), "--template", "frontmatter"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
     assert main(["--workspace", str(workspace), "delete-note", "renamed-novel", "1"]) == 0
@@ -152,6 +153,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert export_path.exists()
     assert "# Renamed Novel" in custom_export.read_text(encoding="utf-8")
     assert "Draft: 2 chapters / 2 words" in custom_export.read_text(encoding="utf-8")
+    assert "# Renamed Novel Outline" in (tmp_path / "outline.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
     assert backup_file.exists()
 
@@ -324,4 +326,5 @@ def test_demo_script_runs(capsys) -> None:
     assert "Target words: 80000" in captured.out
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
     assert "moon-archive\tMoon Archive\t1\t8\t1250\t" in captured.out
+    assert "moon-archive-outline.md" in captured.out
     assert "Backed up:" in captured.out

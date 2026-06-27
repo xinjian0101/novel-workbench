@@ -316,7 +316,7 @@ def build_parser() -> argparse.ArgumentParser:
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
     export.add_argument("output", type=Path)
-    export.add_argument("--template", default="default", help="default, frontmatter, or progress.")
+    export.add_argument("--template", default="default", help="default, frontmatter, outline, or progress.")
     export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")

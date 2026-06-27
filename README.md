@@ -70,6 +70,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown
 - Export with optional YAML front matter for publishing tools
+- Export shareable outline documents with chapter summaries and scene beats
 - Export shareable progress reports with chapter, status, target, and streak tables
 - Export through custom Markdown template files
 - Automatically snapshot project JSON before renames and destructive deletes
@@ -117,6 +118,7 @@ novel --workspace workspace doctor
 novel --workspace workspace migrate --dry-run
 novel --workspace workspace search moon-archive rain
 novel --workspace workspace export moon-archive exports/moon-archive.md
+novel --workspace workspace export moon-archive exports/moon-archive-outline.md --template outline
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
 novel --workspace workspace backup moon-archive backups
@@ -171,7 +173,7 @@ novel add-scene <slug> <chapter> <title> [--summary "..."] [--summary-file path]
 novel list-scenes <slug> <chapter>
 novel update-scene <slug> <chapter> <scene> [--title "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel delete-scene <slug> <chapter> <scene>
-novel export <slug> <output.md> [--template default|frontmatter|progress] [--template-file path]
+novel export <slug> <output.md> [--template default|frontmatter|outline|progress] [--template-file path]
 novel backup <slug> <output-dir>
 novel restore-backup <backup.json> [--force]
 ```

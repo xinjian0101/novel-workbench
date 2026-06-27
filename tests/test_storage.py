@@ -352,6 +352,30 @@ def test_export_markdown_frontmatter_template(tmp_path: Path) -> None:
     )
 
 
+def test_export_markdown_outline_template(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.update_project_metadata("first-novel", genre="mystery", audience="adult")
+    store.add_chapter("first-novel", "Opening", summary="Introduce the clue.")
+    store.add_scene("first-novel", 1, "First clue", "A detail looks misplaced.", "revising")
+    output = tmp_path / "exports" / "first-novel-outline.md"
+
+    store.export_markdown("first-novel", output, template="outline")
+
+    assert output.read_text(encoding="utf-8") == (
+        "# First Novel Outline\n\n"
+        "A concise premise.\n\n"
+        "## Metadata\n\n"
+        "- Genre: mystery\n"
+        "- Audience: adult\n\n"
+        "## Chapters\n\n"
+        "1. Opening [draft]\n"
+        "   Introduce the clue.\n"
+        "   1.1 First clue [revising]\n"
+        "      A detail looks misplaced.\n"
+    )
+
+
 def test_export_markdown_progress_template(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")
