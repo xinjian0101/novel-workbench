@@ -2,6 +2,45 @@
 
 Use these examples to see what Novel Workbench produces before installing it.
 
+## Launch Post Snippets
+
+Use these compact snippets in posts, README comparisons, forum replies, and issue answers.
+
+Manuscript export:
+
+```text
+Markdown manuscript export:
+# Moon Archive
+## Chapter 1: Descent
+They opened the hatch and heard rain below.
+```
+
+AI/editor handoff:
+
+```text
+Handoff brief:
+- Continue Chapter 1: Descent [draft] - 8 words
+- Includes project snapshot, continuity notes, recent progress, and a continuation prompt.
+```
+
+Context JSON:
+
+```text
+Context JSON:
+{"format":"novel-workbench-project-context","project":{"slug":"moon-archive"},"next_action":{"kind":"continue_chapter"}}
+```
+
+Static site export:
+
+```text
+Static site export:
+index.html
+manuscript.html
+context.json
+Demo: https://xinjian0101.github.io/novel-workbench/
+Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
+```
+
 ## Live HTML Demo
 
 The GitHub Pages demo is generated with the same static export path available to users:
@@ -167,4 +206,3 @@ Run the full quality gate:
 ```powershell
 python scripts/check.py
 ```
-

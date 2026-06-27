@@ -78,6 +78,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 - README first screen explains the value without scrolling.
 - README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
 - README links to output examples for generated Markdown, JSON, static-site, and report-pack proof.
+- Distribution copy links to short output snippets for launch posts.
 - README links to the FAQ for privacy, install, import, export, and PyPI status questions.
 - README explains why the repository is worth starring.
 - README renders `assets/readme-showcase.svg`.

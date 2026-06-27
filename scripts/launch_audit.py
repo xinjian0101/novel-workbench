@@ -65,6 +65,7 @@ REQUIRED_TEXT = {
         "novel_workbench-0.1.1-py3-none-any.whl",
         "docs/FAQ.md",
         "docs/OUTPUT_EXAMPLES.md",
+        "Short output snippets",
         "Awesome List Entry",
         "Hacker News Style",
         "GitHub Discussion Announcement",
@@ -123,12 +124,15 @@ REQUIRED_TEXT = {
         "Demo acceptance checks",
     ],
     "docs/OUTPUT_EXAMPLES.md": [
+        "Launch Post Snippets",
         "Live HTML Demo",
         "Manuscript Markdown",
         "AI or Editor Handoff",
         "Machine-Readable Context JSON",
         "Progress Report",
         "Report Pack",
+        "https://xinjian0101.github.io/novel-workbench/",
+        "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
         "python scripts/check.py",
     ],
     "docs/FAQ.md": [
