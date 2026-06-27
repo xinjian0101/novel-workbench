@@ -1,6 +1,7 @@
 # Novel Workbench
 
 [![CI](https://github.com/xinjian0101/novel-workbench/actions/workflows/ci.yml/badge.svg)](https://github.com/xinjian0101/novel-workbench/actions/workflows/ci.yml)
+[![Pages](https://github.com/xinjian0101/novel-workbench/actions/workflows/pages.yml/badge.svg)](https://github.com/xinjian0101/novel-workbench/actions/workflows/pages.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -187,6 +188,12 @@ Run the bundled demo:
 
 ```powershell
 python scripts/demo.py
+```
+
+Build the GitHub Pages demo site locally:
+
+```powershell
+python scripts/build_pages_demo.py public
 ```
 
 ## Commands

@@ -64,6 +64,7 @@ def main() -> int:
     root = Path(__file__).resolve().parents[1]
     run([sys.executable, "-m", "pytest"], root)
     run([sys.executable, "-m", "compileall", "src", "tests", "scripts"], root)
+    run([sys.executable, "scripts/build_pages_demo.py", str(root / "build" / "pages-demo")], root)
     run([sys.executable, "scripts/demo.py"], root)
     run([sys.executable, "scripts/release_check.py"], root)
     scan_for_debug_markers(root)

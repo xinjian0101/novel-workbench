@@ -45,3 +45,13 @@ The release workflow produces:
 - `novel_workbench-X.Y.Z-py3-none-any.whl`
 
 Because Novel Workbench has no runtime dependencies, the wheel install smoke test uses `pip --no-index` to prove the artifact can install offline.
+
+## Pages Demo
+
+The `Pages` workflow builds a static demo site with:
+
+```powershell
+python scripts/build_pages_demo.py public
+```
+
+It uploads the generated `public/` directory as a GitHub Pages artifact. The site contains `index.html`, `manuscript.html`, and `context.json`, matching the user-facing `novel export-site` output.

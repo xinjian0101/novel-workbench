@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import date, timedelta
 
 from novel_workbench.cli import main
+from scripts.build_pages_demo import main as pages_demo_main
 from scripts.demo import main as demo_main
 
 
@@ -402,3 +403,15 @@ def test_demo_script_runs(capsys) -> None:
     assert "moon-archive-outline.md" in captured.out
     assert "Exported pack:" in captured.out
     assert "Backed up:" in captured.out
+
+
+def test_pages_demo_script_builds_static_site(tmp_path: Path, capsys) -> None:
+    output_dir = tmp_path / "public"
+
+    assert pages_demo_main([str(output_dir)]) == 0
+
+    captured = capsys.readouterr()
+    assert "Built Pages demo site:" in captured.out
+    assert "<h1>Moon Archive</h1>" in (output_dir / "index.html").read_text(encoding="utf-8")
+    assert "They opened the hatch" in (output_dir / "manuscript.html").read_text(encoding="utf-8")
+    assert json.loads((output_dir / "context.json").read_text(encoding="utf-8"))["project"]["slug"] == "moon-archive"

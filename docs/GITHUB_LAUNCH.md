@@ -6,10 +6,11 @@ Use this checklist before making the repository public or announcing it.
 
 - Description: `Local-first CLI workspace for writing, organizing, searching, and exporting novels.`
 - Topics: `writing`, `novel`, `markdown`, `cli`, `local-first`, `author-tools`, `python`
-- Website: leave blank unless a real project page exists.
+- Website: use the GitHub Pages URL after the `Pages` workflow publishes successfully.
 - Visibility: public only after CI passes on GitHub.
 - Features: enable Issues and Discussions if maintainers can respond.
 - Dependabot: enabled for GitHub Actions through `.github/dependabot.yml`.
+- Pages: enable GitHub Actions as the Pages source so `.github/workflows/pages.yml` can publish the generated demo site.
 
 ## README Review
 
@@ -17,6 +18,7 @@ Use this checklist before making the repository public or announcing it.
 - The install command points to the real GitHub repository.
 - The 60-second tour works after installing from GitHub.
 - The terminal demo matches `python scripts/demo.py`.
+- The Pages demo builds with `python scripts/build_pages_demo.py public`.
 - Quick Start works on a clean checkout.
 - No temporary or example-only GitHub URLs remain.
 - Security and contribution links resolve.
@@ -28,11 +30,13 @@ Use this checklist before making the repository public or announcing it.
    ```powershell
    python scripts/check.py
    python scripts/release_check.py
+   python scripts/build_pages_demo.py public
    ```
 
 2. Tag the first release as `v0.1.0`.
 3. Use `docs/RELEASE_TEMPLATE.md` and the `0.1.0` section from `CHANGELOG.md` as release notes.
 4. Push the tag to let the Release workflow build, verify, and attach the source distribution and wheel.
+5. Confirm the `Pages` workflow publishes `index.html`, `manuscript.html`, and `context.json`.
 
 ## Social Preview
 

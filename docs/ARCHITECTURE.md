@@ -7,7 +7,7 @@ Novel Workbench is intentionally small and local-first.
 - CLI parsing lives in `src/novel_workbench/cli.py`.
 - Project persistence and validation live in `src/novel_workbench/storage.py`.
 - Data shapes live in `src/novel_workbench/models.py`.
-- Tests cover storage behavior, CLI flows, validation errors, and the demo script.
+- Tests cover storage behavior, CLI flows, validation errors, the demo script, and the Pages demo builder.
 
 ## Data Model
 
@@ -50,6 +50,7 @@ See [PROJECT_SCHEMA.md](PROJECT_SCHEMA.md) for the file-level schema and validat
 - No network calls: manuscripts stay local by default.
 - No runtime dependencies: installation and maintenance stay simple.
 - Markdown import/export: manuscripts stay portable.
+- Static site export keeps project sharing dependency-free and suitable for GitHub Pages.
 - Custom export templates use explicit named fields and Python's built-in formatter.
 
 ## Compatibility
