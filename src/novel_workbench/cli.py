@@ -417,6 +417,8 @@ def run(args: argparse.Namespace) -> int:
         print(f"Words: {stats['words']}")
         print(f"Logged words: {stats['logged_words']}")
         print(f"Writing days: {stats['writing_days']}")
+        print(f"Current streak: {stats['current_streak_days']} days")
+        print(f"Longest streak: {stats['longest_streak_days']} days")
         if stats["average_logged_words"] is not None:
             print(f"Average logged words: {stats['average_logged_words']}")
         if stats["best_day_words"] is not None:

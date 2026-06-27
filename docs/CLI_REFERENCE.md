@@ -149,7 +149,7 @@ Use this when reviewing a project before drafting or revision. `outline` stays f
 
 ## `novel stats`
 
-Show chapter, note, word, writing log, target, deadline, required daily writing pace, average chapter, character, and status counts.
+Show chapter, note, word, writing log, writing streak, target, deadline, required daily writing pace, average chapter, character, and status counts.
 
 ```powershell
 novel --workspace workspace stats moon-archive
@@ -408,11 +408,11 @@ Templates:
 
 - `default`: plain manuscript Markdown.
 - `frontmatter`: YAML front matter followed by the default Markdown body.
-- `progress`: shareable project progress report with overview, writing log totals, target deadline pace, remaining words, status word counts, a chapter table, and progress log entries.
+- `progress`: shareable project progress report with overview, writing log totals, streaks, target deadline pace, remaining words, status word counts, a chapter table, and progress log entries.
 
 Custom template files use Python-style named fields. Supported fields are:
 
-`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `chapter_table`, `status_summary`, and `progress_log`.
+`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `current_streak_days`, `longest_streak_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `chapter_table`, `status_summary`, and `progress_log`.
 
 Use either `--template` or `--template-file`, not both.
 Files passed with `--template-file` must be readable UTF-8 text.

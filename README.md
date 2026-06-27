@@ -14,6 +14,10 @@ $ novel stats moon-archive
 Chapters: 2
 Notes: 0
 Words: 15
+Logged words: 0
+Writing days: 0
+Current streak: 0 days
+Longest streak: 0 days
 Target words: 80000
 Remaining words: 79985
 Progress: 0%
@@ -54,6 +58,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Add structured character and location notes with dedicated commands
 - Update project notes as plans evolve
 - Log writing sessions by date and words written
+- Track current and longest writing streaks
 - Set a target completion date and calculate required daily writing pace
 - Show structured project outlines
 - Show a full planning view with metadata, progress, chapters, scenes, notes, and writing logs
@@ -63,7 +68,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Import a Markdown manuscript into a structured project
 - Export manuscripts to Markdown
 - Export with optional YAML front matter for publishing tools
-- Export shareable progress reports with chapter and status tables
+- Export shareable progress reports with chapter, status, target, and streak tables
 - Export through custom Markdown template files
 - Automatically snapshot project JSON before renames and destructive deletes
 - Back up project JSON on demand

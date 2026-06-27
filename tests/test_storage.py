@@ -139,7 +139,8 @@ def test_planning_lines_groups_project_progress_chapters_notes_and_log(tmp_path:
     store.add_scene("first-novel", 1, "First clue", "The clue appears in plain sight.")
     store.add_note("first-novel", "Ada", "Engineer protagonist.", "character")
     store.add_note("first-novel", "Archive", "Underground records room.", "location")
-    store.add_progress("first-novel", 400, "2026-06-26", "Drafted opening pages.")
+    progress_date = date.today().isoformat()
+    store.add_progress("first-novel", 400, progress_date, "Drafted opening pages.")
 
     lines = planning_lines(store.get_project("first-novel"))
 
@@ -150,13 +151,15 @@ def test_planning_lines_groups_project_progress_chapters_notes_and_log(tmp_path:
     assert "Keep the clue trail fair." in lines
     assert "- Target words: 10000" in lines
     assert f"- Target date: {target_date}" in lines
+    assert "- Current streak: 1 days" in lines
+    assert "- Longest streak: 1 days" in lines
     assert "1. Opening [draft] - 3 words" in lines
     assert "   1.1 First clue [draft]" in lines
     assert "### Character" in lines
     assert "- Ada" in lines
     assert "### Location" in lines
     assert "- Archive" in lines
-    assert "| 2026-06-26 | 400 | Drafted opening pages. |" in lines
+    assert f"| {progress_date} | 400 | Drafted opening pages. |" in lines
 
 
 def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:
@@ -352,6 +355,8 @@ def test_export_markdown_progress_template(tmp_path: Path) -> None:
         "- Characters: 40\n"
         "- Logged writing days: 0\n"
         "- Logged words: 0\n"
+        "- Current streak: 0 days\n"
+        "- Longest streak: 0 days\n"
         "- Genre: mystery\n"
         "- Audience: young adult\n"
         "- Target words: 10\n"
@@ -393,6 +398,7 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "Audience: {audience}\n"
         "Words: {words}/{target_words}\n"
         "Remaining: {remaining_words}\n\n"
+        "Streak: {current_streak_days}/{longest_streak_days}\n\n"
         "{status_summary}\n\n"
         "{chapter_table}\n",
         encoding="utf-8",
@@ -407,6 +413,7 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "Audience: adult\n"
         "Words: 3/10\n"
         "Remaining: 7\n\n"
+        "Streak: 0/0\n\n"
         "- Draft: 0 chapters / 0 words\n"
         "- Revising: 0 chapters / 0 words\n"
         "- Done: 1 chapters / 3 words\n\n"
@@ -431,9 +438,11 @@ def test_project_stats_count_progress(tmp_path: Path) -> None:
     store.create_project("first-novel", "First Novel")
     store.add_chapter("first-novel", "Opening", "The story begins.", "done")
     store.add_chapter("first-novel", "Middle", "A second scene unfolds.", "revising")
-    store.add_progress("first-novel", 500, "2026-06-25", "Drafted the opening.")
-    store.add_progress("first-novel", 300, "2026-06-25")
-    store.add_progress("first-novel", 700, "2026-06-26", "Expanded the middle.")
+    first_day = date.today() - timedelta(days=1)
+    second_day = date.today()
+    store.add_progress("first-novel", 500, first_day.isoformat(), "Drafted the opening.")
+    store.add_progress("first-novel", 300, first_day.isoformat())
+    store.add_progress("first-novel", 700, second_day.isoformat(), "Expanded the middle.")
 
     assert store.project_stats("first-novel") == {
         "chapters": 2,
@@ -441,6 +450,8 @@ def test_project_stats_count_progress(tmp_path: Path) -> None:
         "words": 7,
         "logged_words": 1500,
         "writing_days": 2,
+        "current_streak_days": 2,
+        "longest_streak_days": 2,
         "average_logged_words": 750,
         "best_day_words": 800,
         "target_words": None,
@@ -474,6 +485,8 @@ def test_project_stats_show_target_progress(tmp_path: Path) -> None:
     assert stats["notes"] == 0
     assert stats["logged_words"] == 0
     assert stats["writing_days"] == 0
+    assert stats["current_streak_days"] == 0
+    assert stats["longest_streak_days"] == 0
     assert stats["average_logged_words"] is None
     assert stats["best_day_words"] is None
     assert stats["target_words"] == 10

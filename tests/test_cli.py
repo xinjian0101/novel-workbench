@@ -63,7 +63,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     ]) == 0
     assert main(["--workspace", str(workspace), "add-note", "renamed-novel", "Ada", "--kind", "character", "--content", "Engineer protagonist"]) == 0
     assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
-    assert main(["--workspace", str(workspace), "add-progress", "renamed-novel", "450", "--date", "2026-06-25", "--note", "Drafted the new opening."]) == 0
+    progress_date = date.today().isoformat()
+    assert main(["--workspace", str(workspace), "add-progress", "renamed-novel", "450", "--date", progress_date, "--note", "Drafted the new opening."]) == 0
     assert main(["--workspace", str(workspace), "list-progress", "renamed-novel"]) == 0
     note_file = tmp_path / "note.md"
     note_file.write_text("Updated protagonist notes", encoding="utf-8")
@@ -111,8 +112,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Added location 2: Archive Vault" in captured.out
     assert "Decode the archive signal." in captured.out
     assert "A sealed records chamber below the city." in captured.out
-    assert "Logged progress 1: 2026-06-25 +450 words" in captured.out
-    assert "1. 2026-06-25: +450 words - Drafted the new opening." in captured.out
+    assert f"Logged progress 1: {progress_date} +450 words" in captured.out
+    assert f"1. {progress_date}: +450 words - Drafted the new opening." in captured.out
     assert "Added scene 1.1: First Image" in captured.out
     assert "Updated scene 1.1: First Image" in captured.out
     assert "1.1. First Image [revising]" in captured.out
@@ -127,6 +128,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Words: 2" in captured.out
     assert "Logged words: 450" in captured.out
     assert "Writing days: 1" in captured.out
+    assert "Current streak: 1 days" in captured.out
+    assert "Longest streak: 1 days" in captured.out
     assert "Average logged words: 450" in captured.out
     assert "Best writing day: 450 words" in captured.out
     assert "Target words: 10" in captured.out

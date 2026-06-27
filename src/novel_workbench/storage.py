@@ -4,7 +4,7 @@ import json
 import math
 import re
 import shutil
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from .models import CURRENT_SCHEMA_VERSION, Chapter, NovelProject, ProgressEntry, ProjectNote, Scene, utc_now_iso
@@ -769,6 +769,8 @@ def planning_lines(project: NovelProject) -> list[str]:
     lines.append(f"- Manuscript words: {stats['words']}")
     lines.append(f"- Logged words: {stats['logged_words']}")
     lines.append(f"- Writing days: {stats['writing_days']}")
+    lines.append(f"- Current streak: {stats['current_streak_days']} days")
+    lines.append(f"- Longest streak: {stats['longest_streak_days']} days")
     if stats["target_words"] is not None:
         lines.append(f"- Target words: {stats['target_words']}")
         lines.append(f"- Remaining words: {stats['remaining_words']}")
@@ -853,6 +855,8 @@ def _progress_export_lines(project: NovelProject) -> list[str]:
             f"- Characters: {stats['characters']}",
             f"- Logged writing days: {stats['writing_days']}",
             f"- Logged words: {stats['logged_words']}",
+            f"- Current streak: {stats['current_streak_days']} days",
+            f"- Longest streak: {stats['longest_streak_days']} days",
         ]
     )
     if stats["average_logged_words"] is not None:
@@ -928,6 +932,8 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
         "words": str(stats["words"]),
         "logged_words": str(stats["logged_words"]),
         "writing_days": str(stats["writing_days"]),
+        "current_streak_days": str(stats["current_streak_days"]),
+        "longest_streak_days": str(stats["longest_streak_days"]),
         "remaining_words": "" if stats["remaining_words"] is None else str(stats["remaining_words"]),
         "progress_percent": "" if stats["progress_percent"] is None else str(stats["progress_percent"]),
         "days_until_target_date": "" if stats["days_until_target_date"] is None else str(stats["days_until_target_date"]),
@@ -995,7 +1001,9 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
         for status in VALID_STATUSES
     }
     logged_words = sum(entry.words for entry in project.progress)
-    writing_days = len({entry.date for entry in project.progress})
+    progress_dates = {entry.date for entry in project.progress}
+    writing_days = len(progress_dates)
+    current_streak_days, longest_streak_days = _progress_streaks(progress_dates)
     average_chapter_words = None if not project.chapters else round(words / len(project.chapters))
     average_logged_words = None if writing_days == 0 else round(logged_words / writing_days)
     best_day_words = None
@@ -1010,6 +1018,8 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
         "words": words,
         "logged_words": logged_words,
         "writing_days": writing_days,
+        "current_streak_days": current_streak_days,
+        "longest_streak_days": longest_streak_days,
         "average_logged_words": average_logged_words,
         "best_day_words": best_day_words,
         "target_words": project.target_words,
@@ -1027,6 +1037,33 @@ def _stats_for_project(project: NovelProject) -> dict[str, int | None]:
         "revising_words": words_by_status["revising"],
         "done_words": words_by_status["done"],
     }
+
+
+def _progress_streaks(progress_dates: set[str]) -> tuple[int, int]:
+    if not progress_dates:
+        return 0, 0
+    dates = sorted(date.fromisoformat(value) for value in progress_dates)
+    longest = 1
+    current_run = 1
+    for previous, current in zip(dates, dates[1:]):
+        if (current - previous).days == 1:
+            current_run += 1
+            longest = max(longest, current_run)
+        else:
+            current_run = 1
+
+    today = date.today()
+    streak_anchor = today if today in dates else today - timedelta(days=1)
+    if streak_anchor not in dates:
+        return 0, longest
+
+    active_streak = 0
+    cursor = streak_anchor
+    date_set = set(dates)
+    while cursor in date_set:
+        active_streak += 1
+        cursor = cursor - timedelta(days=1)
+    return active_streak, longest
 
 
 def _escape_yaml(value: str) -> str:
