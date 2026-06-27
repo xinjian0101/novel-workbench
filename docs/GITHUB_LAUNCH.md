@@ -40,12 +40,14 @@ Use this checklist before making the repository public or announcing it.
    python scripts/release_check.py
    python scripts/build_pages_demo.py public
    python scripts/launch_audit.py
+   python scripts/verify_public_links.py
    ```
 
 2. Tag the next release as `vX.Y.Z`.
 3. Use `docs/RELEASE_TEMPLATE.md` and the matching version section from `CHANGELOG.md` as release notes.
 4. Push the tag to let the Release workflow build, verify, and attach the source distribution and wheel.
 5. Confirm the `Pages` workflow publishes `index.html`, `manuscript.html`, and `context.json`.
+6. Run `python scripts/verify_public_links.py` after publish to confirm the repository, Pages demo, badges, and release wheel resolve from a clean public path.
 
 ## Social Preview
 

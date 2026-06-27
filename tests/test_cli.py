@@ -6,6 +6,7 @@ from novel_workbench.cli import main
 from scripts.launch_audit import main as launch_audit_main
 from scripts.build_pages_demo import main as pages_demo_main
 from scripts.demo import main as demo_main
+from scripts.verify_public_links import main as verify_public_links_main
 
 
 def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) -> None:
@@ -491,3 +492,15 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
     assert ".github/ISSUE_TEMPLATE/question.yml" in captured.out
     assert "Existing project JSON files remain readable" in captured.out
     assert "Live Demo" in captured.out
+
+
+def test_public_link_verifier_lists_launch_targets_offline(capsys) -> None:
+    assert verify_public_links_main(["--offline"]) == 0
+
+    captured = capsys.readouterr()
+    assert "CHECK Repository: https://github.com/xinjian0101/novel-workbench" in captured.out
+    assert "CHECK Pages demo: https://xinjian0101.github.io/novel-workbench/" in captured.out
+    assert "CHECK Release wheel:" in captured.out
+    assert "CHECK CI badge:" in captured.out
+    assert "CHECK Pages badge:" in captured.out
+    assert "CHECK Stars badge:" in captured.out

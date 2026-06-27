@@ -40,6 +40,7 @@ REQUIRED_FILES = [
     ".github/ISSUE_TEMPLATE/config.yml",
     ".github/pull_request_template.md",
     "scripts/build_pages_demo.py",
+    "scripts/verify_public_links.py",
 ]
 
 REQUIRED_TEXT = {
@@ -110,6 +111,7 @@ REQUIRED_TEXT = {
         "novel --workspace workspace tour --output-dir exports",
         "python scripts/check.py",
         "python scripts/build_pages_demo.py public",
+        "python scripts/verify_public_links.py",
     ],
     "docs/LAUNCH_KIT.md": [
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
