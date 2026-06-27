@@ -8,6 +8,7 @@ Use this page as the source of truth for visual and demo assets.
 - Pages demo: https://xinjian0101.github.io/novel-workbench/
 - Launch announcement: https://github.com/xinjian0101/novel-workbench/discussions/7
 - README showcase: `assets/readme-showcase.svg`
+- Terminal demo: `assets/terminal-demo.svg`
 - Social preview source: `assets/social-preview.svg`
 - Output examples: `docs/OUTPUT_EXAMPLES.md`
 - Use-case guide: `docs/USE_CASES.md`
@@ -33,6 +34,8 @@ Use this page as the source of truth for visual and demo assets.
 ## Visual asset usage
 
 Use `assets/readme-showcase.svg` inside README and docs.
+
+Use `assets/terminal-demo.svg` when a launch surface needs a compact command-flow preview.
 
 Use `assets/social-preview.svg` when setting a GitHub social preview image or preparing launch graphics. If a platform requires PNG, export the SVG from a browser or design tool at 1280 by 640 pixels.
 

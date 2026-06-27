@@ -81,6 +81,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 - README links to the FAQ for privacy, install, import, export, and PyPI status questions.
 - README explains why the repository is worth starring.
 - README renders `assets/readme-showcase.svg`.
+- README renders `assets/terminal-demo.svg`.
 - GitHub social preview can use `assets/social-preview.svg`.
 - Live demo returns HTTP 200.
 - CI and Pages badges are green.

@@ -16,6 +16,8 @@ Launch announcement: [GitHub Discussion #7](https://github.com/xinjian0101/novel
 
 ![Novel Workbench feature showcase](assets/readme-showcase.svg)
 
+![Novel Workbench terminal demo](assets/terminal-demo.svg)
+
 ```text
 $ novel sample
 Created sample project: moon-archive (2 chapters)
