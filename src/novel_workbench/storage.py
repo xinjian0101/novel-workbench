@@ -22,6 +22,7 @@ EXPORT_TEMPLATES = {
     "handoff",
     "momentum",
     "outline",
+    "pitch",
     "progress",
     "review",
     "revision",
@@ -29,6 +30,7 @@ EXPORT_TEMPLATES = {
 EXPORT_PACK_TEMPLATES = (
     ("manuscript", "default", "{slug}.md"),
     ("frontmatter", "frontmatter", "{slug}-frontmatter.md"),
+    ("pitch", "pitch", "{slug}-pitch.md"),
     ("focus", "focus", "{slug}-focus.md"),
     ("handoff", "handoff", "{slug}-handoff.md"),
     ("momentum", "momentum", "{slug}-momentum.md"),
@@ -869,6 +871,8 @@ class ProjectStore:
                 lines = momentum_lines(project)
             elif template == "outline":
                 lines = outline_lines(project)
+            elif template == "pitch":
+                lines = pitch_lines(project)
             elif template == "progress":
                 lines = _progress_export_lines(project)
             elif template == "review":
@@ -1402,6 +1406,63 @@ def handoff_lines(project: NovelProject) -> list[str]:
     return lines
 
 
+def pitch_lines(project: NovelProject) -> list[str]:
+    stats = _stats_for_project(project)
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    next_chapter = next((chapter for chapter in chapters if chapter.status != "done"), None)
+    character_notes = [note for note in sorted(project.notes, key=lambda item: item.id) if note.kind == "character"]
+    location_notes = [note for note in sorted(project.notes, key=lambda item: item.id) if note.kind == "location"]
+
+    lines = [f"# {project.title} Pitch", ""]
+    lines.extend(["## Logline", ""])
+    if project.synopsis.strip():
+        lines.append(project.synopsis.strip())
+    else:
+        lines.append("Add a one-paragraph synopsis before sharing this pitch.")
+
+    lines.extend(["", "## Positioning", ""])
+    if project.genre.strip():
+        lines.append(f"- Genre: {project.genre}")
+    if project.audience.strip():
+        lines.append(f"- Audience: {project.audience}")
+    lines.append(f"- Manuscript words: {stats['words']}")
+    lines.append(f"- Chapters: {stats['chapters']}")
+    if stats["target_words"] is not None:
+        lines.append(f"- Target progress: {stats['progress_percent']}% of {stats['target_words']} words")
+
+    lines.extend(["", "## Story Assets", ""])
+    if character_notes:
+        names = ", ".join(note.title for note in character_notes[:5])
+        lines.append(f"- Characters: {names}")
+    else:
+        lines.append("- Characters: add character notes to make the pitch more concrete.")
+    if location_notes:
+        names = ", ".join(note.title for note in location_notes[:5])
+        lines.append(f"- Locations: {names}")
+    else:
+        lines.append("- Locations: add location notes when setting is part of the hook.")
+
+    lines.extend(["", "## Current Hook", ""])
+    if next_chapter is None:
+        if chapters:
+            lines.append("- Draft chapters are marked done; use the review report to prepare the next pitch pass.")
+        else:
+            lines.append("- Add the first chapter to show the opening situation.")
+    else:
+        lines.append(f"- Next chapter: {next_chapter.number}. {next_chapter.title} [{next_chapter.status}]")
+        if next_chapter.summary:
+            lines.append(f"  - {next_chapter.summary}")
+
+    lines.extend(["", "## Share Copy", ""])
+    if project.synopsis.strip():
+        descriptor = project.genre.strip() or "novel"
+        audience = f" for {project.audience.strip()}" if project.audience.strip() else ""
+        lines.append(f"{project.title} is a {descriptor}{audience}: {project.synopsis.strip()}")
+    else:
+        lines.append(f"{project.title} is ready for a sharper public pitch once synopsis, genre, and audience are set.")
+    return lines
+
+
 def momentum_lines(project: NovelProject) -> list[str]:
     stats = _stats_for_project(project)
     lines = [f"# {project.title} Momentum", ""]
@@ -1791,6 +1852,7 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
             ]
         ),
         "progress_log": "\n".join(_progress_log_lines(project)),
+        "pitch_brief": "\n".join(pitch_lines(project)),
         "review_report": "\n".join(review_lines(project)),
         "revision_checklist": "\n".join(revision_lines(project)),
     }

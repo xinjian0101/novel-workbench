@@ -16,6 +16,7 @@ from novel_workbench.storage import (
     momentum_lines,
     outline_lines,
     parse_markdown_chapters,
+    pitch_lines,
     planning_lines,
     review_lines,
     revision_lines,
@@ -354,6 +355,29 @@ def test_handoff_lines_builds_ai_ready_project_context(tmp_path: Path) -> None:
     assert "| 1 | Opening | revising | 3 | Introduce the central clue. |" in lines
     assert "| 2026-06-26 | 300 | Drafted the opening. |" in lines
     assert "Continue Chapter 1: Opening. Preserve the synopsis, continuity notes, current chapter status, and recent progress." in lines
+
+
+def test_pitch_lines_builds_shareable_project_pitch(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel", "A detective follows a signal into a flooded archive.")
+    store.update_project_metadata("first-novel", genre="mystery", audience="adult")
+    store.set_target_words("first-novel", 80000)
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft", "The first clue arrives.")
+    store.add_note("first-novel", "Ada", "Detective protagonist.", "character")
+    store.add_note("first-novel", "Moon Archive", "A sealed archive under the old city.", "location")
+
+    lines = pitch_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Pitch" in lines
+    assert "## Logline" in lines
+    assert "A detective follows a signal into a flooded archive." in lines
+    assert "- Genre: mystery" in lines
+    assert "- Audience: adult" in lines
+    assert "- Target progress: 0% of 80000 words" in lines
+    assert "- Characters: Ada" in lines
+    assert "- Locations: Moon Archive" in lines
+    assert "- Next chapter: 1. Opening [draft]" in lines
+    assert "First Novel is a mystery for adult: A detective follows a signal into a flooded archive." in lines
 
 
 def test_project_context_builds_machine_readable_agent_payload(tmp_path: Path) -> None:
@@ -727,6 +751,7 @@ def test_export_pack_writes_all_standard_reports(tmp_path: Path) -> None:
     assert names == [
         "first-novel.md",
         "first-novel-frontmatter.md",
+        "first-novel-pitch.md",
         "first-novel-focus.md",
         "first-novel-handoff.md",
         "first-novel-momentum.md",
@@ -737,6 +762,7 @@ def test_export_pack_writes_all_standard_reports(tmp_path: Path) -> None:
         "first-novel-revision.md",
     ]
     assert (output_dir / "first-novel.md").read_text(encoding="utf-8").startswith("# First Novel\n\nA concise premise.")
+    assert "# First Novel Pitch" in (output_dir / "first-novel-pitch.md").read_text(encoding="utf-8")
     assert "# First Novel Focus" in (output_dir / "first-novel-focus.md").read_text(encoding="utf-8")
     assert "# First Novel Handoff" in (output_dir / "first-novel-handoff.md").read_text(encoding="utf-8")
     assert "# First Novel Momentum" in (output_dir / "first-novel-momentum.md").read_text(encoding="utf-8")
@@ -856,6 +882,7 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "{momentum_report}\n\n"
         "{status_board}\n\n"
         "{chapter_table}\n\n"
+        "{pitch_brief}\n\n"
         "{review_report}\n\n"
         "{revision_checklist}\n",
         encoding="utf-8",
@@ -907,6 +934,22 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "| # | Title | Status | Words |\n"
         "|---:|---|---|---:|\n"
         "| 1 | Opening | done | 3 |\n\n"
+        "# First Novel Pitch\n\n"
+        "## Logline\n\n"
+        "A concise premise.\n\n"
+        "## Positioning\n\n"
+        "- Genre: fantasy\n"
+        "- Audience: adult\n"
+        "- Manuscript words: 3\n"
+        "- Chapters: 1\n"
+        "- Target progress: 30% of 10 words\n\n"
+        "## Story Assets\n\n"
+        "- Characters: add character notes to make the pitch more concrete.\n"
+        "- Locations: add location notes when setting is part of the hook.\n\n"
+        "## Current Hook\n\n"
+        "- Draft chapters are marked done; use the review report to prepare the next pitch pass.\n\n"
+        "## Share Copy\n\n"
+        "First Novel is a fantasy for adult: A concise premise.\n\n"
         "# First Novel Review\n\n"
         "## Summary\n\n"
         "- Chapters: 1\n"

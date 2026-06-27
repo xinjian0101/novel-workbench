@@ -20,6 +20,7 @@ from .storage import (
     handoff_lines,
     momentum_lines,
     outline_lines,
+    pitch_lines,
     planning_lines,
     review_lines,
     revision_lines,
@@ -42,6 +43,7 @@ EXPORT_TEMPLATE_DESCRIPTIONS = {
     "handoff": "AI/editor handoff brief with project context",
     "momentum": "writing momentum report with weekly totals",
     "outline": "chapter and scene outline document",
+    "pitch": "shareable logline, positioning, and public copy",
     "progress": "project progress report with logs and target pace",
     "review": "manuscript readiness report",
     "revision": "revision checklist for edit passes",
@@ -69,6 +71,7 @@ COMPLETION_COMMANDS = (
     "momentum",
     "board",
     "outline",
+    "pitch",
     "plan",
     "review",
     "revision",
@@ -249,6 +252,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     outline = subparsers.add_parser("outline", help="Show a structured project outline.")
     outline.add_argument("slug")
+
+    pitch = subparsers.add_parser("pitch", help="Show a shareable project pitch.")
+    pitch.add_argument("slug")
 
     plan = subparsers.add_parser("plan", help="Show a planning view with progress, chapters, scenes, and notes.")
     plan.add_argument("slug")
@@ -597,6 +603,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "outline":
         project = store.get_project(args.slug)
         print("\n".join(outline_lines(project)))
+        return 0
+    if args.command == "pitch":
+        project = store.get_project(args.slug)
+        print("\n".join(pitch_lines(project)))
         return 0
     if args.command == "plan":
         project = store.get_project(args.slug)

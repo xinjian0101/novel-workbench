@@ -85,6 +85,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "momentum", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "board", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "outline", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "pitch", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "plan", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "review", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "revision", "renamed-novel"]) == 0
@@ -104,6 +105,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "momentum.md"), "--template", "momentum"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "board.md"), "--template", "board"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "outline.md"), "--template", "outline"]) == 0
+    assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "pitch.md"), "--template", "pitch"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "frontmatter.md"), "--template", "frontmatter"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "review.md"), "--template", "review"]) == 0
@@ -141,6 +143,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "# Renamed Novel Momentum" in captured.out
     assert "# Renamed Novel Status Board" in captured.out
     assert "# Renamed Novel Outline" in captured.out
+    assert "# Renamed Novel Pitch" in captured.out
     assert "# Renamed Novel Plan" in captured.out
     assert "# Renamed Novel Review" in captured.out
     assert "# Renamed Novel Revision Checklist" in captured.out
@@ -206,6 +209,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "# Renamed Novel Momentum" in (tmp_path / "momentum.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Status Board" in (tmp_path / "board.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Outline" in (tmp_path / "outline.md").read_text(encoding="utf-8")
+    assert "# Renamed Novel Pitch" in (tmp_path / "pitch.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Review" in (tmp_path / "review.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "revision.md").read_text(encoding="utf-8")
@@ -220,6 +224,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "https://example.com/renamed-novel/index.html" in (tmp_path / "site" / "sitemap.xml").read_text(encoding="utf-8")
     assert "Sitemap: https://example.com/renamed-novel/sitemap.xml" in (tmp_path / "site" / "robots.txt").read_text(encoding="utf-8")
     assert "# Renamed Novel Momentum" in (tmp_path / "pack" / "renamed-novel-momentum.md").read_text(encoding="utf-8")
+    assert "# Renamed Novel Pitch" in (tmp_path / "pack" / "renamed-novel-pitch.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Handoff" in (tmp_path / "pack" / "renamed-novel-handoff.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "pack" / "renamed-novel-revision.md").read_text(encoding="utf-8")
     assert backup_file.exists()
@@ -403,6 +408,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "context" in captured.out
     assert "momentum" in captured.out
     assert "board" in captured.out
+    assert "pitch" in captured.out
     assert "plan" in captured.out
     assert "review" in captured.out
     assert "revision" in captured.out
@@ -431,6 +437,7 @@ def test_cli_lists_templates(capsys) -> None:
     assert "Export templates:" in captured.out
     assert "- default (default):" in captured.out
     assert "- handoff:" in captured.out
+    assert "- pitch:" in captured.out
     assert "- revision:" in captured.out
 
 

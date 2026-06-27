@@ -23,6 +23,14 @@ Handoff brief:
 - Includes project snapshot, continuity notes, recent progress, and a continuation prompt.
 ```
 
+Project pitch:
+
+```text
+Pitch brief:
+- Logline, genre, audience, story assets, and current hook.
+- Includes short public copy for launch posts, beta readers, or editor notes.
+```
+
 Context JSON:
 
 ```text
@@ -187,6 +195,7 @@ Output files:
 ```text
 moon-archive.md
 moon-archive-frontmatter.md
+moon-archive-pitch.md
 moon-archive-focus.md
 moon-archive-handoff.md
 moon-archive-momentum.md

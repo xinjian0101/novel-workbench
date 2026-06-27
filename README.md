@@ -292,6 +292,7 @@ novel context <slug>
 novel momentum <slug>
 novel board <slug>
 novel outline <slug>
+novel pitch <slug>
 novel plan <slug>
 novel review <slug>
 novel revision <slug>
@@ -320,7 +321,7 @@ novel add-scene <slug> <chapter> <title> [--summary "..."] [--summary-file path]
 novel list-scenes <slug> <chapter>
 novel update-scene <slug> <chapter> <scene> [--title "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel delete-scene <slug> <chapter> <scene>
-novel export <slug> <output.md> [--template board|default|focus|frontmatter|handoff|momentum|outline|progress|review|revision] [--template-file path]
+novel export <slug> <output.md> [--template board|default|focus|frontmatter|handoff|momentum|outline|pitch|progress|review|revision] [--template-file path]
 novel export-context <slug> <output.json>
 novel export-site <slug> <output-dir> [--theme classic|editorial|focus] [--base-url https://example.com/site]
 novel export-pack <slug> <output-dir>

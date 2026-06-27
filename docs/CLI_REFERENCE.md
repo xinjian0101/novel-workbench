@@ -236,6 +236,17 @@ Show a structured project outline with synopsis, metadata, chapter statuses, and
 novel --workspace workspace outline moon-archive
 ```
 
+## `novel pitch`
+
+Show a shareable project pitch with logline, positioning, story assets, current hook, and short public copy.
+
+```powershell
+novel --workspace workspace pitch moon-archive
+novel --workspace workspace export moon-archive exports/moon-archive-pitch.md --template pitch
+```
+
+Use this when preparing a launch post, editor note, beta-reader intro, or project summary for a writing community.
+
 ## `novel plan`
 
 Show a richer planning view with project positioning, progress targets, chapters, scenes, grouped notes, and writing log entries.
@@ -547,6 +558,7 @@ novel --workspace workspace export moon-archive exports/moon-archive-focus.md --
 novel --workspace workspace export moon-archive exports/moon-archive-handoff.md --template handoff
 novel --workspace workspace export moon-archive exports/moon-archive-momentum.md --template momentum
 novel --workspace workspace export moon-archive exports/moon-archive-outline.md --template outline
+novel --workspace workspace export moon-archive exports/moon-archive-pitch.md --template pitch
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
 novel --workspace workspace export moon-archive exports/moon-archive-review.md --template review
@@ -562,6 +574,7 @@ Templates:
 - `handoff`: shareable AI/editor handoff brief with project context, next action, continuity notes, and a continuation prompt.
 - `momentum`: shareable writing momentum report with target pace, weekly totals, and recent progress entries.
 - `outline`: shareable outline document with synopsis, metadata, chapter summaries, and scene beats.
+- `pitch`: shareable logline, project positioning, story assets, current hook, and public copy.
 - `progress`: shareable project progress report with overview, writing log totals, streaks, target deadline pace, remaining words, status word counts, a chapter table, and progress log entries.
 - `review`: shareable manuscript readiness report with findings and strengths.
 - `revision`: shareable revision checklist with project notes, chapter checkboxes, and unfinished scene follow-ups.
