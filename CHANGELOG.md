@@ -15,6 +15,7 @@
 - Added a GitHub Pages workflow and demo site builder for publishing a live project preview.
 - Added a launch readiness audit and launch kit for public sharing.
 - Added showcase and social preview SVG assets for repository promotion.
+- Added structured GitHub issue forms and a contributor-focused pull request template.
 - Added writing momentum reports with weekly totals and recent progress entries.
 - Added chapter status board output and export for draft, revising, and done work.
 - Added manuscript readiness review reports with author-facing findings and strengths.

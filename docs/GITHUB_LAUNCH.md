@@ -11,6 +11,7 @@ Use this checklist before making the repository public or announcing it.
 - Features: enable Issues and Discussions if maintainers can respond.
 - Dependabot: enabled for GitHub Actions through `.github/dependabot.yml`.
 - Pages: enable GitHub Actions as the Pages source so `.github/workflows/pages.yml` can publish the generated demo site.
+- Community intake: issue forms and the pull request template should stay focused on reproducible bugs, author workflows, and the local-first project model.
 
 ## README Review
 
@@ -20,6 +21,7 @@ Use this checklist before making the repository public or announcing it.
 - The terminal demo matches `python scripts/demo.py`.
 - The Pages demo builds with `python scripts/build_pages_demo.py public`.
 - The showcase assets in `docs/SHOWCASE.md` render in the README and social preview.
+- The issue forms and pull request template make first contributions easy to scope.
 - Quick Start works on a clean checkout.
 - No temporary or example-only GitHub URLs remain.
 - Security and contribution links resolve.

@@ -1,0 +1,58 @@
+name: Feature request
+description: Suggest a focused improvement for writers using Novel Workbench.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feature requests work best when they start from a concrete writing workflow. Keep the local-first, offline model in mind.
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Writing workflow
+      description: What are you trying to do as an author, editor, or tool builder?
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is difficult, slow, or currently impossible?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the smallest useful change.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What can users do today, and why is it not enough?
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CLI commands
+        - Import/export
+        - Planning and notes
+        - Progress tracking
+        - Static site or reports
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Fit with project constraints
+      options:
+        - label: This can work without cloud services, telemetry, or user accounts.
+          required: true
+        - label: This keeps manuscripts in local user-controlled files.
+          required: true

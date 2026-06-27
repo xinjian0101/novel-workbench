@@ -22,8 +22,11 @@ REQUIRED_FILES = [
     ".github/workflows/ci.yml",
     ".github/workflows/pages.yml",
     ".github/workflows/release.yml",
-    ".github/ISSUE_TEMPLATE/bug_report.md",
-    ".github/ISSUE_TEMPLATE/feature_request.md",
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    ".github/ISSUE_TEMPLATE/feature_request.yml",
+    ".github/ISSUE_TEMPLATE/question.yml",
+    ".github/ISSUE_TEMPLATE/config.yml",
+    ".github/pull_request_template.md",
     "scripts/build_pages_demo.py",
 ]
 
@@ -56,6 +59,22 @@ REQUIRED_TEXT = {
         "Live Demo",
         "Documentation",
         "Source",
+    ],
+    ".github/ISSUE_TEMPLATE/bug_report.yml": [
+        "Steps to reproduce",
+        "This report does not include private manuscript text",
+    ],
+    ".github/ISSUE_TEMPLATE/feature_request.yml": [
+        "Writing workflow",
+        "This keeps manuscripts in local user-controlled files",
+    ],
+    ".github/ISSUE_TEMPLATE/question.yml": [
+        "GitHub Discussions",
+        "Static site demo",
+    ],
+    ".github/pull_request_template.md": [
+        "python scripts/check.py",
+        "Existing project JSON files remain readable",
     ],
 }
 

@@ -63,6 +63,8 @@ Demo: https://xinjian0101.github.io/novel-workbench/
 - CI and Pages badges are green.
 - GitHub topics match `writing`, `novel`, `markdown`, `cli`, `local-first`, `author-tools`, and `python`.
 - Issues and Discussions are enabled.
+- Bug, feature, and question issue forms are available.
+- The pull request template asks for `python scripts/check.py`.
 - `python scripts/check.py` passes.
 - `python scripts/launch_audit.py` passes.
 - First comment links to the live demo and the 60-second tour.

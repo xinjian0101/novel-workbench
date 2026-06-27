@@ -1,1 +1,8 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Live demo
+    url: https://xinjian0101.github.io/novel-workbench/
+    about: Try the generated sample project site before opening an issue.
+  - name: CLI reference
+    url: https://github.com/xinjian0101/novel-workbench/blob/master/docs/CLI_REFERENCE.md
+    about: Check command syntax and examples.

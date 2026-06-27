@@ -1,0 +1,80 @@
+name: Bug report
+description: Report a reproducible problem in Novel Workbench.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping make Novel Workbench reliable. Please include enough detail for someone else to reproduce the problem locally.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        List the exact commands or file edits needed to reproduce the issue.
+        1. Run `novel --workspace workspace sample`
+        2. Run ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the error output if there is one.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: For example, 0.1.0 or c4967c5.
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Install source
+      options:
+        - GitHub pip install
+        - Editable local checkout
+        - Source archive or wheel
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Include OS, Python version, shell, and terminal if relevant.
+        OS:
+        Python:
+        Shell:
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submit checks
+      options:
+        - label: I searched existing issues and discussions for a duplicate.
+          required: true
+        - label: This report does not include private manuscript text, secrets, or personal data.
+          required: true

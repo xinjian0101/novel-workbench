@@ -6,6 +6,7 @@ Novel Workbench uses GitHub Issues and Discussions for public project work.
 
 - Bug reports: use the bug report issue template.
 - Feature ideas: use the feature request issue template.
+- Questions that should become documentation: use the question issue template.
 - New contributors: start with issues labeled `good first issue`.
 - Roadmap discussion: use issues labeled `roadmap`.
 - Questions and workflow ideas: use GitHub Discussions.
@@ -18,6 +19,7 @@ Novel Workbench uses GitHub Issues and Discussions for public project work.
 - `roadmap`: planned product work
 - `good first issue`: scoped work suitable for new contributors
 - `help wanted`: maintainers would welcome outside implementation help
+- `question`: setup, workflow, or documentation questions
 
 ## Maintainer Notes
 
