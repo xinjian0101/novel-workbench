@@ -24,6 +24,7 @@ Use this page as the source of truth for visual and demo assets.
 - The project can be exported as Markdown reports, AI/editor context JSON, and a static HTML site.
 - The Pages demo includes chapter-level scene summaries, so readers can inspect story planning depth before opening the manuscript view.
 - The exported HTML includes description, Open Graph, and Twitter summary metadata for cleaner social link previews.
+- The Pages demo publishes `sitemap.xml` and `robots.txt` so public crawlers can discover the dashboard, manuscript, and context JSON.
 - GitHub Pages can publish a working static project dashboard.
 - The static site includes a "Try Novel Workbench" callout with the install command and `novel --workspace workspace tour --output-dir exports`.
 - The output examples show generated Markdown, handoff, context JSON, static site, and report-pack shapes.
@@ -57,4 +58,6 @@ python scripts/check.py
 - `public/index.html` contains `novel --workspace workspace tour --output-dir exports`.
 - `public/manuscript.html` contains `They opened the hatch`.
 - `public/context.json` contains `"slug": "moon-archive"`.
+- `public/sitemap.xml` contains `https://xinjian0101.github.io/novel-workbench/index.html`.
+- `public/robots.txt` contains `Sitemap: https://xinjian0101.github.io/novel-workbench/sitemap.xml`.
 - The published Pages URL returns HTTP 200.

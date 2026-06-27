@@ -719,15 +719,19 @@ class ProjectStore:
         output_path.write_text(json.dumps(context, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         return output_path
 
-    def export_site(self, slug: str, output_dir: Path, theme: str = "classic") -> list[Path]:
+    def export_site(self, slug: str, output_dir: Path, theme: str = "classic", base_url: str = "") -> list[Path]:
         project = self.get_project(slug)
         theme = validate_site_theme(theme)
+        base_url = _normalize_site_base_url(base_url)
         output_dir.mkdir(parents=True, exist_ok=True)
         files = {
             output_dir / "index.html": _site_index_html(project, theme),
             output_dir / "manuscript.html": _site_manuscript_html(project, theme),
             output_dir / "context.json": json.dumps(_context_for_project(project), indent=2, ensure_ascii=False) + "\n",
         }
+        if base_url:
+            files[output_dir / "sitemap.xml"] = _site_sitemap_xml(base_url)
+            files[output_dir / "robots.txt"] = _site_robots_txt(base_url)
         for path, content in files.items():
             path.write_text(content, encoding="utf-8")
         return list(files)
@@ -1039,6 +1043,30 @@ def _site_meta_tags(project: NovelProject, page_label: str) -> str:
             f'<meta name="twitter:description" content="{_html(description)}">',
         ]
     )
+
+
+def _normalize_site_base_url(base_url: str) -> str:
+    base_url = base_url.strip().rstrip("/")
+    if not base_url:
+        return ""
+    if not (base_url.startswith("https://") or base_url.startswith("http://")):
+        raise StorageError("Site base URL must start with http:// or https://.")
+    return base_url
+
+
+def _site_sitemap_xml(base_url: str) -> str:
+    urls = ["index.html", "manuscript.html", "context.json"]
+    entries = "\n".join(f"  <url><loc>{_html(base_url + '/' + url)}</loc></url>" for url in urls)
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{entries}\n"
+        "</urlset>\n"
+    )
+
+
+def _site_robots_txt(base_url: str) -> str:
+    return f"User-agent: *\nAllow: /\nSitemap: {base_url}/sitemap.xml\n"
 
 
 def _site_chapter_list(chapters: list[Chapter]) -> str:

@@ -8,6 +8,9 @@ from pathlib import Path
 from novel_workbench.storage import ProjectStore
 
 
+PAGES_BASE_URL = "https://xinjian0101.github.io/novel-workbench"
+
+
 def build_demo_site(output_dir: Path) -> Path:
     if output_dir.exists():
         shutil.rmtree(output_dir)
@@ -25,7 +28,7 @@ def build_demo_site(output_dir: Path) -> Path:
         store.move_chapter(project.slug, 2, 1)
         store.add_progress(project.slug, 1200, "2026-06-26", "Drafted the descent sequence.")
         store.set_target_words(project.slug, 80000)
-        store.export_site(project.slug, output_dir)
+        store.export_site(project.slug, output_dir, base_url=PAGES_BASE_URL)
     return output_dir
 
 

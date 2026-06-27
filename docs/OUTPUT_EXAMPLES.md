@@ -37,6 +37,8 @@ Static site export:
 index.html
 manuscript.html
 context.json
+sitemap.xml
+robots.txt
 Demo: https://xinjian0101.github.io/novel-workbench/
 Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 ```
@@ -47,7 +49,7 @@ The GitHub Pages demo is generated with the same static export path available to
 
 - Demo: https://xinjian0101.github.io/novel-workbench/
 - Build command: `python scripts/build_pages_demo.py public`
-- User command: `novel --workspace workspace export-site moon-archive exports/moon-archive-site`
+- User command: `novel --workspace workspace export-site moon-archive exports/moon-archive-site --base-url https://example.com/moon-archive`
 
 The generated directory contains:
 
@@ -55,6 +57,8 @@ The generated directory contains:
 index.html
 manuscript.html
 context.json
+sitemap.xml
+robots.txt
 ```
 
 ## Manuscript Markdown

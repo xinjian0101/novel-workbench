@@ -812,6 +812,30 @@ def test_export_site_supports_static_site_themes(tmp_path: Path) -> None:
     assert "[data-theme=editorial]" in index
 
 
+def test_export_site_writes_discovery_files_with_base_url(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    output_dir = tmp_path / "site"
+
+    outputs = store.export_site("first-novel", output_dir, base_url="https://example.com/books/first-novel/")
+
+    assert [path.name for path in outputs] == ["index.html", "manuscript.html", "context.json", "sitemap.xml", "robots.txt"]
+    sitemap = (output_dir / "sitemap.xml").read_text(encoding="utf-8")
+    robots = (output_dir / "robots.txt").read_text(encoding="utf-8")
+    assert "<loc>https://example.com/books/first-novel/index.html</loc>" in sitemap
+    assert "<loc>https://example.com/books/first-novel/manuscript.html</loc>" in sitemap
+    assert "<loc>https://example.com/books/first-novel/context.json</loc>" in sitemap
+    assert "Sitemap: https://example.com/books/first-novel/sitemap.xml" in robots
+
+
+def test_export_site_rejects_invalid_base_url(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel")
+
+    with pytest.raises(StorageError, match="Site base URL"):
+        store.export_site("first-novel", tmp_path / "site", base_url="first-novel")
+
+
 def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")

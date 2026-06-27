@@ -109,7 +109,22 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "review.md"), "--template", "review"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "revision.md"), "--template", "revision"]) == 0
     assert main(["--workspace", str(workspace), "export-context", "renamed-novel", str(tmp_path / "context.json")]) == 0
-    assert main(["--workspace", str(workspace), "export-site", "renamed-novel", str(tmp_path / "site"), "--theme", "focus"]) == 0
+    assert (
+        main(
+            [
+                "--workspace",
+                str(workspace),
+                "export-site",
+                "renamed-novel",
+                str(tmp_path / "site"),
+                "--theme",
+                "focus",
+                "--base-url",
+                "https://example.com/renamed-novel/",
+            ]
+        )
+        == 0
+    )
     assert main(["--workspace", str(workspace), "export-pack", "renamed-novel", str(tmp_path / "pack")]) == 0
     assert main(["--workspace", str(workspace), "delete-note", "renamed-novel", "1"]) == 0
     assert main(["--workspace", str(workspace), "backup", "renamed-novel", str(backup_dir)]) == 0
@@ -202,6 +217,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert 'data-theme="focus"' in site_index
     assert "Goodbye" in (tmp_path / "site" / "manuscript.html").read_text(encoding="utf-8")
     assert json.loads((tmp_path / "site" / "context.json").read_text(encoding="utf-8"))["project"]["slug"] == "renamed-novel"
+    assert "https://example.com/renamed-novel/index.html" in (tmp_path / "site" / "sitemap.xml").read_text(encoding="utf-8")
+    assert "Sitemap: https://example.com/renamed-novel/sitemap.xml" in (tmp_path / "site" / "robots.txt").read_text(encoding="utf-8")
     assert "# Renamed Novel Momentum" in (tmp_path / "pack" / "renamed-novel-momentum.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Handoff" in (tmp_path / "pack" / "renamed-novel-handoff.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "pack" / "renamed-novel-revision.md").read_text(encoding="utf-8")
@@ -447,6 +464,8 @@ def test_pages_demo_script_builds_static_site(tmp_path: Path, capsys) -> None:
     assert "1.1 Hatch Pressure" in index
     assert "Ada chooses to descend before the signal window closes." in index
     assert "They opened the hatch" in (output_dir / "manuscript.html").read_text(encoding="utf-8")
+    assert "https://xinjian0101.github.io/novel-workbench/index.html" in (output_dir / "sitemap.xml").read_text(encoding="utf-8")
+    assert "Sitemap: https://xinjian0101.github.io/novel-workbench/sitemap.xml" in (output_dir / "robots.txt").read_text(encoding="utf-8")
     assert context["project"]["slug"] == "moon-archive"
     assert context["chapter_state"][0]["scenes"][0]["label"] == "1.1"
     assert context["chapter_state"][0]["scenes"][0]["title"] == "Hatch Pressure"

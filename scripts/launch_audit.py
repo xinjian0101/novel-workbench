@@ -68,6 +68,7 @@ REQUIRED_TEXT = {
         "docs/OUTPUT_EXAMPLES.md",
         "export-site",
         "--theme classic|editorial|focus",
+        "--base-url https://example.com/site",
         "docs/LAUNCH_KIT.md",
         "docs/POSITIONING.md",
         "docs/SHOWCASE.md",
@@ -113,6 +114,8 @@ REQUIRED_TEXT = {
         "python scripts/build_pages_demo.py public",
         "python scripts/verify_public_links.py",
         "python scripts/verify_public_links.py --min-stars 10000",
+        "sitemap.xml",
+        "robots.txt",
     ],
     "docs/LAUNCH_KIT.md": [
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
@@ -159,6 +162,8 @@ REQUIRED_TEXT = {
         "novel_workbench-0.1.1-py3-none-any.whl",
         "docs/PYPI_PUBLISHING.md",
         "python scripts/release_check.py",
+        "sitemap.xml",
+        "robots.txt",
     ],
     ".env.example": [
         "NOVEL_WORKBENCH_HOME=workspace",
@@ -174,6 +179,8 @@ REQUIRED_TEXT = {
         "scene summaries",
         "Open Graph",
         "Twitter summary metadata",
+        "sitemap.xml",
+        "robots.txt",
         "novel --workspace workspace tour --output-dir exports",
         "Demo acceptance checks",
     ],
@@ -188,6 +195,8 @@ REQUIRED_TEXT = {
         "Report Pack",
         "https://xinjian0101.github.io/novel-workbench/",
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
+        "sitemap.xml",
+        "robots.txt",
         "python scripts/check.py",
     ],
     "docs/FAQ.md": [

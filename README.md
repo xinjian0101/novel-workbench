@@ -317,7 +317,7 @@ novel update-scene <slug> <chapter> <scene> [--title "..."] [--summary "..."] [-
 novel delete-scene <slug> <chapter> <scene>
 novel export <slug> <output.md> [--template board|default|focus|frontmatter|handoff|momentum|outline|progress|review|revision] [--template-file path]
 novel export-context <slug> <output.json>
-novel export-site <slug> <output-dir> [--theme classic|editorial|focus]
+novel export-site <slug> <output-dir> [--theme classic|editorial|focus] [--base-url https://example.com/site]
 novel export-pack <slug> <output-dir>
 novel backup <slug> <output-dir>
 novel restore-backup <backup.json> [--force]
