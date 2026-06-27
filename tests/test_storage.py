@@ -775,6 +775,12 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
     context = json.loads((output_dir / "context.json").read_text(encoding="utf-8"))
     assert "<h1>First &lt;Novel&gt;</h1>" in index
     assert "A concise &amp; private premise." in index
+    assert '<meta name="generator" content="Novel Workbench">' in index
+    assert '<meta name="description" content="A concise &amp; private premise.">' in index
+    assert '<meta property="og:title" content="First &lt;Novel&gt; - Project dashboard">' in index
+    assert '<meta property="og:description" content="A concise &amp; private premise.">' in index
+    assert '<meta name="twitter:card" content="summary">' in index
+    assert '<meta name="twitter:title" content="First &lt;Novel&gt; - Project dashboard">' in index
     assert "Read manuscript" in index
     assert "Download context JSON" in index
     assert "Try Novel Workbench" in index
@@ -787,6 +793,8 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
     assert ".scenes{" in index
     assert "Drafted &lt;opening&gt;." in index
     assert "A clue &lt;appears&gt;." in manuscript
+    assert '<meta property="og:title" content="First &lt;Novel&gt; - Manuscript">' in manuscript
+    assert '<meta name="twitter:description" content="A concise &amp; private premise.">' in manuscript
     assert context["format"] == "novel-workbench-project-context"
 
 

@@ -939,6 +939,7 @@ def _site_index_html(project: NovelProject, theme: str = "classic") -> str:
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         f"<title>{_html(project.title)} - Novel Workbench</title>",
+        _site_meta_tags(project, "Project dashboard"),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -998,6 +999,7 @@ def _site_manuscript_html(project: NovelProject, theme: str = "classic") -> str:
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         f"<title>{_html(project.title)} Manuscript</title>",
+        _site_meta_tags(project, "Manuscript"),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1019,6 +1021,24 @@ def _site_manuscript_html(project: NovelProject, theme: str = "classic") -> str:
         )
     body.extend(["</main>", "</body>", "</html>"])
     return "\n".join(body) + "\n"
+
+
+def _site_meta_tags(project: NovelProject, page_label: str) -> str:
+    title = f"{project.title} - {page_label}"
+    description = project.synopsis or "A local-first novel project workspace exported by Novel Workbench."
+    return "\n".join(
+        [
+            '<meta name="generator" content="Novel Workbench">',
+            f'<meta name="description" content="{_html(description)}">',
+            f'<meta property="og:title" content="{_html(title)}">',
+            f'<meta property="og:description" content="{_html(description)}">',
+            '<meta property="og:type" content="website">',
+            '<meta property="og:site_name" content="Novel Workbench">',
+            '<meta name="twitter:card" content="summary">',
+            f'<meta name="twitter:title" content="{_html(title)}">',
+            f'<meta name="twitter:description" content="{_html(description)}">',
+        ]
+    )
 
 
 def _site_chapter_list(chapters: list[Chapter]) -> str:

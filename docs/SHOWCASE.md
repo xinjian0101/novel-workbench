@@ -23,6 +23,7 @@ Use this page as the source of truth for visual and demo assets.
 - The project can be enriched with metadata, notes, progress, and a target word count.
 - The project can be exported as Markdown reports, AI/editor context JSON, and a static HTML site.
 - The Pages demo includes chapter-level scene summaries, so readers can inspect story planning depth before opening the manuscript view.
+- The exported HTML includes description, Open Graph, and Twitter summary metadata for cleaner social link previews.
 - GitHub Pages can publish a working static project dashboard.
 - The static site includes a "Try Novel Workbench" callout with the install command and `novel --workspace workspace tour --output-dir exports`.
 - The output examples show generated Markdown, handoff, context JSON, static site, and report-pack shapes.

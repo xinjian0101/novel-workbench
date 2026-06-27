@@ -172,6 +172,8 @@ REQUIRED_TEXT = {
         "assets/social-preview.svg",
         "Try Novel Workbench",
         "scene summaries",
+        "Open Graph",
+        "Twitter summary metadata",
         "novel --workspace workspace tour --output-dir exports",
         "Demo acceptance checks",
     ],
