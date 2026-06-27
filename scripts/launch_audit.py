@@ -156,7 +156,6 @@ REQUIRED_TEXT = {
         "docs/FIRST_PR.md",
         "https://github.com/xinjian0101/novel-workbench/issues/8",
         "https://github.com/xinjian0101/novel-workbench/issues/9",
-        "https://github.com/xinjian0101/novel-workbench/issues/10",
         "good first issue",
         "help wanted",
     ],
@@ -196,6 +195,18 @@ REQUIRED_TEXT = {
     ],
 }
 
+FORBIDDEN_TEXT = {
+    "README.md": [
+        "https://github.com/xinjian0101/novel-workbench/issues/10",
+    ],
+    "docs/COMMUNITY.md": [
+        "https://github.com/xinjian0101/novel-workbench/issues/10",
+    ],
+    "docs/FIRST_PR.md": [
+        "https://github.com/xinjian0101/novel-workbench/issues/10",
+    ],
+}
+
 
 def audit(root: Path) -> tuple[bool, list[str]]:
     messages: list[str] = []
@@ -221,6 +232,17 @@ def audit(root: Path) -> tuple[bool, list[str]]:
                 continue
             messages.append(f"MISSING text: {relative} lacks {snippet}")
             ok = False
+    for relative, snippets in FORBIDDEN_TEXT.items():
+        path = root / relative
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for snippet in snippets:
+            if snippet in text:
+                messages.append(f"FORBIDDEN text: {relative} contains {snippet}")
+                ok = False
+                continue
+            messages.append(f"OK absent: {relative} omits {snippet}")
     return ok, messages
 
 
