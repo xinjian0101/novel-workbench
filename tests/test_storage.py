@@ -8,6 +8,7 @@ from novel_workbench.storage import (
     DuplicateError,
     NotFoundError,
     ProjectStore,
+    STARTER_TEMPLATES,
     StorageError,
     board_lines,
     focus_lines,
@@ -1358,6 +1359,19 @@ def test_starter_markdown_supports_named_templates(tmp_path: Path) -> None:
 
     assert project.title == "Working Title"
     assert [chapter.title for chapter in project.chapters] == ["The Body", "First Suspect", "False Pattern"]
+
+
+def test_all_starter_templates_can_be_imported(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+
+    for template in sorted(STARTER_TEMPLATES):
+        starter = tmp_path / f"{template}.md"
+        store.write_starter_markdown(starter, template=template)
+        project = store.import_markdown(f"{template}-draft", starter)
+
+        assert project.title == "Working Title"
+        assert len(project.chapters) == 3
+        assert all(chapter.title for chapter in project.chapters)
 
 
 def test_starter_markdown_rejects_unknown_template(tmp_path: Path) -> None:

@@ -146,7 +146,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 
 - Create and list novel projects
 - Create a sample project for instant exploration
-- Generate an importable starter manuscript template
+- Generate importable starter manuscript templates for three-act, hero-journey, mystery, romance, sci-fi, and thriller drafts
 - Rename project slugs and titles without losing chapters
 - Track project genre, audience, and revision notes
 - Add chapters with draft, revising, and done statuses
@@ -280,7 +280,7 @@ novel migrate [--dry-run]
 novel tour [--slug moon-archive] [--output-dir exports]
 novel completion bash|zsh|powershell
 novel sample [--slug moon-archive]
-novel starter <output.md> [--template three-act|hero-journey|mystery] [--force]
+novel starter <output.md> [--template three-act|hero-journey|mystery|romance|sci-fi|thriller] [--force]
 novel create <slug> <title> [--synopsis "..."] [--genre "..."] [--audience "..."]
 novel rename <slug> <new-slug> [--title "..."]
 novel import-markdown <slug> <input.md>

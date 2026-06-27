@@ -111,6 +111,54 @@ Introduce the first plausible answer and the detail that makes it unstable.
 
 Draft the clue trail that seems obvious but points in the wrong direction.
 """,
+    "romance": """# Working Title
+
+One paragraph premise: the two leads, what they want, what keeps them apart, and why choosing love will cost something.
+
+## Chapter 1: First Spark
+
+Show the first charged encounter and the reason neither lead can ignore the other.
+
+## Chapter 2: Forced Proximity
+
+Create the situation that keeps the leads in each other's orbit.
+
+## Chapter 3: First Vulnerability
+
+Draft the moment one lead reveals a need, fear, or wound they meant to hide.
+""",
+    "sci-fi": """# Working Title
+
+One paragraph premise: the speculative idea, the person closest to its consequences, the system under pressure, and the choice that changes the future.
+
+## Chapter 1: The Anomaly
+
+Open with the discovery, malfunction, signal, or impossible data point.
+
+## Chapter 2: First Contact
+
+Draft the first encounter with the force, machine, place, or intelligence that changes the rules.
+
+## Chapter 3: System Failure
+
+Show the moment the old assumptions stop protecting anyone.
+""",
+    "thriller": """# Working Title
+
+One paragraph premise: the threat, the target, the deadline, and the secret that makes escape harder.
+
+## Chapter 1: The Trigger
+
+Open with the incident that turns ordinary danger into a countdown.
+
+## Chapter 2: No Safe Place
+
+Take away the obvious refuge, ally, or explanation.
+
+## Chapter 3: First Reversal
+
+Draft the reveal that proves the protagonist misunderstood the threat.
+""",
 }
 
 

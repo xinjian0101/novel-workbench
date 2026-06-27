@@ -76,6 +76,7 @@ REQUIRED_TEXT = {
         "docs/CODESPACES.md",
         "docs/MAINTAINER_GUIDE.md",
         "docs/OUTPUT_EXAMPLES.md",
+        "three-act|hero-journey|mystery|romance|sci-fi|thriller",
         "export-site",
         "--theme classic|editorial|focus",
         "--base-url https://example.com/site",
@@ -221,6 +222,9 @@ REQUIRED_TEXT = {
     "docs/OUTPUT_EXAMPLES.md": [
         "Launch Post Snippets",
         "Live HTML Demo",
+        "romance",
+        "sci-fi",
+        "thriller",
         "novel --workspace workspace tour --output-dir exports",
         "Manuscript Markdown",
         "AI or Editor Handoff",
@@ -245,6 +249,10 @@ REQUIRED_TEXT = {
     ],
     "docs/USE_CASES.md": [
         "Author Drafting Workspace",
+        "novel starter",
+        "romance",
+        "sci-fi",
+        "thriller",
         "AI or Editor Handoff",
         "docs/EDITOR_WORKFLOWS.md",
         "Static Project Demo",

@@ -100,6 +100,7 @@ Write an importable Markdown manuscript template.
 ```powershell
 novel --workspace workspace starter drafts/working-title.md
 novel --workspace workspace starter drafts/working-title.md --template mystery
+novel --workspace workspace starter drafts/working-title.md --template sci-fi
 novel --workspace workspace starter drafts/working-title.md --force
 novel --workspace workspace import-markdown working-title drafts/working-title.md
 ```
@@ -111,6 +112,9 @@ Templates:
 - `three-act`: opening image, inciting incident, and first choice. This is the default.
 - `hero-journey`: ordinary world, call to adventure, and crossing the threshold.
 - `mystery`: the body, first suspect, and false pattern.
+- `romance`: first spark, forced proximity, and first vulnerability.
+- `sci-fi`: anomaly, first contact, and system failure.
+- `thriller`: trigger, no safe place, and first reversal.
 
 ## `novel create`
 

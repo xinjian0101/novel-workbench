@@ -11,6 +11,7 @@ For copy-paste editor recipes, see [docs/EDITOR_WORKFLOWS.md](EDITOR_WORKFLOWS.m
 Use Novel Workbench when a novel needs structure before it needs a full writing suite.
 
 - Create a project with chapters, scenes, character notes, location notes, and research notes.
+- Start from importable manuscript templates with `novel starter` for `three-act`, `hero-journey`, `mystery`, `romance`, `sci-fi`, and `thriller` drafts.
 - Track daily word-count progress and deadline pace.
 - Export Markdown when the draft is ready for an editor, static site, or publishing pipeline.
 
