@@ -438,12 +438,17 @@ def test_pages_demo_script_builds_static_site(tmp_path: Path, capsys) -> None:
 
     captured = capsys.readouterr()
     index = (output_dir / "index.html").read_text(encoding="utf-8")
+    context = json.loads((output_dir / "context.json").read_text(encoding="utf-8"))
     assert "Built Pages demo site:" in captured.out
     assert "<h1>Moon Archive</h1>" in index
     assert "Try Novel Workbench" in index
     assert "novel --workspace workspace tour --output-dir exports" in index
+    assert "1.1 Hatch Pressure" in index
+    assert "Ada chooses to descend before the signal window closes." in index
     assert "They opened the hatch" in (output_dir / "manuscript.html").read_text(encoding="utf-8")
-    assert json.loads((output_dir / "context.json").read_text(encoding="utf-8"))["project"]["slug"] == "moon-archive"
+    assert context["project"]["slug"] == "moon-archive"
+    assert context["chapter_state"][0]["scenes"][0]["label"] == "1.1"
+    assert context["chapter_state"][0]["scenes"][0]["title"] == "Hatch Pressure"
 
 
 def test_launch_audit_passes_for_repository(capsys) -> None:

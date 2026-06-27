@@ -44,8 +44,22 @@ SAMPLE_PROJECT = {
     "title": "Moon Archive",
     "synopsis": "A historian finds a city under the lunar dust.",
     "chapters": [
-        ("Signal", "The first signal arrived at 03:17."),
-        ("Descent", "They opened the hatch and heard rain below."),
+        {
+            "title": "Signal",
+            "content": "The first signal arrived at 03:17.",
+            "scenes": [
+                ("Night Shift", "Ada notices a repeating pulse hidden in archive static.", "done"),
+                ("False Map", "The team traces the pulse to a city grid that should not exist.", "draft"),
+            ],
+        },
+        {
+            "title": "Descent",
+            "content": "They opened the hatch and heard rain below.",
+            "scenes": [
+                ("Hatch Pressure", "Ada chooses to descend before the signal window closes.", "revising"),
+                ("Underground Rain", "The lower city answers with weather, voices, and a locked door.", "draft"),
+            ],
+        },
     ],
 }
 STARTER_TEMPLATES = {
@@ -330,8 +344,14 @@ class ProjectStore:
 
     def create_sample_project(self, slug: str = SAMPLE_PROJECT["slug"]) -> NovelProject:
         project = self.create_project(slug, SAMPLE_PROJECT["title"], SAMPLE_PROJECT["synopsis"])
-        for chapter_title, content in SAMPLE_PROJECT["chapters"]:
-            self.add_chapter(project.slug, chapter_title, content)
+        for chapter_data in SAMPLE_PROJECT["chapters"]:
+            if isinstance(chapter_data, dict):
+                chapter = self.add_chapter(project.slug, str(chapter_data["title"]), str(chapter_data["content"]))
+                for title, summary, status in chapter_data.get("scenes", []):
+                    self.add_scene(project.slug, chapter.number, title, summary, status)
+            else:
+                chapter_title, content = chapter_data
+                self.add_chapter(project.slug, chapter_title, content)
         return self.get_project(project.slug)
 
     def import_markdown(self, slug: str, markdown_path: Path) -> NovelProject:

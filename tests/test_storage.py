@@ -52,6 +52,11 @@ def test_create_sample_project(tmp_path: Path) -> None:
     assert project.title == "Moon Archive"
     assert len(project.chapters) == 2
     assert project.chapters[0].title == "Signal"
+    assert [(scene.number, scene.title, scene.status) for scene in project.chapters[0].scenes] == [
+        (1, "Night Shift", "done"),
+        (2, "False Map", "draft"),
+    ]
+    assert project.chapters[1].scenes[0].summary == "Ada chooses to descend before the signal window closes."
 
 
 def test_create_sample_project_rejects_duplicate_slug(tmp_path: Path) -> None:
