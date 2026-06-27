@@ -2,6 +2,23 @@
 
 This example shows the smallest complete flow.
 
+Install directly from GitHub:
+
+```powershell
+python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"
+```
+
+Try the built-in sample:
+
+```powershell
+novel --workspace workspace sample
+novel --workspace workspace focus moon-archive
+novel --workspace workspace momentum moon-archive
+novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
+```
+
+Run a fuller local workflow:
+
 ```powershell
 novel --workspace workspace init
 novel --workspace workspace starter drafts/working-title.md --template three-act

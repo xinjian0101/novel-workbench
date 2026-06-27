@@ -4,6 +4,7 @@
 
 - Added local JSON project storage.
 - Added project creation, listing, and inspection commands.
+- Added direct GitHub install and 60-second tour documentation.
 - Added a workspace dashboard command for comparing project progress.
 - Added Markdown export for workspace dashboard reports.
 - Added one-command project report pack export.

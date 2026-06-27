@@ -32,6 +32,31 @@ Chapter 1: Signal [draft]
    The first signal arrived at 03:17.
 ```
 
+## Install
+
+Install directly from GitHub:
+
+```powershell
+python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"
+```
+
+For local development, clone the repository and install it editable:
+
+```powershell
+python -m pip install -e ".[dev]"
+```
+
+## 60-Second Tour
+
+```powershell
+novel --workspace workspace sample
+novel --workspace workspace focus moon-archive
+novel --workspace workspace momentum moon-archive
+novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
+```
+
+The tour creates a sample novel workspace, shows the next writing move, summarizes drafting momentum, and writes a complete Markdown report pack.
+
 ## Why It Exists
 
 Most writing apps are either too heavy for developers and terminal users, or too cloud-dependent for private drafts. Novel Workbench keeps the core workflow plain:
@@ -90,7 +115,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Print shell completion scripts for bash, zsh, and PowerShell
 - Run fully offline with no account, server, database, or telemetry
 
-## Quick Start
+## Full Local Development Quick Start
 
 ```powershell
 python -m venv .venv

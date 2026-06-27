@@ -14,6 +14,8 @@ Use this checklist before making the repository public or announcing it.
 ## README Review
 
 - The first screen explains what the tool does.
+- The install command points to the real GitHub repository.
+- The 60-second tour works after installing from GitHub.
 - The terminal demo matches `python scripts/demo.py`.
 - Quick Start works on a clean checkout.
 - No temporary or example-only GitHub URLs remain.
