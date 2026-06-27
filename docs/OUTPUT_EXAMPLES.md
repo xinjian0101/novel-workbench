@@ -214,6 +214,7 @@ python scripts/demo.py
 Starter manuscript templates are available for `three-act`, `hero-journey`, `mystery`, `romance`, `sci-fi`, and `thriller` projects:
 
 ```powershell
+novel templates
 novel --workspace workspace starter drafts/working-title.md --template sci-fi
 novel --workspace workspace import-markdown working-title drafts/working-title.md
 ```

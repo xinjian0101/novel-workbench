@@ -278,6 +278,7 @@ novel export-dashboard <output.md>
 novel doctor
 novel migrate [--dry-run]
 novel tour [--slug moon-archive] [--output-dir exports]
+novel templates
 novel completion bash|zsh|powershell
 novel sample [--slug moon-archive]
 novel starter <output.md> [--template three-act|hero-journey|mystery|romance|sci-fi|thriller] [--force]

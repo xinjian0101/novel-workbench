@@ -93,6 +93,16 @@ novel --workspace workspace tour --slug moon-archive --output-dir exports
 
 The command creates the sample project if it does not already exist, reuses it if it does, prints a writing focus brief, exports `context.json`, writes a static HTML site, and builds a Markdown report pack under `<output-dir>/<slug>/`.
 
+## `novel templates`
+
+List built-in starter manuscript templates and Markdown export templates.
+
+```powershell
+novel templates
+```
+
+Use this command before `starter` or `export` when you want to discover the available structures without opening the full reference.
+
 ## `novel starter`
 
 Write an importable Markdown manuscript template.

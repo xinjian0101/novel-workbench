@@ -396,6 +396,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "export-dashboard" in captured.out
     assert "migrate" in captured.out
     assert "tour" in captured.out
+    assert "templates" in captured.out
     assert "import-markdown" in captured.out
     assert "focus" in captured.out
     assert "handoff" in captured.out
@@ -416,6 +417,21 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "export-context" in captured.out
     assert "export-site" in captured.out
     assert "export-pack" in captured.out
+
+
+def test_cli_lists_templates(capsys) -> None:
+    assert main(["templates"]) == 0
+
+    captured = capsys.readouterr()
+    assert "Starter templates:" in captured.out
+    assert "- three-act (default):" in captured.out
+    assert "- romance:" in captured.out
+    assert "- sci-fi:" in captured.out
+    assert "- thriller:" in captured.out
+    assert "Export templates:" in captured.out
+    assert "- default (default):" in captured.out
+    assert "- handoff:" in captured.out
+    assert "- revision:" in captured.out
 
 
 def test_demo_script_runs(capsys) -> None:

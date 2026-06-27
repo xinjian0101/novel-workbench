@@ -9,6 +9,7 @@ from pathlib import Path
 
 from . import __version__
 from .storage import (
+    EXPORT_TEMPLATES,
     STARTER_TEMPLATES,
     VALID_NOTE_KINDS,
     NotFoundError,
@@ -25,6 +26,28 @@ from .storage import (
 )
 
 
+STARTER_TEMPLATE_DESCRIPTIONS = {
+    "hero-journey": "ordinary world, call to adventure, and crossing the threshold",
+    "mystery": "the body, first suspect, and false pattern",
+    "romance": "first spark, forced proximity, and first vulnerability",
+    "sci-fi": "anomaly, first contact, and system failure",
+    "three-act": "opening image, inciting incident, and first choice",
+    "thriller": "trigger, no safe place, and first reversal",
+}
+EXPORT_TEMPLATE_DESCRIPTIONS = {
+    "board": "chapter status board grouped by draft, revising, and done",
+    "default": "plain manuscript export",
+    "focus": "next writing-session brief",
+    "frontmatter": "manuscript export with YAML front matter",
+    "handoff": "AI/editor handoff brief with project context",
+    "momentum": "writing momentum report with weekly totals",
+    "outline": "chapter and scene outline document",
+    "progress": "project progress report with logs and target pace",
+    "review": "manuscript readiness report",
+    "revision": "revision checklist for edit passes",
+}
+
+
 COMPLETION_COMMANDS = (
     "init",
     "list",
@@ -34,6 +57,7 @@ COMPLETION_COMMANDS = (
     "migrate",
     "sample",
     "tour",
+    "templates",
     "starter",
     "create",
     "rename",
@@ -181,6 +205,8 @@ def build_parser() -> argparse.ArgumentParser:
     tour = subparsers.add_parser("tour", help="Run a one-command sample tour and export shareable outputs.")
     tour.add_argument("--slug", default="moon-archive", help="Sample project slug.")
     tour.add_argument("--output-dir", type=Path, default=Path("exports"), help="Directory for generated tour outputs.")
+
+    subparsers.add_parser("templates", help="List starter and export templates.")
 
     starter = subparsers.add_parser("starter", help="Write an importable starter Markdown manuscript.")
     starter.add_argument("output", type=Path)
@@ -500,6 +526,19 @@ def run(args: argparse.Namespace) -> int:
             print(f"  - {output}")
         print("")
         print("\n".join(focus_lines(project)))
+        return 0
+    if args.command == "templates":
+        print("Starter templates:")
+        for name in sorted(STARTER_TEMPLATES):
+            description = STARTER_TEMPLATE_DESCRIPTIONS.get(name, "starter manuscript structure")
+            suffix = " (default)" if name == "three-act" else ""
+            print(f"- {name}{suffix}: {description}")
+        print("")
+        print("Export templates:")
+        for name in sorted(EXPORT_TEMPLATES):
+            description = EXPORT_TEMPLATE_DESCRIPTIONS.get(name, "Markdown export")
+            suffix = " (default)" if name == "default" else ""
+            print(f"- {name}{suffix}: {description}")
         return 0
     if args.command == "starter":
         output = store.write_starter_markdown(args.output, template=args.template, overwrite=args.force)

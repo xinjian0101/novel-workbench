@@ -66,6 +66,7 @@ REQUIRED_TEXT = {
         "Star fit",
         "60-Second Tour",
         "novel --workspace workspace tour --output-dir exports",
+        "novel templates",
         "assets/readme-showcase.svg",
         "assets/terminal-demo.svg",
         "docs/DISTRIBUTION.md",
@@ -76,6 +77,7 @@ REQUIRED_TEXT = {
         "docs/CODESPACES.md",
         "docs/MAINTAINER_GUIDE.md",
         "docs/OUTPUT_EXAMPLES.md",
+        "novel templates",
         "three-act|hero-journey|mystery|romance|sci-fi|thriller",
         "export-site",
         "--theme classic|editorial|focus",
@@ -222,6 +224,7 @@ REQUIRED_TEXT = {
     "docs/OUTPUT_EXAMPLES.md": [
         "Launch Post Snippets",
         "Live HTML Demo",
+        "novel templates",
         "romance",
         "sci-fi",
         "thriller",
@@ -249,6 +252,7 @@ REQUIRED_TEXT = {
     ],
     "docs/USE_CASES.md": [
         "Author Drafting Workspace",
+        "novel templates",
         "novel starter",
         "romance",
         "sci-fi",
