@@ -41,3 +41,5 @@ These tradeoffs are intentional. Novel Workbench should stay small enough that a
 ## Best Public Pitch
 
 Novel Workbench is for people who like the privacy of local files, the repeatability of a CLI, and the portability of Markdown.
+
+Use [docs/DISTRIBUTION.md](DISTRIBUTION.md) for channel-specific launch copy.

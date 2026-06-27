@@ -8,6 +8,7 @@ Use this kit when sharing Novel Workbench publicly.
 - Live demo: https://xinjian0101.github.io/novel-workbench/
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - Quick tour: `novel --workspace workspace sample`
+- Distribution copy: `docs/DISTRIBUTION.md`
 - Showcase assets: `docs/SHOWCASE.md`
 - Use cases: `docs/USE_CASES.md`
 - Positioning: `docs/POSITIONING.md`
@@ -81,6 +82,9 @@ Demo: https://xinjian0101.github.io/novel-workbench/
 
 - GitHub repository homepage
 - GitHub Discussions announcement
+- Awesome lists and project directories
+- Show HN style launch posts
+- Writing and Markdown communities
 - Python community forums
 - Writing tool communities
 - Indie maker communities
@@ -89,3 +93,5 @@ Demo: https://xinjian0101.github.io/novel-workbench/
 ## Follow-up loop
 
 After posting, watch for repeated questions. If two or more people ask the same thing, turn the answer into README copy, CLI reference text, or a focused issue.
+
+Use `docs/DISTRIBUTION.md` for channel-specific text and follow-up signals.

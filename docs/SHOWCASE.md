@@ -10,6 +10,7 @@ Use this page as the source of truth for visual and demo assets.
 - Social preview source: `assets/social-preview.svg`
 - Use-case guide: `docs/USE_CASES.md`
 - Positioning guide: `docs/POSITIONING.md`
+- Distribution guide: `docs/DISTRIBUTION.md`
 
 ## What the demo proves
 
@@ -19,6 +20,7 @@ Use this page as the source of truth for visual and demo assets.
 - GitHub Pages can publish a working static project dashboard.
 - The README and use-case guide explain who should try or star the project.
 - The positioning guide explains the comparison with rich writing apps, notes apps, and static site generators.
+- The distribution guide provides channel-specific copy for external sharing.
 
 ## Visual asset usage
 

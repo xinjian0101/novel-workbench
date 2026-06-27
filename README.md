@@ -378,6 +378,8 @@ Use [docs/GITHUB_LAUNCH.md](docs/GITHUB_LAUNCH.md) before publishing the reposit
 
 Use [docs/LAUNCH_KIT.md](docs/LAUNCH_KIT.md) for demo links, launch posts, and submission checklists.
 
+Use [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for channel-specific submission copy and follow-up signals.
+
 Use [docs/SHOWCASE.md](docs/SHOWCASE.md) for visual preview assets and demo proof points.
 
 Use [docs/USE_CASES.md](docs/USE_CASES.md) to match Novel Workbench to author, archive, AI handoff, and static demo workflows.
