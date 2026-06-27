@@ -6,6 +6,7 @@
 - Added project creation, listing, and inspection commands.
 - Added a workspace dashboard command for comparing project progress.
 - Added Markdown export for workspace dashboard reports.
+- Added one-command project report pack export.
 - Added writing focus briefs for choosing the next drafting or revision move.
 - Added writing momentum reports with weekly totals and recent progress entries.
 - Added chapter status board output and export for draft, revising, and done work.

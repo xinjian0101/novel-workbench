@@ -525,6 +525,16 @@ Custom template files use Python-style named fields. Supported fields are:
 Use either `--template` or `--template-file`, not both.
 Files passed with `--template-file` must be readable UTF-8 text.
 
+## `novel export-pack`
+
+Export every standard project report to one directory.
+
+```powershell
+novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
+```
+
+The command writes the plain manuscript, YAML-frontmatter manuscript, focus brief, momentum report, status board, outline, progress report, readiness review, and revision checklist. File names use the project slug, for example `moon-archive.md`, `moon-archive-momentum.md`, and `moon-archive-revision.md`.
+
 ## `novel backup`
 
 Copy the project JSON file to a backup directory.

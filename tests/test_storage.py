@@ -643,6 +643,35 @@ def test_export_markdown_rejects_unknown_template(tmp_path: Path) -> None:
         store.export_markdown("first-novel", tmp_path / "book.md", template="unknown")
 
 
+def test_export_pack_writes_all_standard_reports(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.update_project_metadata("first-novel", genre="mystery", audience="adult")
+    store.set_target_words("first-novel", 1000)
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft", "Start with pressure.")
+    store.add_progress("first-novel", 300, "2026-06-26", "Drafted the opening.")
+    output_dir = tmp_path / "pack"
+
+    outputs = store.export_pack("first-novel", output_dir)
+
+    names = [path.name for path in outputs]
+    assert names == [
+        "first-novel.md",
+        "first-novel-frontmatter.md",
+        "first-novel-focus.md",
+        "first-novel-momentum.md",
+        "first-novel-board.md",
+        "first-novel-outline.md",
+        "first-novel-progress.md",
+        "first-novel-review.md",
+        "first-novel-revision.md",
+    ]
+    assert (output_dir / "first-novel.md").read_text(encoding="utf-8").startswith("# First Novel\n\nA concise premise.")
+    assert "# First Novel Focus" in (output_dir / "first-novel-focus.md").read_text(encoding="utf-8")
+    assert "# First Novel Momentum" in (output_dir / "first-novel-momentum.md").read_text(encoding="utf-8")
+    assert "# First Novel Review" in (output_dir / "first-novel-review.md").read_text(encoding="utf-8")
+
+
 def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")

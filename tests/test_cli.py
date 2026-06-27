@@ -101,6 +101,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "review.md"), "--template", "review"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "revision.md"), "--template", "revision"]) == 0
+    assert main(["--workspace", str(workspace), "export-pack", "renamed-novel", str(tmp_path / "pack")]) == 0
     assert main(["--workspace", str(workspace), "delete-note", "renamed-novel", "1"]) == 0
     assert main(["--workspace", str(workspace), "backup", "renamed-novel", str(backup_dir)]) == 0
     backup_file = next(backup_dir.glob("renamed-novel-*.json"))
@@ -147,6 +148,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
     assert "renamed-novel\tRenamed Novel\t2\t2\t500\t1\t-\t-" in captured.out
     assert "Exported dashboard:" in captured.out
+    assert "Exported pack:" in captured.out
     assert "Notes: 3" in captured.out
     assert "Words: 2" in captured.out
     assert "Logged words: 500" in captured.out
@@ -178,6 +180,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Review" in (tmp_path / "review.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "revision.md").read_text(encoding="utf-8")
+    assert "# Renamed Novel Momentum" in (tmp_path / "pack" / "renamed-novel-momentum.md").read_text(encoding="utf-8")
+    assert "# Renamed Novel Revision Checklist" in (tmp_path / "pack" / "renamed-novel-revision.md").read_text(encoding="utf-8")
     assert backup_file.exists()
 
 
@@ -344,6 +348,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "add-progress" in captured.out
     assert "update-progress" in captured.out
     assert "delete-progress" in captured.out
+    assert "export-pack" in captured.out
 
 
 def test_demo_script_runs(capsys) -> None:
@@ -372,4 +377,5 @@ def test_demo_script_runs(capsys) -> None:
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
     assert "moon-archive\tMoon Archive\t1\t8\t1250\t" in captured.out
     assert "moon-archive-outline.md" in captured.out
+    assert "Exported pack:" in captured.out
     assert "Backed up:" in captured.out

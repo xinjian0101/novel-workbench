@@ -20,6 +20,7 @@ novel --workspace workspace search moon-archive rain
 novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
+novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 novel --workspace workspace backup moon-archive backups
 ```
 
@@ -68,6 +69,20 @@ Expected progress report:
 - Remaining words: 79992
 - Progress: 0%
 - Average chapter words: 8
+```
+
+Expected report pack files:
+
+```text
+moon-archive.md
+moon-archive-frontmatter.md
+moon-archive-focus.md
+moon-archive-momentum.md
+moon-archive-board.md
+moon-archive-outline.md
+moon-archive-progress.md
+moon-archive-review.md
+moon-archive-revision.md
 ```
 
 Importing from Markdown:

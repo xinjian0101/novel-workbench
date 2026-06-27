@@ -24,6 +24,17 @@ EXPORT_TEMPLATES = {
     "review",
     "revision",
 }
+EXPORT_PACK_TEMPLATES = (
+    ("manuscript", "default", "{slug}.md"),
+    ("frontmatter", "frontmatter", "{slug}-frontmatter.md"),
+    ("focus", "focus", "{slug}-focus.md"),
+    ("momentum", "momentum", "{slug}-momentum.md"),
+    ("board", "board", "{slug}-board.md"),
+    ("outline", "outline", "{slug}-outline.md"),
+    ("progress", "progress", "{slug}-progress.md"),
+    ("review", "review", "{slug}-review.md"),
+    ("revision", "revision", "{slug}-revision.md"),
+)
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -767,6 +778,15 @@ class ProjectStore:
                 lines = _default_export_lines(project)
         output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
         return output_path
+
+    def export_pack(self, slug: str, output_dir: Path) -> list[Path]:
+        project = self.get_project(slug)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        paths: list[Path] = []
+        for _name, template, filename in EXPORT_PACK_TEMPLATES:
+            output_path = output_dir / filename.format(slug=project.slug)
+            paths.append(self.export_markdown(project.slug, output_path, template))
+        return paths
 
     def _read_project(self, path: Path) -> NovelProject:
         try:

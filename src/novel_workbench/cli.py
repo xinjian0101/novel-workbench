@@ -68,6 +68,7 @@ COMPLETION_COMMANDS = (
     "update-scene",
     "delete-scene",
     "export",
+    "export-pack",
     "backup",
     "restore-backup",
     "completion",
@@ -353,6 +354,10 @@ def build_parser() -> argparse.ArgumentParser:
     export.add_argument("output", type=Path)
     export.add_argument("--template", default="default", help="board, default, focus, frontmatter, momentum, outline, progress, review, or revision.")
     export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
+
+    export_pack = subparsers.add_parser("export-pack", help="Export all standard Markdown reports for a project.")
+    export_pack.add_argument("slug")
+    export_pack.add_argument("output_dir", type=Path)
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
     backup.add_argument("slug")
@@ -740,6 +745,12 @@ def run(args: argparse.Namespace) -> int:
             raise StorageError("Use either --template or --template-file, not both.")
         output = store.export_markdown(args.slug, args.output, args.template, args.template_file)
         print(f"Exported: {output}")
+        return 0
+    if args.command == "export-pack":
+        outputs = store.export_pack(args.slug, args.output_dir)
+        print(f"Exported pack: {args.output_dir}")
+        for output in outputs:
+            print(f"- {output}")
         return 0
     if args.command == "backup":
         output = store.backup_project(args.slug, args.output_dir)
