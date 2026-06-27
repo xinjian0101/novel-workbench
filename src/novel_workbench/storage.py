@@ -18,6 +18,7 @@ EXPORT_TEMPLATES = {
     "default",
     "focus",
     "frontmatter",
+    "handoff",
     "momentum",
     "outline",
     "progress",
@@ -28,6 +29,7 @@ EXPORT_PACK_TEMPLATES = (
     ("manuscript", "default", "{slug}.md"),
     ("frontmatter", "frontmatter", "{slug}-frontmatter.md"),
     ("focus", "focus", "{slug}-focus.md"),
+    ("handoff", "handoff", "{slug}-handoff.md"),
     ("momentum", "momentum", "{slug}-momentum.md"),
     ("board", "board", "{slug}-board.md"),
     ("outline", "outline", "{slug}-outline.md"),
@@ -764,6 +766,8 @@ class ProjectStore:
                 lines = board_lines(project)
             elif template == "focus":
                 lines = focus_lines(project)
+            elif template == "handoff":
+                lines = handoff_lines(project)
             elif template == "momentum":
                 lines = momentum_lines(project)
             elif template == "outline":
@@ -971,6 +975,94 @@ def focus_lines(project: NovelProject) -> list[str]:
     revision_notes = project.revision_notes.strip()
     if revision_notes:
         lines.extend(["", "## Revision Reminder", "", revision_notes])
+    return lines
+
+
+def handoff_lines(project: NovelProject) -> list[str]:
+    stats = _stats_for_project(project)
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    next_chapter = next((chapter for chapter in chapters if chapter.status != "done"), None)
+
+    lines = [f"# {project.title} Handoff", ""]
+    lines.extend(["## Project Snapshot", ""])
+    lines.append(f"- Slug: `{project.slug}`")
+    if project.synopsis.strip():
+        lines.append(f"- Synopsis: {project.synopsis}")
+    if project.genre.strip():
+        lines.append(f"- Genre: {project.genre}")
+    if project.audience.strip():
+        lines.append(f"- Audience: {project.audience}")
+    lines.append(f"- Manuscript words: {stats['words']}")
+    lines.append(f"- Logged words: {stats['logged_words']}")
+    lines.append(f"- Current streak: {stats['current_streak_days']} days")
+    if stats["target_words"] is not None:
+        lines.append(f"- Target words: {stats['target_words']}")
+        lines.append(f"- Remaining words: {stats['remaining_words']}")
+        lines.append(f"- Progress: {stats['progress_percent']}%")
+    if stats["required_daily_words"] is not None:
+        lines.append(f"- Required daily words: {stats['required_daily_words']}")
+
+    lines.extend(["", "## Next Action", ""])
+    if next_chapter is None:
+        if chapters:
+            lines.append("- All chapters are marked done. Start with a revision pass or export review.")
+        else:
+            lines.append("- Add the first chapter.")
+    else:
+        lines.append(
+            f"- Continue Chapter {next_chapter.number}: {next_chapter.title} "
+            f"[{next_chapter.status}] - {count_words(next_chapter.content)} words"
+        )
+        if next_chapter.summary:
+            lines.append(f"  - Summary: {next_chapter.summary}")
+        open_scenes = [scene for scene in sorted(next_chapter.scenes, key=lambda item: item.number) if scene.status != "done"]
+        if open_scenes:
+            lines.append("  - Open scenes:")
+            for scene in open_scenes:
+                lines.append(f"    - {next_chapter.number}.{scene.number} {scene.title} [{scene.status}]")
+                if scene.summary:
+                    lines.append(f"      {scene.summary}")
+
+    lines.extend(["", "## Continuity Notes", ""])
+    if project.revision_notes.strip():
+        lines.append(project.revision_notes.strip())
+    elif not project.notes:
+        lines.append("No continuity notes yet.")
+    if project.notes:
+        for note in sorted(project.notes, key=lambda item: item.id)[:8]:
+            lines.append(f"- {note.title} [{note.kind}]")
+            if note.content.strip():
+                lines.append(f"  {_note_preview(note.content)}")
+
+    lines.extend(["", "## Chapter State", "", "| # | Title | Status | Words | Summary |", "|---:|---|---|---:|---|"])
+    if not chapters:
+        lines.append("| - | No chapters yet | - | 0 | - |")
+    else:
+        for chapter in chapters:
+            title = _escape_table_cell(chapter.title)
+            summary = _escape_table_cell(chapter.summary)
+            lines.append(f"| {chapter.number} | {title} | {chapter.status} | {count_words(chapter.content)} | {summary} |")
+
+    lines.extend(["", "## Recent Progress", ""])
+    recent_entries = sorted(project.progress, key=lambda item: (item.date, item.id), reverse=True)[:5]
+    if not recent_entries:
+        lines.append("No progress entries yet.")
+    else:
+        lines.extend(["| Date | Words | Note |", "|---|---:|---|"])
+        for entry in recent_entries:
+            note = _escape_table_cell(entry.note)
+            lines.append(f"| {entry.date} | {entry.words} | {note} |")
+
+    lines.extend(["", "## Prompt", ""])
+    if next_chapter is None and chapters:
+        lines.append("Review the manuscript using the snapshot, continuity notes, and chapter state above.")
+    elif next_chapter is None:
+        lines.append("Help start this project by proposing the first chapter from the snapshot above.")
+    else:
+        lines.append(
+            f"Continue Chapter {next_chapter.number}: {next_chapter.title}. "
+            "Preserve the synopsis, continuity notes, current chapter status, and recent progress."
+        )
     return lines
 
 
@@ -1351,6 +1443,7 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
         "best_day_words": "" if stats["best_day_words"] is None else str(stats["best_day_words"]),
         "chapters_markdown": "\n".join(_default_export_lines(project)).strip(),
         "focus_brief": "\n".join(focus_lines(project)),
+        "handoff_brief": "\n".join(handoff_lines(project)),
         "momentum_report": "\n".join(momentum_lines(project)),
         "status_board": "\n".join(board_lines(project)),
         "chapter_table": "\n".join(_chapter_table_lines(project)),
@@ -1381,6 +1474,14 @@ def _chapter_table_lines(project: NovelProject) -> list[str]:
         title = chapter.title.replace("|", "\\|")
         lines.append(f"| {chapter.number} | {title} | {chapter.status} | {count_words(chapter.content)} |")
     return lines
+
+
+def _note_preview(content: str) -> str:
+    for line in content.splitlines():
+        normalized = line.strip()
+        if normalized and not normalized.startswith("#"):
+            return normalized
+    return content.strip().splitlines()[0].strip()
 
 
 def _progress_log_lines(project: NovelProject) -> list[str]:

@@ -10,6 +10,7 @@ from novel_workbench.storage import (
     StorageError,
     board_lines,
     focus_lines,
+    handoff_lines,
     momentum_lines,
     outline_lines,
     parse_markdown_chapters,
@@ -315,6 +316,37 @@ def test_focus_lines_handles_finished_or_empty_project(tmp_path: Path) -> None:
     assert "- Add the first chapter." in empty_lines
     assert "No progress entries yet." in empty_lines
     assert "- All chapters are marked done. Review the revision checklist or export the manuscript." in done_lines
+
+
+def test_handoff_lines_builds_ai_ready_project_context(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.update_project_metadata(
+        "first-novel",
+        genre="mystery",
+        audience="adult",
+        revision_notes="Keep the clue trail fair.",
+    )
+    store.set_target_words("first-novel", 1000)
+    store.set_target_date("first-novel", (date.today() + timedelta(days=10)).isoformat())
+    store.add_chapter("first-novel", "Opening", "The story begins.", "revising", "Introduce the central clue.")
+    store.add_scene("first-novel", 1, "First clue", "A clue appears in plain sight.", "draft")
+    store.add_note("first-novel", "Ada", "Detective protagonist.", "character")
+    store.add_progress("first-novel", 300, "2026-06-26", "Drafted the opening.")
+
+    lines = handoff_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Handoff" in lines
+    assert "## Project Snapshot" in lines
+    assert "- Synopsis: A concise premise." in lines
+    assert "- Genre: mystery" in lines
+    assert "- Continue Chapter 1: Opening [revising] - 3 words" in lines
+    assert "    - 1.1 First clue [draft]" in lines
+    assert "Keep the clue trail fair." in lines
+    assert "- Ada [character]" in lines
+    assert "| 1 | Opening | revising | 3 | Introduce the central clue. |" in lines
+    assert "| 2026-06-26 | 300 | Drafted the opening. |" in lines
+    assert "Continue Chapter 1: Opening. Preserve the synopsis, continuity notes, current chapter status, and recent progress." in lines
 
 
 def test_momentum_lines_groups_progress_by_week(tmp_path: Path) -> None:
@@ -659,6 +691,7 @@ def test_export_pack_writes_all_standard_reports(tmp_path: Path) -> None:
         "first-novel.md",
         "first-novel-frontmatter.md",
         "first-novel-focus.md",
+        "first-novel-handoff.md",
         "first-novel-momentum.md",
         "first-novel-board.md",
         "first-novel-outline.md",
@@ -668,6 +701,7 @@ def test_export_pack_writes_all_standard_reports(tmp_path: Path) -> None:
     ]
     assert (output_dir / "first-novel.md").read_text(encoding="utf-8").startswith("# First Novel\n\nA concise premise.")
     assert "# First Novel Focus" in (output_dir / "first-novel-focus.md").read_text(encoding="utf-8")
+    assert "# First Novel Handoff" in (output_dir / "first-novel-handoff.md").read_text(encoding="utf-8")
     assert "# First Novel Momentum" in (output_dir / "first-novel-momentum.md").read_text(encoding="utf-8")
     assert "# First Novel Review" in (output_dir / "first-novel-review.md").read_text(encoding="utf-8")
 

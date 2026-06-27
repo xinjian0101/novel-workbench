@@ -14,6 +14,7 @@ from .storage import (
     StorageError,
     board_lines,
     focus_lines,
+    handoff_lines,
     momentum_lines,
     outline_lines,
     planning_lines,
@@ -36,6 +37,7 @@ COMPLETION_COMMANDS = (
     "import-markdown",
     "show",
     "focus",
+    "handoff",
     "momentum",
     "board",
     "outline",
@@ -187,6 +189,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     focus = subparsers.add_parser("focus", help="Show the next writing focus for a project.")
     focus.add_argument("slug")
+
+    handoff = subparsers.add_parser("handoff", help="Show an AI/editor handoff brief for a project.")
+    handoff.add_argument("slug")
 
     momentum = subparsers.add_parser("momentum", help="Show writing momentum and weekly progress.")
     momentum.add_argument("slug")
@@ -352,7 +357,7 @@ def build_parser() -> argparse.ArgumentParser:
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
     export.add_argument("output", type=Path)
-    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, momentum, outline, progress, review, or revision.")
+    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, handoff, momentum, outline, progress, review, or revision.")
     export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
 
     export_pack = subparsers.add_parser("export-pack", help="Export all standard Markdown reports for a project.")
@@ -478,6 +483,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "focus":
         project = store.get_project(args.slug)
         print("\n".join(focus_lines(project)))
+        return 0
+    if args.command == "handoff":
+        project = store.get_project(args.slug)
+        print("\n".join(handoff_lines(project)))
         return 0
     if args.command == "momentum":
         project = store.get_project(args.slug)

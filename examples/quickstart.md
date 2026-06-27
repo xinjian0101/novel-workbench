@@ -13,6 +13,7 @@ Try the built-in sample:
 ```powershell
 novel --workspace workspace sample
 novel --workspace workspace focus moon-archive
+novel --workspace workspace handoff moon-archive
 novel --workspace workspace momentum moon-archive
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 ```
@@ -94,6 +95,7 @@ Expected report pack files:
 moon-archive.md
 moon-archive-frontmatter.md
 moon-archive-focus.md
+moon-archive-handoff.md
 moon-archive-momentum.md
 moon-archive-board.md
 moon-archive-outline.md

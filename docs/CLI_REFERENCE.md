@@ -160,6 +160,17 @@ novel --workspace workspace export moon-archive exports/moon-archive-focus.md --
 
 The focus brief includes current progress, target pace when configured, the next unfinished chapter, unfinished scenes in that chapter, recent writing log entries, and revision notes. Use it as the first command before a writing session.
 
+## `novel handoff`
+
+Show an AI/editor handoff brief for a project.
+
+```powershell
+novel --workspace workspace handoff moon-archive
+novel --workspace workspace export moon-archive exports/moon-archive-handoff.md --template handoff
+```
+
+The handoff brief includes a project snapshot, next action, continuity notes, chapter state, recent progress, and a continuation prompt. Use it when moving from the CLI into an AI assistant, editor, or critique workflow.
+
 ## `novel momentum`
 
 Show writing momentum and weekly progress for a project.
@@ -498,6 +509,7 @@ novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-brief.md --template-file templates/brief.md
 novel --workspace workspace export moon-archive exports/moon-archive-board.md --template board
 novel --workspace workspace export moon-archive exports/moon-archive-focus.md --template focus
+novel --workspace workspace export moon-archive exports/moon-archive-handoff.md --template handoff
 novel --workspace workspace export moon-archive exports/moon-archive-momentum.md --template momentum
 novel --workspace workspace export moon-archive exports/moon-archive-outline.md --template outline
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
@@ -512,6 +524,7 @@ Templates:
 - `board`: shareable status board grouped by chapter status, with unfinished scene follow-ups.
 - `focus`: shareable writing-session brief with next chapter, target pace, and recent progress.
 - `frontmatter`: YAML front matter followed by the default Markdown body.
+- `handoff`: shareable AI/editor handoff brief with project context, next action, continuity notes, and a continuation prompt.
 - `momentum`: shareable writing momentum report with target pace, weekly totals, and recent progress entries.
 - `outline`: shareable outline document with synopsis, metadata, chapter summaries, and scene beats.
 - `progress`: shareable project progress report with overview, writing log totals, streaks, target deadline pace, remaining words, status word counts, a chapter table, and progress log entries.
@@ -520,7 +533,7 @@ Templates:
 
 Custom template files use Python-style named fields. Supported fields are:
 
-`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `current_streak_days`, `longest_streak_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `focus_brief`, `momentum_report`, `status_board`, `chapter_table`, `status_summary`, `progress_log`, `review_report`, and `revision_checklist`.
+`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `current_streak_days`, `longest_streak_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `focus_brief`, `handoff_brief`, `momentum_report`, `status_board`, `chapter_table`, `status_summary`, `progress_log`, `review_report`, and `revision_checklist`.
 
 Use either `--template` or `--template-file`, not both.
 Files passed with `--template-file` must be readable UTF-8 text.
@@ -533,7 +546,7 @@ Export every standard project report to one directory.
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 ```
 
-The command writes the plain manuscript, YAML-frontmatter manuscript, focus brief, momentum report, status board, outline, progress report, readiness review, and revision checklist. File names use the project slug, for example `moon-archive.md`, `moon-archive-momentum.md`, and `moon-archive-revision.md`.
+The command writes the plain manuscript, YAML-frontmatter manuscript, focus brief, handoff brief, momentum report, status board, outline, progress report, readiness review, and revision checklist. File names use the project slug, for example `moon-archive.md`, `moon-archive-handoff.md`, and `moon-archive-revision.md`.
 
 ## `novel backup`
 
