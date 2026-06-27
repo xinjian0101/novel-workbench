@@ -2,6 +2,8 @@
 
 Novel Workbench is built for writers and tool builders who want durable local files instead of a hosted writing account.
 
+For comparison notes and project tradeoffs, see [docs/POSITIONING.md](POSITIONING.md).
+
 ## Author Drafting Workspace
 
 Use Novel Workbench when a novel needs structure before it needs a full writing suite.

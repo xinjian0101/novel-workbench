@@ -15,6 +15,7 @@ REQUIRED_FILES = [
     "docs/GITHUB_LAUNCH.md",
     "docs/LAUNCH_KIT.md",
     "docs/PACKAGING.md",
+    "docs/POSITIONING.md",
     "docs/SHOWCASE.md",
     "docs/USE_CASES.md",
     "examples/quickstart.md",
@@ -39,6 +40,7 @@ REQUIRED_TEXT = {
         "assets/readme-showcase.svg",
         "export-site",
         "docs/LAUNCH_KIT.md",
+        "docs/POSITIONING.md",
         "docs/SHOWCASE.md",
         "docs/USE_CASES.md",
     ],
@@ -50,7 +52,14 @@ REQUIRED_TEXT = {
     "docs/LAUNCH_KIT.md": [
         "Live demo",
         "Launch posts",
+        "Star pitch",
         "Submission checklist",
+    ],
+    "docs/POSITIONING.md": [
+        "Why Star It",
+        "Comparison",
+        "Design Bets",
+        "Tradeoffs",
     ],
     "docs/SHOWCASE.md": [
         "Pages demo",

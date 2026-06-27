@@ -10,10 +10,15 @@ Use this kit when sharing Novel Workbench publicly.
 - Quick tour: `novel --workspace workspace sample`
 - Showcase assets: `docs/SHOWCASE.md`
 - Use cases: `docs/USE_CASES.md`
+- Positioning: `docs/POSITIONING.md`
 
 ## One-line pitch
 
 Novel Workbench is a local-first command line workspace for planning, drafting, tracking, and exporting long-form fiction.
+
+## Star pitch
+
+Star Novel Workbench if you want a private, plain-file alternative to heavy writing apps: local JSON projects, Markdown exports, AI/editor handoff context, and a GitHub Pages-ready static manuscript demo.
 
 ## Launch posts
 
@@ -59,6 +64,7 @@ Demo: https://xinjian0101.github.io/novel-workbench/
 
 - README first screen explains the value without scrolling.
 - README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
+- README explains why the repository is worth starring.
 - README renders `assets/readme-showcase.svg`.
 - GitHub social preview can use `assets/social-preview.svg`.
 - Live demo returns HTTP 200.

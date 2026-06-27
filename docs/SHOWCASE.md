@@ -9,6 +9,7 @@ Use this page as the source of truth for visual and demo assets.
 - README showcase: `assets/readme-showcase.svg`
 - Social preview source: `assets/social-preview.svg`
 - Use-case guide: `docs/USE_CASES.md`
+- Positioning guide: `docs/POSITIONING.md`
 
 ## What the demo proves
 
@@ -17,6 +18,7 @@ Use this page as the source of truth for visual and demo assets.
 - The project can be exported as Markdown reports, AI/editor context JSON, and a static HTML site.
 - GitHub Pages can publish a working static project dashboard.
 - The README and use-case guide explain who should try or star the project.
+- The positioning guide explains the comparison with rich writing apps, notes apps, and static site generators.
 
 ## Visual asset usage
 

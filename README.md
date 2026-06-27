@@ -76,6 +76,15 @@ The tour creates a sample novel workspace, shows the next writing move, prepares
 
 See [docs/USE_CASES.md](docs/USE_CASES.md) for workflow examples and fit guidance.
 
+## Why Star It
+
+- Local-first writing data: no account, server, database, or telemetry.
+- Plain exports: Markdown reports, context JSON, and static HTML sites.
+- Automation-friendly: every workflow can run from the CLI and fit into Git-based writing systems.
+- AI/editor ready: handoff briefs and project context JSON are built in.
+
+See [docs/POSITIONING.md](docs/POSITIONING.md) for comparison notes, tradeoffs, and project fit.
+
 ## Why It Exists
 
 Most writing apps are either too heavy for developers and terminal users, or too cloud-dependent for private drafts. Novel Workbench keeps the core workflow plain:
@@ -372,6 +381,8 @@ Use [docs/LAUNCH_KIT.md](docs/LAUNCH_KIT.md) for demo links, launch posts, and s
 Use [docs/SHOWCASE.md](docs/SHOWCASE.md) for visual preview assets and demo proof points.
 
 Use [docs/USE_CASES.md](docs/USE_CASES.md) to match Novel Workbench to author, archive, AI handoff, and static demo workflows.
+
+Use [docs/POSITIONING.md](docs/POSITIONING.md) for comparison notes and launch positioning.
 
 ## Contributing
 
