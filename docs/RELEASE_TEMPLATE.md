@@ -21,6 +21,11 @@ python scripts/check.py
 python scripts/release_check.py
 ```
 
+Expected local result:
+
+- `python scripts/check.py` reports `All checks passed.`
+- `python scripts/release_check.py` reports `Release package check passed.`
+
 GitHub Actions:
 
 - CI passed

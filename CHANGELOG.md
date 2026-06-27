@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- Added launch positioning, distribution, use-case, showcase, and PyPI publishing preparation docs for public adoption.
+- Added structured GitHub issue forms and a stronger pull request template.
+- Made `scripts/check.py` use a repository-local pytest temp directory so checks are more reliable in restricted Windows environments.
+- Verified GitHub Pages demo, package smoke tests, release audit, and the full test suite.
+
 ## 0.1.0
 
 - Added local JSON project storage.

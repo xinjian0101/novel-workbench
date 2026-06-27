@@ -41,8 +41,8 @@ Use this checklist before making the repository public or announcing it.
    python scripts/launch_audit.py
    ```
 
-2. Tag the first release as `v0.1.0`.
-3. Use `docs/RELEASE_TEMPLATE.md` and the `0.1.0` section from `CHANGELOG.md` as release notes.
+2. Tag the next release as `vX.Y.Z`.
+3. Use `docs/RELEASE_TEMPLATE.md` and the matching version section from `CHANGELOG.md` as release notes.
 4. Push the tag to let the Release workflow build, verify, and attach the source distribution and wheel.
 5. Confirm the `Pages` workflow publishes `index.html`, `manuscript.html`, and `context.json`.
 

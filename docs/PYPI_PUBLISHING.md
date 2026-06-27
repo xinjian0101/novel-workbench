@@ -34,8 +34,8 @@ Confirm:
 
 The release check builds:
 
-- `dist/novel_workbench-0.1.0.tar.gz`
-- `dist/novel_workbench-0.1.0-py3-none-any.whl`
+- `dist/novel_workbench-X.Y.Z.tar.gz`
+- `dist/novel_workbench-X.Y.Z-py3-none-any.whl`
 
 The wheel is installed into a temporary virtual environment without reaching package indexes. The smoke test runs:
 
