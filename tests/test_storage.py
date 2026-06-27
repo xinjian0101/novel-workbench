@@ -11,6 +11,7 @@ from novel_workbench.storage import (
     outline_lines,
     parse_markdown_chapters,
     planning_lines,
+    revision_lines,
     workspace_dashboard_lines,
 )
 
@@ -204,6 +205,39 @@ def test_planning_lines_groups_project_progress_chapters_notes_and_log(tmp_path:
     assert "### Location" in lines
     assert "- Archive" in lines
     assert f"| {progress_date} | 400 | Drafted opening pages. |" in lines
+
+
+def test_revision_lines_builds_actionable_revision_checklist(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.update_project_metadata("first-novel", revision_notes="Tighten the midpoint.")
+    store.add_chapter("first-novel", "Opening", "The story begins.", "done", "Keep the hook.")
+    store.add_chapter("first-novel", "Middle", "A second scene unfolds.", "revising")
+    store.add_scene("first-novel", 2, "Confrontation", "Raise the cost.", "draft")
+    store.add_note("first-novel", "Ada", "Engineer protagonist.", "character")
+
+    lines = revision_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Revision Checklist" in lines
+    assert "- Words: 7" in lines
+    assert "Tighten the midpoint." in lines
+    assert "- [x] Chapter 1: Opening [done] - 3 words" in lines
+    assert "  - Summary: Keep the hook." in lines
+    assert "- [ ] Chapter 2: Middle [revising] - 4 words" in lines
+    assert "- [ ] 2.1 Confrontation [draft]" in lines
+    assert "  - Raise the cost." in lines
+    assert "- [ ] Ada [character]" in lines
+
+
+def test_revision_lines_handles_empty_project(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    lines = revision_lines(store.get_project("first-novel"))
+
+    assert "- [ ] Add chapters before starting a revision pass." in lines
+    assert "No unfinished scenes." in lines
+    assert "No planning notes yet." in lines
 
 
 def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:
@@ -468,7 +502,8 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "Remaining: {remaining_words}\n\n"
         "Streak: {current_streak_days}/{longest_streak_days}\n\n"
         "{status_summary}\n\n"
-        "{chapter_table}\n",
+        "{chapter_table}\n\n"
+        "{revision_checklist}\n",
         encoding="utf-8",
     )
     output = tmp_path / "exports" / "custom.md"
@@ -487,7 +522,21 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "- Done: 1 chapters / 3 words\n\n"
         "| # | Title | Status | Words |\n"
         "|---:|---|---|---:|\n"
-        "| 1 | Opening | done | 3 |\n"
+        "| 1 | Opening | done | 3 |\n\n"
+        "# First Novel Revision Checklist\n\n"
+        "## Snapshot\n\n"
+        "- Slug: `first-novel`\n"
+        "- Words: 3\n"
+        "- Chapters: 1\n"
+        "- Draft: 0 chapters / 0 words\n"
+        "- Revising: 0 chapters / 0 words\n"
+        "- Done: 1 chapters / 3 words\n\n"
+        "## Chapter Pass\n\n"
+        "- [x] Chapter 1: Opening [done] - 3 words\n\n"
+        "## Scene Follow-Ups\n\n"
+        "No unfinished scenes.\n\n"
+        "## Planning Notes To Review\n\n"
+        "No planning notes yet.\n"
     )
 
 

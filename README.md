@@ -65,6 +65,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export workspace dashboard reports to Markdown
 - Show structured project outlines
 - Show a full planning view with metadata, progress, chapters, scenes, notes, and writing logs
+- Generate revision checklists from chapter status, scene status, notes, and revision notes
 - Report chapter, word, character, status, and average chapter counts
 - Track target word count progress and remaining words
 - Search across chapter titles, manuscript content, and project notes
@@ -73,6 +74,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export with optional YAML front matter for publishing tools
 - Export shareable outline documents with chapter summaries and scene beats
 - Export shareable progress reports with chapter, status, target, and streak tables
+- Export shareable revision checklists for manuscript edit passes
 - Export through custom Markdown template files
 - Automatically snapshot project JSON before renames and destructive deletes
 - Back up project JSON on demand
@@ -101,6 +103,7 @@ novel --workspace workspace add-scene moon-archive 1 "Signal discovered" --summa
 novel --workspace workspace list-scenes moon-archive 1
 novel --workspace workspace outline moon-archive
 novel --workspace workspace plan moon-archive
+novel --workspace workspace revision moon-archive
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
 novel --workspace workspace add-character moon-archive "Ada" --role protagonist --goal "Decode the archive signal."
@@ -123,6 +126,7 @@ novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-outline.md --template outline
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
+novel --workspace workspace export moon-archive exports/moon-archive-revision.md --template revision
 novel --workspace workspace backup moon-archive backups
 novel --workspace workspace restore-backup backups/moon-archive-20260626T120000000000Z.json --force
 ```
@@ -151,6 +155,7 @@ novel import-markdown <slug> <input.md>
 novel show <slug>
 novel outline <slug>
 novel plan <slug>
+novel revision <slug>
 novel stats <slug>
 novel set-metadata <slug> [--genre "..."] [--audience "..."] [--revision-notes "..."] [--revision-notes-file path]
 novel set-target <slug> <words>
@@ -176,7 +181,7 @@ novel add-scene <slug> <chapter> <title> [--summary "..."] [--summary-file path]
 novel list-scenes <slug> <chapter>
 novel update-scene <slug> <chapter> <scene> [--title "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel delete-scene <slug> <chapter> <scene>
-novel export <slug> <output.md> [--template default|frontmatter|outline|progress] [--template-file path]
+novel export <slug> <output.md> [--template default|frontmatter|outline|progress|revision] [--template-file path]
 novel backup <slug> <output-dir>
 novel restore-backup <backup.json> [--force]
 ```

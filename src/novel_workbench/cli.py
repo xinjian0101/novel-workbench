@@ -7,7 +7,15 @@ from datetime import date
 from pathlib import Path
 
 from . import __version__
-from .storage import STARTER_TEMPLATES, VALID_NOTE_KINDS, ProjectStore, StorageError, outline_lines, planning_lines
+from .storage import (
+    STARTER_TEMPLATES,
+    VALID_NOTE_KINDS,
+    ProjectStore,
+    StorageError,
+    outline_lines,
+    planning_lines,
+    revision_lines,
+)
 
 
 COMPLETION_COMMANDS = (
@@ -25,6 +33,7 @@ COMPLETION_COMMANDS = (
     "show",
     "outline",
     "plan",
+    "revision",
     "stats",
     "set-metadata",
     "set-target",
@@ -172,6 +181,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     plan = subparsers.add_parser("plan", help="Show a planning view with progress, chapters, scenes, and notes.")
     plan.add_argument("slug")
+
+    revision = subparsers.add_parser("revision", help="Show a revision checklist for a project.")
+    revision.add_argument("slug")
 
     stats = subparsers.add_parser("stats", help="Show drafting progress for a project.")
     stats.add_argument("slug")
@@ -445,6 +457,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "plan":
         project = store.get_project(args.slug)
         print("\n".join(planning_lines(project)))
+        return 0
+    if args.command == "revision":
+        project = store.get_project(args.slug)
+        print("\n".join(revision_lines(project)))
         return 0
     if args.command == "stats":
         stats = store.project_stats(args.slug)

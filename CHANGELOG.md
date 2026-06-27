@@ -11,6 +11,7 @@
 - Added chapter creation and update commands.
 - Added chapter outline summaries and a structured outline command.
 - Added a richer planning view with project metadata, progress, chapters, scenes, grouped notes, and writing logs.
+- Added revision checklist output and export for focused manuscript edit passes.
 - Added chapter scene outlines with add, list, update, delete, search, and doctor support.
 - Added chapter moving with automatic renumbering.
 - Added chapter deletion with automatic renumbering.

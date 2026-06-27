@@ -13,7 +13,7 @@ SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
 VALID_NOTE_KINDS = {"general", "character", "location", "plot", "research"}
-EXPORT_TEMPLATES = {"default", "frontmatter", "outline", "progress"}
+EXPORT_TEMPLATES = {"default", "frontmatter", "outline", "progress", "revision"}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -743,6 +743,8 @@ class ProjectStore:
                 lines = outline_lines(project)
             elif template == "progress":
                 lines = _progress_export_lines(project)
+            elif template == "revision":
+                lines = revision_lines(project)
             else:
                 lines = _default_export_lines(project)
         output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
@@ -912,6 +914,63 @@ def planning_lines(project: NovelProject) -> list[str]:
     return lines
 
 
+def revision_lines(project: NovelProject) -> list[str]:
+    lines = [f"# {project.title} Revision Checklist", ""]
+    stats = _stats_for_project(project)
+    lines.extend(
+        [
+            "## Snapshot",
+            "",
+            f"- Slug: `{project.slug}`",
+            f"- Words: {stats['words']}",
+            f"- Chapters: {stats['chapters']}",
+            f"- Draft: {stats['draft']} chapters / {stats['draft_words']} words",
+            f"- Revising: {stats['revising']} chapters / {stats['revising_words']} words",
+            f"- Done: {stats['done']} chapters / {stats['done_words']} words",
+        ]
+    )
+    if project.revision_notes:
+        lines.extend(["", "## Project Revision Notes", "", project.revision_notes])
+
+    lines.extend(["", "## Chapter Pass", ""])
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    if not chapters:
+        lines.append("- [ ] Add chapters before starting a revision pass.")
+    else:
+        for chapter in chapters:
+            marker = "x" if chapter.status == "done" else " "
+            lines.append(
+                f"- [{marker}] Chapter {chapter.number}: {chapter.title} "
+                f"[{chapter.status}] - {count_words(chapter.content)} words"
+            )
+            if chapter.summary:
+                lines.append(f"  - Summary: {chapter.summary}")
+
+    scene_rows = [
+        (chapter, scene)
+        for chapter in chapters
+        for scene in sorted(chapter.scenes, key=lambda item: item.number)
+        if scene.status != "done"
+    ]
+    lines.extend(["", "## Scene Follow-Ups", ""])
+    if not scene_rows:
+        lines.append("No unfinished scenes.")
+    else:
+        for chapter, scene in scene_rows:
+            lines.append(f"- [ ] {chapter.number}.{scene.number} {scene.title} [{scene.status}]")
+            if scene.summary:
+                lines.append(f"  - {scene.summary}")
+
+    notes = sorted(project.notes, key=lambda item: (item.kind, item.id))
+    lines.extend(["", "## Planning Notes To Review", ""])
+    if not notes:
+        lines.append("No planning notes yet.")
+    else:
+        for note in notes:
+            lines.append(f"- [ ] {note.title} [{note.kind}]")
+    return lines
+
+
 def _frontmatter_export_lines(project: NovelProject) -> list[str]:
     lines = [
         "---",
@@ -1047,6 +1106,7 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
             ]
         ),
         "progress_log": "\n".join(_progress_log_lines(project)),
+        "revision_checklist": "\n".join(revision_lines(project)),
     }
     try:
         rendered = template.format(**values)
