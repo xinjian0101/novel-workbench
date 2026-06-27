@@ -13,7 +13,7 @@ SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
 VALID_NOTE_KINDS = {"general", "character", "location", "plot", "research"}
-EXPORT_TEMPLATES = {"default", "frontmatter", "outline", "progress", "revision"}
+EXPORT_TEMPLATES = {"board", "default", "frontmatter", "outline", "progress", "revision"}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -739,6 +739,8 @@ class ProjectStore:
             template = validate_export_template(template)
             if template == "frontmatter":
                 lines = _frontmatter_export_lines(project)
+            elif template == "board":
+                lines = board_lines(project)
             elif template == "outline":
                 lines = outline_lines(project)
             elif template == "progress":
@@ -847,6 +849,34 @@ def outline_lines(project: NovelProject) -> list[str]:
             lines.append(f"   {chapter.number}.{scene.number} {scene.title} [{scene.status}]")
             if scene.summary:
                 lines.append(f"      {scene.summary}")
+    return lines
+
+
+def board_lines(project: NovelProject) -> list[str]:
+    lines = [f"# {project.title} Status Board", ""]
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    if not chapters:
+        lines.append("No chapters yet.")
+        return lines
+    for status in ("draft", "revising", "done"):
+        items = [chapter for chapter in chapters if chapter.status == status]
+        lines.extend([f"## {status.title()}", ""])
+        if not items:
+            lines.append("No chapters.")
+        else:
+            for chapter in items:
+                lines.append(f"- Chapter {chapter.number}: {chapter.title} ({count_words(chapter.content)} words)")
+                if chapter.summary:
+                    lines.append(f"  - {chapter.summary}")
+                unfinished_scenes = [scene for scene in chapter.scenes if scene.status != "done"]
+                if unfinished_scenes:
+                    scene_labels = ", ".join(
+                        f"{chapter.number}.{scene.number} {scene.title} [{scene.status}]" for scene in unfinished_scenes
+                    )
+                    lines.append(f"  - Open scenes: {scene_labels}")
+        lines.append("")
+    if lines[-1] == "":
+        lines.pop()
     return lines
 
 
@@ -1097,6 +1127,7 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
         "average_logged_words": "" if stats["average_logged_words"] is None else str(stats["average_logged_words"]),
         "best_day_words": "" if stats["best_day_words"] is None else str(stats["best_day_words"]),
         "chapters_markdown": "\n".join(_default_export_lines(project)).strip(),
+        "status_board": "\n".join(board_lines(project)),
         "chapter_table": "\n".join(_chapter_table_lines(project)),
         "status_summary": "\n".join(
             [

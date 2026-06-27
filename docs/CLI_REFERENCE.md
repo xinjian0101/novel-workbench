@@ -149,6 +149,17 @@ Show project metadata and chapter outline.
 novel --workspace workspace show moon-archive
 ```
 
+## `novel board`
+
+Show a chapter status board grouped by draft, revising, and done.
+
+```powershell
+novel --workspace workspace board moon-archive
+novel --workspace workspace export moon-archive exports/moon-archive-board.md --template board
+```
+
+Each chapter row includes word count, summary, and unfinished scene follow-ups when present. Use it when deciding what to draft, revise, or mark complete next.
+
 ## `novel outline`
 
 Show a structured project outline with synopsis, metadata, chapter statuses, and chapter summaries.
@@ -452,6 +463,7 @@ Export a project to Markdown.
 ```powershell
 novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-brief.md --template-file templates/brief.md
+novel --workspace workspace export moon-archive exports/moon-archive-board.md --template board
 novel --workspace workspace export moon-archive exports/moon-archive-outline.md --template outline
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
@@ -461,6 +473,7 @@ novel --workspace workspace export moon-archive exports/moon-archive-revision.md
 Templates:
 
 - `default`: plain manuscript Markdown.
+- `board`: shareable status board grouped by chapter status, with unfinished scene follow-ups.
 - `frontmatter`: YAML front matter followed by the default Markdown body.
 - `outline`: shareable outline document with synopsis, metadata, chapter summaries, and scene beats.
 - `progress`: shareable project progress report with overview, writing log totals, streaks, target deadline pace, remaining words, status word counts, a chapter table, and progress log entries.
@@ -468,7 +481,7 @@ Templates:
 
 Custom template files use Python-style named fields. Supported fields are:
 
-`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `current_streak_days`, `longest_streak_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `chapter_table`, `status_summary`, `progress_log`, and `revision_checklist`.
+`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `current_streak_days`, `longest_streak_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `status_board`, `chapter_table`, `status_summary`, `progress_log`, and `revision_checklist`.
 
 Use either `--template` or `--template-file`, not both.
 Files passed with `--template-file` must be readable UTF-8 text.

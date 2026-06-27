@@ -8,6 +8,7 @@ from novel_workbench.storage import (
     NotFoundError,
     ProjectStore,
     StorageError,
+    board_lines,
     outline_lines,
     parse_markdown_chapters,
     planning_lines,
@@ -238,6 +239,39 @@ def test_revision_lines_handles_empty_project(tmp_path: Path) -> None:
     assert "- [ ] Add chapters before starting a revision pass." in lines
     assert "No unfinished scenes." in lines
     assert "No planning notes yet." in lines
+
+
+def test_board_lines_groups_chapters_by_status(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft", "Set the hook.")
+    store.add_chapter("first-novel", "Middle", "A clue turns.", "revising")
+    store.add_chapter("first-novel", "Ending", "The case closes.", "done")
+    store.add_scene("first-novel", 2, "Midpoint", "Raise the pressure.", "draft")
+    store.add_scene("first-novel", 2, "Quiet Beat", "Resolve a subplot.", "done")
+
+    lines = board_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Status Board" in lines
+    assert "## Draft" in lines
+    assert "- Chapter 1: Opening (3 words)" in lines
+    assert "  - Set the hook." in lines
+    assert "## Revising" in lines
+    assert "- Chapter 2: Middle (3 words)" in lines
+    assert "  - Open scenes: 2.1 Midpoint [draft]" in lines
+    assert "## Done" in lines
+    assert "- Chapter 3: Ending (3 words)" in lines
+
+
+def test_board_lines_handles_empty_project(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+
+    assert board_lines(store.get_project("first-novel")) == [
+        "# First Novel Status Board",
+        "",
+        "No chapters yet.",
+    ]
 
 
 def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:
@@ -502,6 +536,7 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "Remaining: {remaining_words}\n\n"
         "Streak: {current_streak_days}/{longest_streak_days}\n\n"
         "{status_summary}\n\n"
+        "{status_board}\n\n"
         "{chapter_table}\n\n"
         "{revision_checklist}\n",
         encoding="utf-8",
@@ -520,6 +555,13 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "- Draft: 0 chapters / 0 words\n"
         "- Revising: 0 chapters / 0 words\n"
         "- Done: 1 chapters / 3 words\n\n"
+        "# First Novel Status Board\n\n"
+        "## Draft\n\n"
+        "No chapters.\n\n"
+        "## Revising\n\n"
+        "No chapters.\n\n"
+        "## Done\n\n"
+        "- Chapter 1: Opening (3 words)\n\n"
         "| # | Title | Status | Words |\n"
         "|---:|---|---|---:|\n"
         "| 1 | Opening | done | 3 |\n\n"

@@ -12,6 +12,7 @@ from .storage import (
     VALID_NOTE_KINDS,
     ProjectStore,
     StorageError,
+    board_lines,
     outline_lines,
     planning_lines,
     revision_lines,
@@ -31,6 +32,7 @@ COMPLETION_COMMANDS = (
     "rename",
     "import-markdown",
     "show",
+    "board",
     "outline",
     "plan",
     "revision",
@@ -175,6 +177,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     show = subparsers.add_parser("show", help="Show project details.")
     show.add_argument("slug")
+
+    board = subparsers.add_parser("board", help="Show a chapter status board.")
+    board.add_argument("slug")
 
     outline = subparsers.add_parser("outline", help="Show a structured project outline.")
     outline.add_argument("slug")
@@ -449,6 +454,10 @@ def run(args: argparse.Namespace) -> int:
             print(f"{chapter.number}. {chapter.title} [{chapter.status}]")
             if chapter.summary:
                 print(f"   {chapter.summary}")
+        return 0
+    if args.command == "board":
+        project = store.get_project(args.slug)
+        print("\n".join(board_lines(project)))
         return 0
     if args.command == "outline":
         project = store.get_project(args.slug)

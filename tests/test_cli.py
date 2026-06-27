@@ -75,6 +75,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "dashboard"]) == 0
     assert main(["--workspace", str(workspace), "export-dashboard", str(tmp_path / "dashboard.md")]) == 0
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
+    assert main(["--workspace", str(workspace), "board", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "outline", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "plan", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "revision", "renamed-novel"]) == 0
@@ -89,6 +90,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     custom_template.write_text("# {title}\n\n{status_summary}\n", encoding="utf-8")
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(export_path)]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(custom_export), "--template-file", str(custom_template)]) == 0
+    assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "board.md"), "--template", "board"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "outline.md"), "--template", "outline"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "frontmatter.md"), "--template", "frontmatter"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "progress.md"), "--template", "progress"]) == 0
@@ -103,6 +105,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Renamed project: renamed-novel" in captured.out
     assert "Updated metadata for renamed-novel" in captured.out
     assert "Renamed Novel (renamed-novel)" in captured.out
+    assert "# Renamed Novel Status Board" in captured.out
     assert "# Renamed Novel Outline" in captured.out
     assert "# Renamed Novel Plan" in captured.out
     assert "# Renamed Novel Revision Checklist" in captured.out
@@ -159,6 +162,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "# Renamed Novel" in custom_export.read_text(encoding="utf-8")
     assert "# Novel Workbench Dashboard" in (tmp_path / "dashboard.md").read_text(encoding="utf-8")
     assert "Draft: 2 chapters / 2 words" in custom_export.read_text(encoding="utf-8")
+    assert "# Renamed Novel Status Board" in (tmp_path / "board.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Outline" in (tmp_path / "outline.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "revision.md").read_text(encoding="utf-8")
@@ -314,6 +318,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "export-dashboard" in captured.out
     assert "migrate" in captured.out
     assert "import-markdown" in captured.out
+    assert "board" in captured.out
     assert "plan" in captured.out
     assert "revision" in captured.out
     assert "set-metadata" in captured.out
@@ -341,6 +346,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "Added note 3: Underground rain [plot]" in captured.out
     assert "Updated note 3: Underground rain [research]" in captured.out
     assert "Updated progress 1: 2026-06-26 +1250 words" in captured.out
+    assert "# Moon Archive Status Board" in captured.out
     assert "# Moon Archive Revision Checklist" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out
