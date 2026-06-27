@@ -11,6 +11,7 @@ Use this page when sharing Novel Workbench beyond the repository homepage. Keep 
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - Release wheel: `python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"`
 - 60-second tour: `novel --workspace workspace sample`
+- Output examples: `docs/OUTPUT_EXAMPLES.md`
 - Package publishing prep: `docs/PYPI_PUBLISHING.md`
 - Positioning: `docs/POSITIONING.md`
 - Use cases: `docs/USE_CASES.md`
@@ -75,6 +76,7 @@ Start here:
 - Demo: https://xinjian0101.github.io/novel-workbench/
 - Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 - Launch discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
+- Output examples: docs/OUTPUT_EXAMPLES.md
 - Use cases: docs/USE_CASES.md
 - FAQ: docs/FAQ.md
 - Positioning: docs/POSITIONING.md

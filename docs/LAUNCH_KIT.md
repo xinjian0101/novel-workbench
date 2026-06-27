@@ -11,6 +11,7 @@ Use this kit when sharing Novel Workbench publicly.
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - Release wheel: `python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"`
 - Quick tour: `novel --workspace workspace sample`
+- Output examples: `docs/OUTPUT_EXAMPLES.md`
 - Distribution copy: `docs/DISTRIBUTION.md`
 - PyPI publishing prep: `docs/PYPI_PUBLISHING.md`
 - Showcase assets: `docs/SHOWCASE.md`
@@ -76,6 +77,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 
 - README first screen explains the value without scrolling.
 - README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
+- README links to output examples for generated Markdown, JSON, static-site, and report-pack proof.
 - README links to the FAQ for privacy, install, import, export, and PyPI status questions.
 - README explains why the repository is worth starring.
 - README renders `assets/readme-showcase.svg`.

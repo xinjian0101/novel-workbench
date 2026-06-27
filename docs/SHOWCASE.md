@@ -9,6 +9,7 @@ Use this page as the source of truth for visual and demo assets.
 - Launch announcement: https://github.com/xinjian0101/novel-workbench/discussions/7
 - README showcase: `assets/readme-showcase.svg`
 - Social preview source: `assets/social-preview.svg`
+- Output examples: `docs/OUTPUT_EXAMPLES.md`
 - Use-case guide: `docs/USE_CASES.md`
 - FAQ: `docs/FAQ.md`
 - Positioning guide: `docs/POSITIONING.md`
@@ -21,6 +22,7 @@ Use this page as the source of truth for visual and demo assets.
 - The project can be enriched with metadata, notes, progress, and a target word count.
 - The project can be exported as Markdown reports, AI/editor context JSON, and a static HTML site.
 - GitHub Pages can publish a working static project dashboard.
+- The output examples show generated Markdown, handoff, context JSON, static site, and report-pack shapes.
 - The README and use-case guide explain who should try or star the project.
 - The FAQ answers privacy, install, import, export, and package-index questions.
 - The GitHub Discussion announcement provides a public launch thread for questions and sharing.

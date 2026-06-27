@@ -87,6 +87,8 @@ The tour creates a sample novel workspace, shows the next writing move, prepares
 
 See [docs/USE_CASES.md](docs/USE_CASES.md) for workflow examples and fit guidance.
 
+See [docs/OUTPUT_EXAMPLES.md](docs/OUTPUT_EXAMPLES.md) for sample Markdown, handoff, context JSON, static site, and report-pack outputs.
+
 Common privacy, install, import, and export questions are answered in [docs/FAQ.md](docs/FAQ.md).
 
 ## Why Star It
@@ -396,6 +398,8 @@ Use [docs/LAUNCH_KIT.md](docs/LAUNCH_KIT.md) for demo links, launch posts, and s
 Use [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for channel-specific submission copy and follow-up signals.
 
 Use [docs/SHOWCASE.md](docs/SHOWCASE.md) for visual preview assets and demo proof points.
+
+Use [docs/OUTPUT_EXAMPLES.md](docs/OUTPUT_EXAMPLES.md) to inspect generated Markdown, JSON, static-site, and report-pack examples.
 
 Use [docs/USE_CASES.md](docs/USE_CASES.md) to match Novel Workbench to author, archive, AI handoff, and static demo workflows.
 
