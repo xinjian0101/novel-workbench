@@ -66,6 +66,7 @@ REQUIRED_TEXT = {
         "docs/FIRST_PR.md",
         "docs/OUTPUT_EXAMPLES.md",
         "export-site",
+        "--theme classic|editorial|focus",
         "docs/LAUNCH_KIT.md",
         "docs/POSITIONING.md",
         "docs/SHOWCASE.md",
@@ -198,6 +199,7 @@ REQUIRED_TEXT = {
         "AI or Editor Handoff",
         "docs/EDITOR_WORKFLOWS.md",
         "Static Project Demo",
+        "--theme editorial",
         "Not a Fit",
     ],
     "docs/EDITOR_WORKFLOWS.md": [

@@ -389,6 +389,7 @@ def build_parser() -> argparse.ArgumentParser:
     export_site = subparsers.add_parser("export-site", help="Export a static HTML project site.")
     export_site.add_argument("slug")
     export_site.add_argument("output_dir", type=Path)
+    export_site.add_argument("--theme", choices=("classic", "editorial", "focus"), default="classic", help="Static site theme.")
 
     export_pack = subparsers.add_parser("export-pack", help="Export all standard Markdown reports for a project.")
     export_pack.add_argument("slug")
@@ -817,7 +818,7 @@ def run(args: argparse.Namespace) -> int:
         print(f"Exported context: {output}")
         return 0
     if args.command == "export-site":
-        outputs = store.export_site(args.slug, args.output_dir)
+        outputs = store.export_site(args.slug, args.output_dir, theme=args.theme)
         print(f"Exported site: {args.output_dir}")
         for output in outputs:
             print(f"- {output}")

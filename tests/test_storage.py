@@ -779,6 +779,20 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
     assert context["format"] == "novel-workbench-project-context"
 
 
+def test_export_site_supports_static_site_themes(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    output_dir = tmp_path / "site"
+
+    store.export_site("first-novel", output_dir, theme="editorial")
+
+    index = (output_dir / "index.html").read_text(encoding="utf-8")
+    manuscript = (output_dir / "manuscript.html").read_text(encoding="utf-8")
+    assert '<html lang="en" data-theme="editorial">' in index
+    assert '<html lang="en" data-theme="editorial">' in manuscript
+    assert "[data-theme=editorial]" in index
+
+
 def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")

@@ -38,6 +38,7 @@ EXPORT_PACK_TEMPLATES = (
     ("review", "review", "{slug}-review.md"),
     ("revision", "revision", "{slug}-revision.md"),
 )
+SITE_THEMES = ("classic", "editorial", "focus")
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -698,12 +699,13 @@ class ProjectStore:
         output_path.write_text(json.dumps(context, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         return output_path
 
-    def export_site(self, slug: str, output_dir: Path) -> list[Path]:
+    def export_site(self, slug: str, output_dir: Path, theme: str = "classic") -> list[Path]:
         project = self.get_project(slug)
+        theme = validate_site_theme(theme)
         output_dir.mkdir(parents=True, exist_ok=True)
         files = {
-            output_dir / "index.html": _site_index_html(project),
-            output_dir / "manuscript.html": _site_manuscript_html(project),
+            output_dir / "index.html": _site_index_html(project, theme),
+            output_dir / "manuscript.html": _site_manuscript_html(project, theme),
             output_dir / "context.json": json.dumps(_context_for_project(project), indent=2, ensure_ascii=False) + "\n",
         }
         for path, content in files.items():
@@ -888,7 +890,15 @@ def workspace_dashboard_lines(rows: list[dict[str, str | int | None]]) -> list[s
     return lines
 
 
-def _site_index_html(project: NovelProject) -> str:
+def validate_site_theme(theme: str) -> str:
+    normalized = theme.strip().lower()
+    if normalized not in SITE_THEMES:
+        choices = ", ".join(SITE_THEMES)
+        raise StorageError(f"Unknown site theme '{theme}'. Choose one of: {choices}.")
+    return normalized
+
+
+def _site_index_html(project: NovelProject, theme: str = "classic") -> str:
     stats = _stats_for_project(project)
     chapters = sorted(project.chapters, key=lambda item: item.number)
     notes = sorted(project.notes, key=lambda item: item.id)
@@ -904,7 +914,7 @@ def _site_index_html(project: NovelProject) -> str:
     ]
     body = [
         '<!doctype html>',
-        '<html lang="en">',
+        f'<html lang="en" data-theme="{_html(theme)}">',
         "<head>",
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
@@ -960,10 +970,10 @@ def _site_index_html(project: NovelProject) -> str:
     return "\n".join(body) + "\n"
 
 
-def _site_manuscript_html(project: NovelProject) -> str:
+def _site_manuscript_html(project: NovelProject, theme: str = "classic") -> str:
     body = [
         '<!doctype html>',
-        '<html lang="en">',
+        f'<html lang="en" data-theme="{_html(theme)}">',
         "<head>",
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
@@ -1036,8 +1046,11 @@ def _site_progress_table(entries: list[ProgressEntry]) -> str:
 def _site_css() -> str:
     return (
         ":root{color-scheme:light;--ink:#1f2933;--muted:#5f6c7b;--line:#d8dee6;--paper:#f7f8fa;--accent:#0f766e;}"
+        "[data-theme=editorial]{--ink:#27201c;--muted:#74665c;--line:#d8cfc5;--paper:#fbf7f0;--accent:#9f3a25;}"
+        "[data-theme=focus]{--ink:#172033;--muted:#536179;--line:#cfd8e6;--paper:#f2f7ff;--accent:#2563eb;}"
         "*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}"
         ".wrap{width:min(1040px,92vw);margin:0 auto}.hero{background:#111827;color:white;padding:56px 0 40px}.hero p{max-width:760px;color:#d1d5db}"
+        "[data-theme=editorial] .hero{background:#3b241d}[data-theme=focus] .hero{background:#172554}"
         ".eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;color:#99f6e4}.hero h1{font-size:clamp(36px,7vw,72px);line-height:1;margin:0 0 16px}"
         "nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}a{color:var(--accent);font-weight:700}nav a{color:white;border:1px solid #5eead4;padding:10px 14px;text-decoration:none}"
         ".metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:24px 0}.metrics div,.panel{background:white;border:1px solid var(--line);padding:18px}"

@@ -71,6 +71,7 @@ Useful commands:
 
 ```powershell
 novel --workspace workspace export-site moon-archive exports/moon-archive-site
+novel --workspace workspace export-site moon-archive exports/moon-archive-site --theme editorial
 python scripts/build_pages_demo.py public
 python scripts/launch_audit.py
 ```
