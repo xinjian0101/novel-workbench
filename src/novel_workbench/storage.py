@@ -579,6 +579,47 @@ class ProjectStore:
         project = self.get_project(slug)
         return sorted(project.progress, key=lambda item: (item.date, item.id))
 
+    def update_progress(
+        self,
+        slug: str,
+        progress_id: int,
+        *,
+        entry_date: str | None = None,
+        words: int | None = None,
+        note: str | None = None,
+    ) -> ProgressEntry:
+        if progress_id < 1:
+            raise StorageError("Progress id must be greater than zero.")
+        if entry_date is None and words is None and note is None:
+            raise StorageError("Provide at least one progress field to update.")
+        project = self.get_project(slug)
+        entry = next((item for item in project.progress if item.id == progress_id), None)
+        if entry is None:
+            raise NotFoundError(f"Progress entry {progress_id} does not exist in project '{project.slug}'.")
+        if entry_date is not None:
+            entry.date = validate_progress_date(entry_date)
+        if words is not None:
+            entry.words = validate_progress_words(words)
+        if note is not None:
+            entry.note = note.strip()
+        entry.updated_at = utc_now_iso()
+        project.updated_at = entry.updated_at
+        self._write_project(project)
+        return entry
+
+    def delete_progress(self, slug: str, progress_id: int) -> ProgressEntry:
+        if progress_id < 1:
+            raise StorageError("Progress id must be greater than zero.")
+        project = self.get_project(slug)
+        index = next((idx for idx, item in enumerate(project.progress) if item.id == progress_id), None)
+        if index is None:
+            raise NotFoundError(f"Progress entry {progress_id} does not exist in project '{project.slug}'.")
+        self._snapshot_project(project, "delete-progress")
+        entry = project.progress.pop(index)
+        project.updated_at = utc_now_iso()
+        self._write_project(project)
+        return entry
+
     def set_target_words(self, slug: str, target_words: int | None) -> NovelProject:
         project = self.get_project(slug)
         project.target_words = None if target_words is None else validate_target_words(target_words)

@@ -58,6 +58,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Add structured character and location notes with dedicated commands
 - Update project notes as plans evolve
 - Log writing sessions by date and words written
+- Correct or delete writing log entries when plans change
 - Track current and longest writing streaks
 - Set a target completion date and calculate required daily writing pace
 - Review every project in a workspace dashboard
@@ -106,6 +107,7 @@ novel --workspace workspace add-note moon-archive "Underground rain" --kind plot
 novel --workspace workspace update-note moon-archive 1 --kind research --content "The lower city has sealed storm drains."
 novel --workspace workspace list-notes moon-archive
 novel --workspace workspace add-progress moon-archive 1200 --date 2026-06-26 --note "Drafted the descent sequence."
+novel --workspace workspace update-progress moon-archive 1 --words 1250 --note "Included evening revisions."
 novel --workspace workspace list-progress moon-archive
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace set-deadline moon-archive 2026-12-31
@@ -158,6 +160,8 @@ novel update-note <slug> <id> [--title "..."] [--kind general|character|location
 novel delete-note <slug> <id>
 novel add-progress <slug> <words> [--date YYYY-MM-DD] [--note "..."]
 novel list-progress <slug>
+novel update-progress <slug> <id> [--date YYYY-MM-DD] [--words N] [--note "..."]
+novel delete-progress <slug> <id>
 novel search <slug> <query>
 novel add-chapter <slug> <title> [--content "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel update-chapter <slug> <number> [--title "..."] [--content "..."] [--content-file path] [--summary "..."] [--summary-file path] [--status draft|revising|done]

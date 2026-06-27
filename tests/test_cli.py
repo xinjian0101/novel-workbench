@@ -65,6 +65,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
     progress_date = date.today().isoformat()
     assert main(["--workspace", str(workspace), "add-progress", "renamed-novel", "450", "--date", progress_date, "--note", "Drafted the new opening."]) == 0
+    assert main(["--workspace", str(workspace), "update-progress", "renamed-novel", "1", "--words", "500", "--note", "Recounted the new opening."]) == 0
     assert main(["--workspace", str(workspace), "list-progress", "renamed-novel"]) == 0
     note_file = tmp_path / "note.md"
     note_file.write_text("Updated protagonist notes", encoding="utf-8")
@@ -114,7 +115,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Decode the archive signal." in captured.out
     assert "A sealed records chamber below the city." in captured.out
     assert f"Logged progress 1: {progress_date} +450 words" in captured.out
-    assert f"1. {progress_date}: +450 words - Drafted the new opening." in captured.out
+    assert f"Updated progress 1: {progress_date} +500 words" in captured.out
+    assert f"1. {progress_date}: +500 words - Recounted the new opening." in captured.out
     assert "Added scene 1.1: First Image" in captured.out
     assert "Updated scene 1.1: First Image" in captured.out
     assert "1.1. First Image [revising]" in captured.out
@@ -126,15 +128,15 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Restored project: renamed-novel" in captured.out
     assert "Workspace healthy." in captured.out
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
-    assert "renamed-novel\tRenamed Novel\t2\t2\t450\t1\t-\t-" in captured.out
+    assert "renamed-novel\tRenamed Novel\t2\t2\t500\t1\t-\t-" in captured.out
     assert "Notes: 3" in captured.out
     assert "Words: 2" in captured.out
-    assert "Logged words: 450" in captured.out
+    assert "Logged words: 500" in captured.out
     assert "Writing days: 1" in captured.out
     assert "Current streak: 1 days" in captured.out
     assert "Longest streak: 1 days" in captured.out
-    assert "Average logged words: 450" in captured.out
-    assert "Best writing day: 450 words" in captured.out
+    assert "Average logged words: 500" in captured.out
+    assert "Best writing day: 500 words" in captured.out
     assert "Target words: 10" in captured.out
     assert "Remaining words: 8" in captured.out
     assert "Progress: 20%" in captured.out
@@ -202,6 +204,20 @@ def test_cli_dashboard_reports_empty_workspace(tmp_path: Path, capsys) -> None:
 
     captured = capsys.readouterr()
     assert "No projects found." in captured.out
+
+
+def test_cli_deletes_progress_entry(tmp_path: Path, capsys) -> None:
+    workspace = tmp_path / "workspace"
+
+    assert main(["--workspace", str(workspace), "create", "first-novel", "First Novel"]) == 0
+    assert main(["--workspace", str(workspace), "add-progress", "first-novel", "100", "--date", "2026-06-25"]) == 0
+    assert main(["--workspace", str(workspace), "delete-progress", "first-novel", "1"]) == 0
+    assert main(["--workspace", str(workspace), "list-progress", "first-novel"]) == 0
+
+    captured = capsys.readouterr()
+    assert "Deleted progress 1: 2026-06-25 +100 words" in captured.out
+    assert "No progress entries found." in captured.out
+    assert list((workspace / "backups").glob("first-novel-delete-progress-*.json"))
 
 
 def test_cli_reports_validation_errors(tmp_path: Path, capsys) -> None:
@@ -285,6 +301,8 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "add-location" in captured.out
     assert "update-note" in captured.out
     assert "add-progress" in captured.out
+    assert "update-progress" in captured.out
+    assert "delete-progress" in captured.out
 
 
 def test_demo_script_runs(capsys) -> None:
@@ -301,8 +319,9 @@ def test_demo_script_runs(capsys) -> None:
     assert "Added location 2: Archive Vault" in captured.out
     assert "Added note 3: Underground rain [plot]" in captured.out
     assert "Updated note 3: Underground rain [research]" in captured.out
+    assert "Updated progress 1: 2026-06-26 +1250 words" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
-    assert "moon-archive\tMoon Archive\t1\t8\t1200\t" in captured.out
+    assert "moon-archive\tMoon Archive\t1\t8\t1250\t" in captured.out
     assert "Backed up:" in captured.out

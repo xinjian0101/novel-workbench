@@ -561,6 +561,55 @@ def test_progress_entries_are_stored_sorted_and_validated(tmp_path: Path) -> Non
         store.add_progress("first-novel", 100, "06/27/2026")
 
 
+def test_update_and_delete_progress_entries(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    first = store.add_progress("first-novel", 200, "2026-06-26", "Initial note.")
+    second = store.add_progress("first-novel", 100, "2026-06-27", "Remove later.")
+
+    updated = store.update_progress(
+        "first-novel",
+        first.id,
+        entry_date="2026-06-25",
+        words=250,
+        note="Recounted pages.",
+    )
+    deleted = store.delete_progress("first-novel", second.id)
+    entries = store.list_progress("first-novel")
+
+    assert updated.date == "2026-06-25"
+    assert updated.words == 250
+    assert updated.note == "Recounted pages."
+    assert deleted.id == second.id
+    assert [(entry.id, entry.date, entry.words, entry.note) for entry in entries] == [
+        (first.id, "2026-06-25", 250, "Recounted pages.")
+    ]
+    backups = list((tmp_path / "backups").glob("first-novel-delete-progress-*.json"))
+    assert len(backups) == 1
+    assert '"id": 2' in backups[0].read_text(encoding="utf-8")
+
+
+def test_update_and_delete_progress_validate_inputs(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    entry = store.add_progress("first-novel", 100, "2026-06-25")
+
+    with pytest.raises(StorageError, match="Provide at least one progress field"):
+        store.update_progress("first-novel", entry.id)
+    with pytest.raises(StorageError, match="Progress id must be greater than zero"):
+        store.update_progress("first-novel", 0, words=100)
+    with pytest.raises(StorageError, match="YYYY-MM-DD"):
+        store.update_progress("first-novel", entry.id, entry_date="06/26/2026")
+    with pytest.raises(StorageError, match="greater than zero"):
+        store.update_progress("first-novel", entry.id, words=0)
+    with pytest.raises(NotFoundError):
+        store.update_progress("first-novel", 99, words=100)
+    with pytest.raises(StorageError, match="Progress id must be greater than zero"):
+        store.delete_progress("first-novel", 0)
+    with pytest.raises(NotFoundError):
+        store.delete_progress("first-novel", 99)
+
+
 def test_clear_target_words(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")

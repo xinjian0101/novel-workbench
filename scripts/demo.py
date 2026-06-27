@@ -41,6 +41,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "update-note", "moon-archive", "3", "--kind", "research", "--content", "The lower city has sealed storm drains."],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "list-notes", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "add-progress", "moon-archive", "1200", "--date", "2026-06-26", "--note", "Drafted the descent sequence."],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "update-progress", "moon-archive", "1", "--words", "1250", "--note", "Included evening revisions."],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "list-progress", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-target", "moon-archive", "80000"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-deadline", "moon-archive", "2026-12-31"],

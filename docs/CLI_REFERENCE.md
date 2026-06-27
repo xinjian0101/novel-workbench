@@ -306,6 +306,27 @@ List writing progress entries sorted by date.
 novel --workspace workspace list-progress moon-archive
 ```
 
+## `novel update-progress`
+
+Correct a writing progress entry.
+
+```powershell
+novel --workspace workspace update-progress moon-archive 1 --words 1250
+novel --workspace workspace update-progress moon-archive 1 --date 2026-06-27 --note "Included evening revisions."
+```
+
+Provide at least one of `--date`, `--words`, or `--note`. Dates use `YYYY-MM-DD`; word counts must be greater than zero.
+
+## `novel delete-progress`
+
+Delete a writing progress entry.
+
+```powershell
+novel --workspace workspace delete-progress moon-archive 1
+```
+
+The command writes a pre-delete safety snapshot under `workspace/backups/` before removing the progress entry.
+
 ## `novel search`
 
 Search chapter titles, manuscript content, note titles, note content, and note kinds.

@@ -38,6 +38,8 @@ COMPLETION_COMMANDS = (
     "delete-note",
     "add-progress",
     "list-progress",
+    "update-progress",
+    "delete-progress",
     "search",
     "add-chapter",
     "update-chapter",
@@ -242,6 +244,17 @@ def build_parser() -> argparse.ArgumentParser:
 
     list_progress = subparsers.add_parser("list-progress", help="List writing progress entries.")
     list_progress.add_argument("slug")
+
+    update_progress = subparsers.add_parser("update-progress", help="Update a writing progress entry.")
+    update_progress.add_argument("slug")
+    update_progress.add_argument("id", type=int)
+    update_progress.add_argument("--date", help="Writing date in YYYY-MM-DD format.")
+    update_progress.add_argument("--words", type=int, help="Words written.")
+    update_progress.add_argument("--note", help="Progress note.")
+
+    delete_progress = subparsers.add_parser("delete-progress", help="Delete a writing progress entry.")
+    delete_progress.add_argument("slug")
+    delete_progress.add_argument("id", type=int)
 
     search = subparsers.add_parser("search", help="Search chapters and project notes.")
     search.add_argument("slug")
@@ -567,6 +580,14 @@ def run(args: argparse.Namespace) -> int:
             if entry.note:
                 line = f"{line} - {entry.note}"
             print(line)
+        return 0
+    if args.command == "update-progress":
+        entry = store.update_progress(args.slug, args.id, entry_date=args.date, words=args.words, note=args.note)
+        print(f"Updated progress {entry.id}: {entry.date} +{entry.words} words")
+        return 0
+    if args.command == "delete-progress":
+        entry = store.delete_progress(args.slug, args.id)
+        print(f"Deleted progress {entry.id}: {entry.date} +{entry.words} words")
         return 0
     if args.command == "search":
         results = store.search(args.slug, args.query)
