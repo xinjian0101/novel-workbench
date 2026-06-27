@@ -25,6 +25,7 @@ Use this page as the source of truth for visual and demo assets.
 - The Pages demo includes chapter-level scene summaries, so readers can inspect story planning depth before opening the manuscript view.
 - The exported HTML includes description, Open Graph, and Twitter summary metadata for cleaner social link previews.
 - The Pages demo publishes `sitemap.xml` and `robots.txt` so public crawlers can discover the dashboard, manuscript, and context JSON.
+- The Codespaces quick start gives reviewers a disposable environment for running the same tour without local setup.
 - GitHub Pages can publish a working static project dashboard.
 - The static site includes a "Try Novel Workbench" callout with the install command and `novel --workspace workspace tour --output-dir exports`.
 - The output examples show generated Markdown, handoff, context JSON, static site, and report-pack shapes.

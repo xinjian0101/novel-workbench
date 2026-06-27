@@ -14,6 +14,8 @@ python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 ```
 
+For a no-local-install path, use GitHub Codespaces with [docs/CODESPACES.md](docs/CODESPACES.md).
+
 ## Before Opening a Pull Request
 
 Run:

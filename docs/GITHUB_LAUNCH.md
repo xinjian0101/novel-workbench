@@ -11,6 +11,7 @@ Use this checklist before making the repository public or announcing it.
 - Features: enable Issues and Discussions if maintainers can respond.
 - Dependabot: enabled for GitHub Actions through `.github/dependabot.yml`.
 - Pages: enable GitHub Actions as the Pages source so `.github/workflows/pages.yml` can publish the generated demo site.
+- Codespaces: `.devcontainer/devcontainer.json` should install `.[dev]` so new contributors can run the tour and checks without local Python setup.
 - Community intake: issue forms and the pull request template should stay focused on reproducible bugs, author workflows, and the local-first project model.
 - Maintainer trust: `.github/CODEOWNERS` and `docs/MAINTAINER_GUIDE.md` should describe review routing, release gates, public link checks, and milestone verification.
 
@@ -23,6 +24,7 @@ Use this checklist before making the repository public or announcing it.
 - The install command points to the real GitHub repository.
 - PyPI publishing is documented as a post-release maintainer action, not claimed as already complete.
 - The one-command 60-second tour works after installing from GitHub: `novel --workspace workspace tour --output-dir exports`.
+- The Codespaces quick start links to `docs/CODESPACES.md` and runs the same one-command tour.
 - The terminal demo matches `python scripts/demo.py`.
 - The Pages demo builds with `python scripts/build_pages_demo.py public`.
 - The showcase assets in `docs/SHOWCASE.md` render in the README and social preview.

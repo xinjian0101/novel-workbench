@@ -4,6 +4,7 @@
 [![Pages](https://github.com/xinjian0101/novel-workbench/actions/workflows/pages.yml/badge.svg)](https://github.com/xinjian0101/novel-workbench/actions/workflows/pages.yml)
 [![Release](https://img.shields.io/github/v/release/xinjian0101/novel-workbench?display_name=tag)](https://github.com/xinjian0101/novel-workbench/releases/latest)
 [![Stars](https://img.shields.io/github/stars/xinjian0101/novel-workbench?label=stars)](https://github.com/xinjian0101/novel-workbench/stargazers)
+[![Open in GitHub Codespaces](https://img.shields.io/badge/open-Codespaces-181717.svg)](https://codespaces.new/xinjian0101/novel-workbench?quickstart=1)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Topics](https://img.shields.io/badge/topics-writing%20%7C%20novel%20%7C%20local--first%20%7C%20cli-2563eb.svg)](https://github.com/xinjian0101/novel-workbench/topics)
@@ -22,6 +23,7 @@ Launch announcement: [GitHub Discussion #7](https://github.com/xinjian0101/novel
 |---|---|
 | Local-first | No account, server, database, telemetry, or background network calls. |
 | Fastest try path | `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"` then `novel --workspace workspace tour --output-dir exports`. |
+| Cloud try path | Open a disposable GitHub Codespaces environment using [docs/CODESPACES.md](docs/CODESPACES.md). |
 | Shareable proof | Live demo, terminal demo, output examples, and static HTML export are all generated from repository commands. |
 | Star fit | See [docs/EVALUATION.md](docs/EVALUATION.md) for star signals, share targets, and contribution fit. |
 
@@ -74,6 +76,8 @@ For local development, clone the repository and install it editable:
 ```powershell
 python -m pip install -e ".[dev]"
 ```
+
+Or use GitHub Codespaces for a disposable development environment. See [docs/CODESPACES.md](docs/CODESPACES.md).
 
 ## 60-Second Tour
 
@@ -446,6 +450,8 @@ Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), then o
 First-time contributors can follow [docs/FIRST_PR.md](docs/FIRST_PR.md).
 
 Community and issue labels are described in [docs/COMMUNITY.md](docs/COMMUNITY.md).
+
+Codespaces setup for no-local-install contributions is documented in [docs/CODESPACES.md](docs/CODESPACES.md).
 
 Maintainer review routing, release gates, and public milestone checks are documented in [docs/MAINTAINER_GUIDE.md](docs/MAINTAINER_GUIDE.md).
 

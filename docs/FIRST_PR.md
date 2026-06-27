@@ -20,6 +20,10 @@ python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 ```
 
+## Codespaces Setup
+
+If you do not want to configure Python locally, create a GitHub Codespace from the repository and follow [docs/CODESPACES.md](CODESPACES.md). The dev container installs Novel Workbench in editable mode with development dependencies.
+
 ## Before Editing
 
 Run the current quality gate:

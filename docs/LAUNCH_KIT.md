@@ -79,6 +79,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 
 - README first screen explains the value without scrolling.
 - README first screen includes stars, topics, local-first proof, fastest try path, and evaluation guide links.
+- README links to the GitHub Codespaces quick start for no-local-install trials.
 - README includes the one-command `novel tour` path.
 - README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
 - README links to copy-paste editor workflow recipes.
@@ -100,6 +101,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 - Bug, feature, and question issue forms are available.
 - At least one open `good first issue` and one open `help wanted` issue are available.
 - First-time contributors have a concrete PR guide in `docs/FIRST_PR.md`.
+- `docs/CODESPACES.md` explains the no-local-install contributor path.
 - The pull request template asks for `python scripts/check.py`.
 - Maintainer review routing and release gates are documented in `docs/MAINTAINER_GUIDE.md`.
 - `.github/CODEOWNERS` routes repository-wide review ownership.

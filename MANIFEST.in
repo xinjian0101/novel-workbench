@@ -7,6 +7,7 @@ include ROADMAP.md
 include CODE_OF_CONDUCT.md
 include MANUAL_ACTIONS.md
 include .github/CODEOWNERS
+recursive-include .devcontainer *.json
 recursive-include docs *.md
 recursive-include examples *.md
 recursive-include scripts *.py
