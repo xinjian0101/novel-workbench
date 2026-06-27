@@ -60,6 +60,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Log writing sessions by date and words written
 - Track current and longest writing streaks
 - Set a target completion date and calculate required daily writing pace
+- Review every project in a workspace dashboard
 - Show structured project outlines
 - Show a full planning view with metadata, progress, chapters, scenes, notes, and writing logs
 - Report chapter, word, character, status, and average chapter counts
@@ -108,6 +109,7 @@ novel --workspace workspace add-progress moon-archive 1200 --date 2026-06-26 --n
 novel --workspace workspace list-progress moon-archive
 novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace set-deadline moon-archive 2026-12-31
+novel --workspace workspace dashboard
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
 novel --workspace workspace migrate --dry-run
@@ -130,6 +132,7 @@ python scripts/demo.py
 ```text
 novel init
 novel list
+novel dashboard
 novel doctor
 novel migrate [--dry-run]
 novel completion bash|zsh|powershell

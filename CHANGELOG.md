@@ -4,6 +4,7 @@
 
 - Added local JSON project storage.
 - Added project creation, listing, and inspection commands.
+- Added a workspace dashboard command for comparing project progress.
 - Added project genre, audience, and revision note metadata.
 - Added project rename support for changing slugs and titles safely.
 - Added chapter creation and update commands.

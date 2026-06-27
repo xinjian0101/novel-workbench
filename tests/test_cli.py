@@ -71,6 +71,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "update-note", "renamed-novel", "1", "--title", "Ada Byron", "--kind", "research", "--content-file", str(note_file)]) == 0
     assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "doctor"]) == 0
+    assert main(["--workspace", str(workspace), "dashboard"]) == 0
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "outline", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "plan", "renamed-novel"]) == 0
@@ -124,6 +125,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Deleted note 1: Ada Byron" in captured.out
     assert "Restored project: renamed-novel" in captured.out
     assert "Workspace healthy." in captured.out
+    assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
+    assert "renamed-novel\tRenamed Novel\t2\t2\t450\t1\t-\t-" in captured.out
     assert "Notes: 3" in captured.out
     assert "Words: 2" in captured.out
     assert "Logged words: 450" in captured.out
@@ -192,6 +195,13 @@ def test_cli_sample_creates_demo_project(tmp_path: Path, capsys) -> None:
     captured = capsys.readouterr()
     assert "Created sample project: moon-archive (2 chapters)" in captured.out
     assert "Moon Archive (moon-archive)" in captured.out
+
+
+def test_cli_dashboard_reports_empty_workspace(tmp_path: Path, capsys) -> None:
+    assert main(["--workspace", str(tmp_path), "dashboard"]) == 0
+
+    captured = capsys.readouterr()
+    assert "No projects found." in captured.out
 
 
 def test_cli_reports_validation_errors(tmp_path: Path, capsys) -> None:
@@ -265,6 +275,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "complete -F _novel_completion novel" in captured.out
     assert "#compdef novel" in captured.out
     assert "Register-ArgumentCompleter" in captured.out
+    assert "dashboard" in captured.out
     assert "migrate" in captured.out
     assert "import-markdown" in captured.out
     assert "plan" in captured.out
@@ -292,4 +303,6 @@ def test_demo_script_runs(capsys) -> None:
     assert "Updated note 3: Underground rain [research]" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out
+    assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
+    assert "moon-archive\tMoon Archive\t1\t8\t1200\t" in captured.out
     assert "Backed up:" in captured.out

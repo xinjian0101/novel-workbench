@@ -44,6 +44,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "list-progress", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-target", "moon-archive", "80000"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "set-deadline", "moon-archive", "2026-12-31"],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "dashboard"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "show", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "plan", "moon-archive"],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "stats", "moon-archive"],

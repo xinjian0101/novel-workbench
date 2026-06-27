@@ -13,6 +13,7 @@ from .storage import STARTER_TEMPLATES, VALID_NOTE_KINDS, ProjectStore, StorageE
 COMPLETION_COMMANDS = (
     "init",
     "list",
+    "dashboard",
     "doctor",
     "migrate",
     "sample",
@@ -129,6 +130,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("init", help="Create the workspace directory.")
     subparsers.add_parser("list", help="List projects.")
+    subparsers.add_parser("dashboard", help="Show a workspace progress dashboard.")
     subparsers.add_parser("doctor", help="Validate workspace project files.")
     migrate = subparsers.add_parser("migrate", help="Normalize project files to the current schema.")
     migrate.add_argument("--dry-run", action="store_true", help="Report projects that would change without writing files.")
@@ -335,6 +337,20 @@ def run(args: argparse.Namespace) -> int:
             return 0
         for project in projects:
             print(f"{project.slug}\t{project.title}\t{len(project.chapters)} chapters")
+        return 0
+    if args.command == "dashboard":
+        rows = store.workspace_dashboard()
+        if not rows:
+            print("No projects found.")
+            return 0
+        print("Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated")
+        for row in rows:
+            target = "-" if row["target_words"] is None else str(row["target_words"])
+            progress = "-" if row["progress_percent"] is None else f"{row['progress_percent']}%"
+            print(
+                f"{row['slug']}\t{row['title']}\t{row['chapters']}\t{row['words']}\t"
+                f"{row['logged_words']}\t{row['current_streak_days']}\t{target}\t{progress}\t{row['updated_at']}"
+            )
         return 0
     if args.command == "doctor":
         report = store.check_workspace()

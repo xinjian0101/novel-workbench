@@ -226,6 +226,25 @@ class ProjectStore:
         projects = [self._read_project(path) for path in sorted(self.projects_dir.glob("*.json"))]
         return sorted(projects, key=lambda project: project.updated_at, reverse=True)
 
+    def workspace_dashboard(self) -> list[dict[str, str | int | None]]:
+        rows: list[dict[str, str | int | None]] = []
+        for project in self.list_projects():
+            stats = _stats_for_project(project)
+            rows.append(
+                {
+                    "slug": project.slug,
+                    "title": project.title,
+                    "chapters": stats["chapters"],
+                    "words": stats["words"],
+                    "logged_words": stats["logged_words"],
+                    "current_streak_days": stats["current_streak_days"],
+                    "target_words": stats["target_words"],
+                    "progress_percent": stats["progress_percent"],
+                    "updated_at": project.updated_at,
+                }
+            )
+        return rows
+
     def check_workspace(self) -> dict[str, int | list[dict[str, str]]]:
         self.initialize()
         checked = 0

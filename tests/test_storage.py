@@ -54,6 +54,30 @@ def test_create_sample_project_rejects_duplicate_slug(tmp_path: Path) -> None:
         store.create_sample_project()
 
 
+def test_workspace_dashboard_summarizes_projects(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening", "The story begins.")
+    store.set_target_words("first-novel", 10)
+    store.add_progress("first-novel", 250, date.today().isoformat())
+    store.create_project("second-novel", "Second Novel")
+
+    rows = store.workspace_dashboard()
+
+    by_slug = {str(row["slug"]): row for row in rows}
+
+    assert by_slug["second-novel"]["title"] == "Second Novel"
+    assert by_slug["second-novel"]["chapters"] == 0
+    assert by_slug["second-novel"]["target_words"] is None
+    assert by_slug["second-novel"]["progress_percent"] is None
+    assert by_slug["first-novel"]["chapters"] == 1
+    assert by_slug["first-novel"]["words"] == 3
+    assert by_slug["first-novel"]["logged_words"] == 250
+    assert by_slug["first-novel"]["current_streak_days"] == 1
+    assert by_slug["first-novel"]["target_words"] == 10
+    assert by_slug["first-novel"]["progress_percent"] == 30
+
+
 def test_validates_slug_title_and_status(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
 

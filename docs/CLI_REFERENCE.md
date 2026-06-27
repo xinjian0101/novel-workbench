@@ -18,6 +18,16 @@ List projects in the workspace.
 novel --workspace workspace list
 ```
 
+## `novel dashboard`
+
+Show a workspace-level progress table for every project.
+
+```powershell
+novel --workspace workspace dashboard
+```
+
+The table includes slug, title, chapter count, manuscript words, logged words, current writing streak, target words, target progress, and last updated timestamp. Use this command to choose what needs attention before opening a specific project with `plan` or `stats`.
+
 ## `novel doctor`
 
 Validate project files in the workspace.
