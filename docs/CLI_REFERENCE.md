@@ -578,7 +578,7 @@ novel --workspace workspace export-site moon-archive exports/moon-archive-site
 novel --workspace workspace export-site moon-archive exports/moon-archive-site --theme editorial
 ```
 
-The command writes `index.html`, `manuscript.html`, and `context.json`. The index page summarizes project metadata, progress, the next action, chapters, notes, and recent writing. The manuscript page provides a clean reading view. Use `--theme classic`, `--theme editorial`, or `--theme focus` to choose the static-site presentation without adding runtime dependencies. The JSON file matches `novel context`, which makes the site directory useful for GitHub Pages, local review, or AI/editor automation.
+The command writes `index.html`, `manuscript.html`, and `context.json`. The index page summarizes project metadata, progress, the next action, chapters, scene summaries, notes, and recent writing. The manuscript page provides a clean reading view. Use `--theme classic`, `--theme editorial`, or `--theme focus` to choose the static-site presentation without adding runtime dependencies. The JSON file matches `novel context`, which makes the site directory useful for GitHub Pages, local review, or AI/editor automation.
 
 ## `novel export-pack`
 

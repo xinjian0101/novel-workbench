@@ -757,6 +757,7 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
     store.create_project("first-novel", "First <Novel>", "A concise & private premise.")
     store.update_project_metadata("first-novel", genre="mystery", audience="adult")
     store.add_chapter("first-novel", "Opening", "The story begins.\nA clue <appears>.", "draft", "Start with pressure.")
+    store.add_scene("first-novel", 1, "First clue", "A clue <glows> under the desk.", "revising")
     store.add_note("first-novel", "Ada", "Detective & protagonist.", "character")
     store.add_progress("first-novel", 300, "2026-06-26", "Drafted <opening>.")
     output_dir = tmp_path / "site"
@@ -774,6 +775,11 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
     assert "Try Novel Workbench" in index
     assert "novel --workspace workspace tour --output-dir exports" in index
     assert "https://github.com/xinjian0101/novel-workbench" in index
+    assert '<ol class="scenes">' in index
+    assert "1.1 First clue" in index
+    assert "revising" in index
+    assert "A clue &lt;glows&gt; under the desk." in index
+    assert ".scenes{" in index
     assert "Drafted &lt;opening&gt;." in index
     assert "A clue &lt;appears&gt;." in manuscript
     assert context["format"] == "novel-workbench-project-context"

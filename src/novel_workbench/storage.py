@@ -1007,14 +1007,32 @@ def _site_chapter_list(chapters: list[Chapter]) -> str:
     items = []
     for chapter in chapters:
         summary = f"<p>{_html(chapter.summary)}</p>" if chapter.summary else ""
+        scenes = _site_scene_list(chapter)
         items.append(
             "<li>"
             f"<strong>{chapter.number}. {_html(chapter.title)}</strong>"
             f"<span>{_html(chapter.status)} / {count_words(chapter.content)} words</span>"
             f"{summary}"
+            f"{scenes}"
             "</li>"
         )
     return f"<ol>{''.join(items)}</ol>"
+
+
+def _site_scene_list(chapter: Chapter) -> str:
+    if not chapter.scenes:
+        return ""
+    items = []
+    for scene in sorted(chapter.scenes, key=lambda item: item.number):
+        summary = f"<p>{_html(scene.summary)}</p>" if scene.summary else ""
+        items.append(
+            "<li>"
+            f"<strong>{chapter.number}.{scene.number} {_html(scene.title)}</strong>"
+            f"<span>{_html(scene.status)}</span>"
+            f"{summary}"
+            "</li>"
+        )
+    return '<ol class="scenes">' + "".join(items) + "</ol>"
 
 
 def _site_note_list(notes: list[ProjectNote]) -> str:
@@ -1056,6 +1074,7 @@ def _site_css() -> str:
         ".metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:24px 0}.metrics div,.panel{background:white;border:1px solid var(--line);padding:18px}"
         ".metrics span{display:block;color:var(--muted);font-size:13px}.metrics strong{font-size:24px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}"
         "h2{margin-top:0}ol,ul{padding-left:22px}li{margin:0 0 14px}li span{display:block;color:var(--muted);font-size:14px}"
+        ".scenes{margin-top:10px;padding-left:18px;border-left:3px solid var(--line)}.scenes li{margin-bottom:10px}"
         "table{width:100%;border-collapse:collapse}th,td{text-align:left;border-bottom:1px solid var(--line);padding:10px}.manuscript{background:white;padding:30px;margin-top:24px;margin-bottom:24px}"
         ".manuscript article{border-top:1px solid var(--line);padding-top:20px}.synopsis{color:var(--muted);font-size:18px}"
         ".callout{margin:24px 0 40px}.callout pre{overflow:auto;background:#0f172a;color:#e5e7eb;padding:14px;border:1px solid #1f2937}"

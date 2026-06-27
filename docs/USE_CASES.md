@@ -76,6 +76,8 @@ python scripts/build_pages_demo.py public
 python scripts/launch_audit.py
 ```
 
+The exported index includes project metadata, progress, chapter summaries, scene summaries, notes, and recent writing so reviewers can scan the plan before opening the manuscript view.
+
 ## Good Fit
 
 - Authors who like Git, Markdown, terminals, and local files.

@@ -200,6 +200,7 @@ REQUIRED_TEXT = {
         "docs/EDITOR_WORKFLOWS.md",
         "Static Project Demo",
         "--theme editorial",
+        "scene summaries",
         "Not a Fit",
     ],
     "docs/EDITOR_WORKFLOWS.md": [
