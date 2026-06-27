@@ -9,6 +9,7 @@ Use this kit when sharing Novel Workbench publicly.
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - Quick tour: `novel --workspace workspace sample`
 - Distribution copy: `docs/DISTRIBUTION.md`
+- PyPI publishing prep: `docs/PYPI_PUBLISHING.md`
 - Showcase assets: `docs/SHOWCASE.md`
 - Use cases: `docs/USE_CASES.md`
 - Positioning: `docs/POSITIONING.md`
@@ -74,6 +75,7 @@ Demo: https://xinjian0101.github.io/novel-workbench/
 - Issues and Discussions are enabled.
 - Bug, feature, and question issue forms are available.
 - The pull request template asks for `python scripts/check.py`.
+- PyPI publishing prep is documented without claiming the package is already published.
 - `python scripts/check.py` passes.
 - `python scripts/launch_audit.py` passes.
 - First comment links to the live demo and the 60-second tour.

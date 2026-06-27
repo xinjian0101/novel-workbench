@@ -8,6 +8,7 @@ Use this page when sharing Novel Workbench beyond the repository homepage. Keep 
 - Live demo: https://xinjian0101.github.io/novel-workbench/
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - 60-second tour: `novel --workspace workspace sample`
+- Package publishing prep: `docs/PYPI_PUBLISHING.md`
 - Positioning: `docs/POSITIONING.md`
 - Use cases: `docs/USE_CASES.md`
 

@@ -20,6 +20,7 @@ Use this checklist before making the repository public or announcing it.
 - The README includes a direct star-worthy positioning section.
 - The README links to the distribution copy for public sharing.
 - The install command points to the real GitHub repository.
+- PyPI publishing is documented as a post-release maintainer action, not claimed as already complete.
 - The 60-second tour works after installing from GitHub.
 - The terminal demo matches `python scripts/demo.py`.
 - The Pages demo builds with `python scripts/build_pages_demo.py public`.

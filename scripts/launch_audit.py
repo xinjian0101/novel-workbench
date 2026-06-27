@@ -17,6 +17,7 @@ REQUIRED_FILES = [
     "docs/LAUNCH_KIT.md",
     "docs/PACKAGING.md",
     "docs/POSITIONING.md",
+    "docs/PYPI_PUBLISHING.md",
     "docs/SHOWCASE.md",
     "docs/USE_CASES.md",
     "examples/quickstart.md",
@@ -68,6 +69,16 @@ REQUIRED_TEXT = {
         "Comparison",
         "Design Bets",
         "Tradeoffs",
+    ],
+    "docs/PYPI_PUBLISHING.md": [
+        "Package Identity",
+        "TestPyPI Dry Run",
+        "PyPI Release",
+        "Post-Release Updates",
+    ],
+    "docs/PACKAGING.md": [
+        "docs/PYPI_PUBLISHING.md",
+        "python scripts/release_check.py",
     ],
     "docs/SHOWCASE.md": [
         "Pages demo",

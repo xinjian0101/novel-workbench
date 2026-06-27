@@ -21,14 +21,16 @@ SCAN_PATTERNS = [
     "example/novel-workbench",
 ]
 
-EXCLUDED_DIRS = {".git", ".pytest_cache", "__pycache__", "build", "dist"}
+EXCLUDED_DIRS = {".git", ".pytest_cache", "__pycache__", "build", "dist", "runtime"}
 EXCLUDED_SUFFIXES = {".egg-info"}
 
 
-def run(command: list[str], cwd: Path) -> None:
+def run(command: list[str], cwd: Path, *, extra_env: dict[str, str] | None = None) -> None:
     print(f"$ {' '.join(command)}")
     env = os.environ.copy()
     env.setdefault("PYTHONUTF8", "1")
+    if extra_env:
+        env.update(extra_env)
     subprocess.run(command, cwd=cwd, check=True, env=env)
 
 
@@ -51,7 +53,7 @@ def scan_for_debug_markers(root: Path) -> None:
 
 
 def clean_generated(root: Path) -> None:
-    for relative in ["build", "dist", ".pytest_cache", "src/novel_workbench.egg-info"]:
+    for relative in ["build", "dist", ".pytest_cache", "runtime", "src/novel_workbench.egg-info"]:
         target = root / relative
         if target.exists():
             shutil.rmtree(target, ignore_errors=True)
@@ -62,7 +64,17 @@ def clean_generated(root: Path) -> None:
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
-    run([sys.executable, "-m", "pytest"], root)
+    pytest_temp = root / "runtime" / "pytest-temp"
+    pytest_base = root / "runtime" / "pytest-basetemp"
+    for target in [pytest_temp, pytest_base]:
+        if target.exists():
+            shutil.rmtree(target, ignore_errors=True)
+        target.mkdir(parents=True, exist_ok=True)
+    pytest_env = {
+        "TMP": str(pytest_temp),
+        "TEMP": str(pytest_temp),
+    }
+    run([sys.executable, "-m", "pytest", "-p", "no:cacheprovider", "--basetemp", str(pytest_base)], root, extra_env=pytest_env)
     run([sys.executable, "-m", "compileall", "src", "tests", "scripts"], root)
     run([sys.executable, "scripts/build_pages_demo.py", str(root / "build" / "pages-demo")], root)
     run([sys.executable, "scripts/launch_audit.py"], root)

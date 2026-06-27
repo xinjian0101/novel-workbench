@@ -428,6 +428,8 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
     assert "docs/LAUNCH_KIT.md" in captured.out
     assert "docs/POSITIONING.md" in captured.out
     assert "Why Star It" in captured.out
+    assert "docs/PYPI_PUBLISHING.md" in captured.out
+    assert "TestPyPI Dry Run" in captured.out
     assert "assets/social-preview.svg" in captured.out
     assert "docs/SHOWCASE.md" in captured.out
     assert "docs/USE_CASES.md" in captured.out

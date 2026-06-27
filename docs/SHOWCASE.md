@@ -11,6 +11,7 @@ Use this page as the source of truth for visual and demo assets.
 - Use-case guide: `docs/USE_CASES.md`
 - Positioning guide: `docs/POSITIONING.md`
 - Distribution guide: `docs/DISTRIBUTION.md`
+- PyPI publishing prep: `docs/PYPI_PUBLISHING.md`
 
 ## What the demo proves
 
@@ -21,6 +22,7 @@ Use this page as the source of truth for visual and demo assets.
 - The README and use-case guide explain who should try or star the project.
 - The positioning guide explains the comparison with rich writing apps, notes apps, and static site generators.
 - The distribution guide provides channel-specific copy for external sharing.
+- The PyPI publishing guide documents the next install-channel milestone without claiming it is complete.
 
 ## Visual asset usage
 

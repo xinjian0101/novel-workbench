@@ -356,6 +356,8 @@ python scripts/release_check.py
 
 Architecture notes live in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Packaging and release steps live in [docs/PACKAGING.md](docs/PACKAGING.md).
 
+PyPI publishing preparation lives in [docs/PYPI_PUBLISHING.md](docs/PYPI_PUBLISHING.md). The repository documents the package-index path, but the current install command intentionally uses GitHub until a maintainer completes the external PyPI release.
+
 ## Configuration
 
 Copy `.env.example` if you want a fixed local workspace setting:

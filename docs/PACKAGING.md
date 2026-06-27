@@ -2,6 +2,8 @@
 
 Novel Workbench ships as a standard Python source distribution and wheel.
 
+PyPI release preparation lives in [docs/PYPI_PUBLISHING.md](docs/PYPI_PUBLISHING.md). That page separates verified local package checks from account-controlled publishing steps.
+
 ## Local Package Check
 
 Run the full project check:
@@ -51,6 +53,10 @@ The release workflow produces:
 - `novel_workbench-X.Y.Z-py3-none-any.whl`
 
 Because Novel Workbench has no runtime dependencies, the wheel install smoke test uses `pip --no-index` to prove the artifact can install offline.
+
+## Package Index Publishing
+
+Do not publish to PyPI from an unreviewed local checkout. Use the verified artifacts from `python scripts/release_check.py`, then follow [docs/PYPI_PUBLISHING.md](docs/PYPI_PUBLISHING.md) for TestPyPI, PyPI, and post-release README updates.
 
 ## Pages Demo
 
