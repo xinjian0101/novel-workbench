@@ -458,6 +458,8 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
     assert "docs/EDITOR_WORKFLOWS.md" in captured.out
     assert "docs/FAQ.md" in captured.out
     assert "docs/OUTPUT_EXAMPLES.md" in captured.out
+    assert "ROADMAP.md" in captured.out
+    assert "static-site theme options" in captured.out
     assert "Launch Post Snippets" in captured.out
     assert "assets/terminal-demo.svg" in captured.out
     assert "docs/COMMUNITY.md" in captured.out

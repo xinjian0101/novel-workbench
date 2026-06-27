@@ -417,7 +417,7 @@ Supported variables:
 
 ## Roadmap
 
-See [ROADMAP.md](ROADMAP.md) for planned improvements. The current project intentionally starts with a small, reliable local core before adding richer writing workflows.
+See [ROADMAP.md](ROADMAP.md) for near-term examples, static-site polish, editor workflow coverage, import validation, PyPI publishing, and longer-term local-first extensions. The current project intentionally starts with a small, reliable local core before adding richer writing workflows.
 
 ## GitHub Launch
 
