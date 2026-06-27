@@ -428,6 +428,7 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
     assert "docs/OUTPUT_EXAMPLES.md" in captured.out
     assert "assets/terminal-demo.svg" in captured.out
     assert "docs/COMMUNITY.md" in captured.out
+    assert "docs/FIRST_PR.md" in captured.out
     assert "issues/10" in captured.out
     assert "v0.1.1" in captured.out
     assert "discussions/7" in captured.out

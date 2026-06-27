@@ -2,6 +2,8 @@
 
 Describe the user-visible change and why it belongs in a local-first novel writing CLI.
 
+Link the issue this PR addresses. First-time contributors can follow `docs/FIRST_PR.md`.
+
 ## Verification
 
 - [ ] `python scripts/check.py`

@@ -2,6 +2,8 @@
 
 Thanks for improving Novel Workbench. Keep contributions focused and easy to review.
 
+First-time contributors can use [docs/FIRST_PR.md](docs/FIRST_PR.md) for a concrete issue-to-PR workflow.
+
 ## Setup
 
 ```powershell
@@ -37,3 +39,5 @@ Good first contributions include:
 - validation and error messages
 - tests for edge cases
 - documentation examples
+
+Current contributor entry points are listed in [docs/COMMUNITY.md](docs/COMMUNITY.md).

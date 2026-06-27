@@ -92,6 +92,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 - Issues and Discussions are enabled.
 - Bug, feature, and question issue forms are available.
 - At least one open `good first issue` and one open `help wanted` issue are available.
+- First-time contributors have a concrete PR guide in `docs/FIRST_PR.md`.
 - The pull request template asks for `python scripts/check.py`.
 - PyPI publishing prep is documented without claiming the package is already published.
 - `python scripts/check.py` passes.

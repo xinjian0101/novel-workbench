@@ -8,6 +8,7 @@ Novel Workbench uses GitHub Issues and Discussions for public project work.
 - Feature ideas: use the feature request issue template.
 - Questions that should become documentation: use the question issue template.
 - New contributors: start with issues labeled `good first issue`.
+- First pull request workflow: use [docs/FIRST_PR.md](FIRST_PR.md).
 - Roadmap discussion: use issues labeled `roadmap`.
 - Questions and workflow ideas: use GitHub Discussions.
 
