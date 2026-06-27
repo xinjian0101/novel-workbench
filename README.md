@@ -87,6 +87,8 @@ The tour creates a sample novel workspace, shows the next writing move, prepares
 
 See [docs/USE_CASES.md](docs/USE_CASES.md) for workflow examples and fit guidance.
 
+Common privacy, install, import, and export questions are answered in [docs/FAQ.md](docs/FAQ.md).
+
 ## Why Star It
 
 - Local-first writing data: no account, server, database, or telemetry.
@@ -398,6 +400,8 @@ Use [docs/SHOWCASE.md](docs/SHOWCASE.md) for visual preview assets and demo proo
 Use [docs/USE_CASES.md](docs/USE_CASES.md) to match Novel Workbench to author, archive, AI handoff, and static demo workflows.
 
 Use [docs/POSITIONING.md](docs/POSITIONING.md) for comparison notes and launch positioning.
+
+Use [docs/FAQ.md](docs/FAQ.md) for privacy, install, import, export, and PyPI status answers.
 
 ## Contributing
 

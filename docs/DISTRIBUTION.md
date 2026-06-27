@@ -14,6 +14,7 @@ Use this page when sharing Novel Workbench beyond the repository homepage. Keep 
 - Package publishing prep: `docs/PYPI_PUBLISHING.md`
 - Positioning: `docs/POSITIONING.md`
 - Use cases: `docs/USE_CASES.md`
+- FAQ: `docs/FAQ.md`
 
 ## Awesome List Entry
 
@@ -75,6 +76,7 @@ Start here:
 - Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 - Launch discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 - Use cases: docs/USE_CASES.md
+- FAQ: docs/FAQ.md
 - Positioning: docs/POSITIONING.md
 ```
 

@@ -16,6 +16,7 @@ Use this kit when sharing Novel Workbench publicly.
 - Showcase assets: `docs/SHOWCASE.md`
 - Use cases: `docs/USE_CASES.md`
 - Positioning: `docs/POSITIONING.md`
+- FAQ: `docs/FAQ.md`
 
 ## One-line pitch
 
@@ -75,6 +76,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 
 - README first screen explains the value without scrolling.
 - README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
+- README links to the FAQ for privacy, install, import, export, and PyPI status questions.
 - README explains why the repository is worth starring.
 - README renders `assets/readme-showcase.svg`.
 - GitHub social preview can use `assets/social-preview.svg`.
