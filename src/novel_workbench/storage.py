@@ -946,6 +946,12 @@ def _site_index_html(project: NovelProject) -> str:
             "<h2>Recent Progress</h2>",
             _site_progress_table(progress),
             "</section>",
+            '<section class="panel callout">',
+            "<h2>Try Novel Workbench</h2>",
+            "<p>This static project site was exported from a local Novel Workbench workspace.</p>",
+            '<pre><code>python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"\nnovel --workspace workspace tour --output-dir exports</code></pre>',
+            '<p><a href="https://github.com/xinjian0101/novel-workbench">Open the GitHub repository</a></p>',
+            "</section>",
             "</main>",
             "</body>",
             "</html>",
@@ -1039,6 +1045,7 @@ def _site_css() -> str:
         "h2{margin-top:0}ol,ul{padding-left:22px}li{margin:0 0 14px}li span{display:block;color:var(--muted);font-size:14px}"
         "table{width:100%;border-collapse:collapse}th,td{text-align:left;border-bottom:1px solid var(--line);padding:10px}.manuscript{background:white;padding:30px;margin-top:24px;margin-bottom:24px}"
         ".manuscript article{border-top:1px solid var(--line);padding-top:20px}.synopsis{color:var(--muted);font-size:18px}"
+        ".callout{margin:24px 0 40px}.callout pre{overflow:auto;background:#0f172a;color:#e5e7eb;padding:14px;border:1px solid #1f2937}"
     )
 
 

@@ -435,8 +435,11 @@ def test_pages_demo_script_builds_static_site(tmp_path: Path, capsys) -> None:
     assert pages_demo_main([str(output_dir)]) == 0
 
     captured = capsys.readouterr()
+    index = (output_dir / "index.html").read_text(encoding="utf-8")
     assert "Built Pages demo site:" in captured.out
-    assert "<h1>Moon Archive</h1>" in (output_dir / "index.html").read_text(encoding="utf-8")
+    assert "<h1>Moon Archive</h1>" in index
+    assert "Try Novel Workbench" in index
+    assert "novel --workspace workspace tour --output-dir exports" in index
     assert "They opened the hatch" in (output_dir / "manuscript.html").read_text(encoding="utf-8")
     assert json.loads((output_dir / "context.json").read_text(encoding="utf-8"))["project"]["slug"] == "moon-archive"
 

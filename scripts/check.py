@@ -64,9 +64,9 @@ def clean_generated(root: Path) -> None:
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
-    pytest_temp = root / "runtime" / "pytest-temp"
-    pytest_base = root / "runtime" / "pytest-basetemp"
-    for target in [pytest_temp, pytest_base]:
+    pytest_temp = root / "runtime" / f"pytest-temp-{os.getpid()}"
+    pytest_base = root / "runtime" / f"pytest-basetemp-{os.getpid()}"
+    for target in [pytest_temp]:
         if target.exists():
             shutil.rmtree(target, ignore_errors=True)
         target.mkdir(parents=True, exist_ok=True)

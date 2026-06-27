@@ -23,6 +23,7 @@ Use this page as the source of truth for visual and demo assets.
 - The project can be enriched with metadata, notes, progress, and a target word count.
 - The project can be exported as Markdown reports, AI/editor context JSON, and a static HTML site.
 - GitHub Pages can publish a working static project dashboard.
+- The static site includes a "Try Novel Workbench" callout with the install command and `novel --workspace workspace tour --output-dir exports`.
 - The output examples show generated Markdown, handoff, context JSON, static site, and report-pack shapes.
 - The README and use-case guide explain who should try or star the project.
 - The FAQ answers privacy, install, import, export, and package-index questions.
@@ -50,6 +51,8 @@ python scripts/check.py
 ## Demo acceptance checks
 
 - `public/index.html` contains `Moon Archive`.
+- `public/index.html` contains `Try Novel Workbench`.
+- `public/index.html` contains `novel --workspace workspace tour --output-dir exports`.
 - `public/manuscript.html` contains `They opened the hatch`.
 - `public/context.json` contains `"slug": "moon-archive"`.
 - The published Pages URL returns HTTP 200.

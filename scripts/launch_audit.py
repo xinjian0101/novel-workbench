@@ -130,6 +130,8 @@ REQUIRED_TEXT = {
         "docs/OUTPUT_EXAMPLES.md",
         "assets/terminal-demo.svg",
         "assets/social-preview.svg",
+        "Try Novel Workbench",
+        "novel --workspace workspace tour --output-dir exports",
         "Demo acceptance checks",
     ],
     "docs/OUTPUT_EXAMPLES.md": [

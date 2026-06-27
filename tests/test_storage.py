@@ -771,6 +771,9 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
     assert "A concise &amp; private premise." in index
     assert "Read manuscript" in index
     assert "Download context JSON" in index
+    assert "Try Novel Workbench" in index
+    assert "novel --workspace workspace tour --output-dir exports" in index
+    assert "https://github.com/xinjian0101/novel-workbench" in index
     assert "Drafted &lt;opening&gt;." in index
     assert "A clue &lt;appears&gt;." in manuscript
     assert context["format"] == "novel-workbench-project-context"
