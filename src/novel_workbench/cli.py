@@ -13,6 +13,7 @@ from .storage import (
     ProjectStore,
     StorageError,
     board_lines,
+    focus_lines,
     outline_lines,
     planning_lines,
     revision_lines,
@@ -32,6 +33,7 @@ COMPLETION_COMMANDS = (
     "rename",
     "import-markdown",
     "show",
+    "focus",
     "board",
     "outline",
     "plan",
@@ -177,6 +179,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     show = subparsers.add_parser("show", help="Show project details.")
     show.add_argument("slug")
+
+    focus = subparsers.add_parser("focus", help="Show the next writing focus for a project.")
+    focus.add_argument("slug")
 
     board = subparsers.add_parser("board", help="Show a chapter status board.")
     board.add_argument("slug")
@@ -336,7 +341,7 @@ def build_parser() -> argparse.ArgumentParser:
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
     export.add_argument("output", type=Path)
-    export.add_argument("--template", default="default", help="default, frontmatter, outline, or progress.")
+    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, outline, progress, or revision.")
     export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
@@ -454,6 +459,10 @@ def run(args: argparse.Namespace) -> int:
             print(f"{chapter.number}. {chapter.title} [{chapter.status}]")
             if chapter.summary:
                 print(f"   {chapter.summary}")
+        return 0
+    if args.command == "focus":
+        project = store.get_project(args.slug)
+        print("\n".join(focus_lines(project)))
         return 0
     if args.command == "board":
         project = store.get_project(args.slug)

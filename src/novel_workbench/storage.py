@@ -13,7 +13,7 @@ SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
 VALID_NOTE_KINDS = {"general", "character", "location", "plot", "research"}
-EXPORT_TEMPLATES = {"board", "default", "frontmatter", "outline", "progress", "revision"}
+EXPORT_TEMPLATES = {"board", "default", "focus", "frontmatter", "outline", "progress", "revision"}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -741,6 +741,8 @@ class ProjectStore:
                 lines = _frontmatter_export_lines(project)
             elif template == "board":
                 lines = board_lines(project)
+            elif template == "focus":
+                lines = focus_lines(project)
             elif template == "outline":
                 lines = outline_lines(project)
             elif template == "progress":
@@ -877,6 +879,64 @@ def board_lines(project: NovelProject) -> list[str]:
         lines.append("")
     if lines[-1] == "":
         lines.pop()
+    return lines
+
+
+def focus_lines(project: NovelProject) -> list[str]:
+    stats = _stats_for_project(project)
+    lines = [f"# {project.title} Focus", ""]
+    lines.extend(
+        [
+            "## Current Position",
+            "",
+            f"- Words: {stats['words']}",
+            f"- Logged words: {stats['logged_words']}",
+            f"- Current streak: {stats['current_streak_days']} days",
+        ]
+    )
+    if stats["target_words"] is not None:
+        lines.append(f"- Target progress: {stats['progress_percent']}%")
+        lines.append(f"- Remaining words: {stats['remaining_words']}")
+    if stats["required_daily_words"] is not None:
+        lines.append(f"- Required daily words: {stats['required_daily_words']}")
+
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    next_chapter = next((chapter for chapter in chapters if chapter.status != "done"), None)
+    lines.extend(["", "## Next Writing Move", ""])
+    if next_chapter is None:
+        if chapters:
+            lines.append("- All chapters are marked done. Review the revision checklist or export the manuscript.")
+        else:
+            lines.append("- Add the first chapter.")
+    else:
+        lines.append(
+            f"- Work on Chapter {next_chapter.number}: {next_chapter.title} "
+            f"[{next_chapter.status}] - {count_words(next_chapter.content)} words"
+        )
+        if next_chapter.summary:
+            lines.append(f"  - Summary: {next_chapter.summary}")
+        open_scenes = [scene for scene in sorted(next_chapter.scenes, key=lambda item: item.number) if scene.status != "done"]
+        if open_scenes:
+            lines.append("  - Open scenes:")
+            for scene in open_scenes:
+                lines.append(f"    - {next_chapter.number}.{scene.number} {scene.title} [{scene.status}]")
+                if scene.summary:
+                    lines.append(f"      {scene.summary}")
+
+    lines.extend(["", "## Recent Writing", ""])
+    recent_entries = sorted(project.progress, key=lambda item: (item.date, item.id), reverse=True)[:3]
+    if not recent_entries:
+        lines.append("No progress entries yet.")
+    else:
+        for entry in recent_entries:
+            line = f"- {entry.date}: +{entry.words} words"
+            if entry.note:
+                line = f"{line} - {entry.note}"
+            lines.append(line)
+
+    revision_notes = project.revision_notes.strip()
+    if revision_notes:
+        lines.extend(["", "## Revision Reminder", "", revision_notes])
     return lines
 
 
@@ -1127,6 +1187,7 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
         "average_logged_words": "" if stats["average_logged_words"] is None else str(stats["average_logged_words"]),
         "best_day_words": "" if stats["best_day_words"] is None else str(stats["best_day_words"]),
         "chapters_markdown": "\n".join(_default_export_lines(project)).strip(),
+        "focus_brief": "\n".join(focus_lines(project)),
         "status_board": "\n".join(board_lines(project)),
         "chapter_table": "\n".join(_chapter_table_lines(project)),
         "status_summary": "\n".join(

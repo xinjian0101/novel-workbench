@@ -9,6 +9,7 @@ from novel_workbench.storage import (
     ProjectStore,
     StorageError,
     board_lines,
+    focus_lines,
     outline_lines,
     parse_markdown_chapters,
     planning_lines,
@@ -274,6 +275,46 @@ def test_board_lines_handles_empty_project(tmp_path: Path) -> None:
     ]
 
 
+def test_focus_lines_selects_next_unfinished_chapter(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.update_project_metadata("first-novel", revision_notes="Keep the emotional turn clear.")
+    store.set_target_words("first-novel", 100)
+    store.set_target_date("first-novel", (date.today() + timedelta(days=4)).isoformat())
+    store.add_chapter("first-novel", "Opening", "The story begins.", "done")
+    store.add_chapter("first-novel", "Middle", "A clue turns.", "revising", "Make the midpoint costly.")
+    store.add_scene("first-novel", 2, "Midpoint", "Raise the pressure.", "draft")
+    store.add_progress("first-novel", 300, "2026-06-25", "Outlined act two.")
+    store.add_progress("first-novel", 450, "2026-06-26", "Drafted the midpoint.")
+
+    lines = focus_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Focus" in lines
+    assert "- Target progress: 6%" in lines
+    assert "- Required daily words: 24" in lines
+    assert "- Work on Chapter 2: Middle [revising] - 3 words" in lines
+    assert "  - Summary: Make the midpoint costly." in lines
+    assert "    - 2.1 Midpoint [draft]" in lines
+    assert "      Raise the pressure." in lines
+    assert "- 2026-06-26: +450 words - Drafted the midpoint." in lines
+    assert "- 2026-06-25: +300 words - Outlined act two." in lines
+    assert "Keep the emotional turn clear." in lines
+
+
+def test_focus_lines_handles_finished_or_empty_project(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("empty-novel", "Empty Novel")
+    store.create_project("done-novel", "Done Novel")
+    store.add_chapter("done-novel", "Ending", "The case closes.", "done")
+
+    empty_lines = focus_lines(store.get_project("empty-novel"))
+    done_lines = focus_lines(store.get_project("done-novel"))
+
+    assert "- Add the first chapter." in empty_lines
+    assert "No progress entries yet." in empty_lines
+    assert "- All chapters are marked done. Review the revision checklist or export the manuscript." in done_lines
+
+
 def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")
@@ -536,6 +577,7 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "Remaining: {remaining_words}\n\n"
         "Streak: {current_streak_days}/{longest_streak_days}\n\n"
         "{status_summary}\n\n"
+        "{focus_brief}\n\n"
         "{status_board}\n\n"
         "{chapter_table}\n\n"
         "{revision_checklist}\n",
@@ -555,6 +597,17 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "- Draft: 0 chapters / 0 words\n"
         "- Revising: 0 chapters / 0 words\n"
         "- Done: 1 chapters / 3 words\n\n"
+        "# First Novel Focus\n\n"
+        "## Current Position\n\n"
+        "- Words: 3\n"
+        "- Logged words: 0\n"
+        "- Current streak: 0 days\n"
+        "- Target progress: 30%\n"
+        "- Remaining words: 7\n\n"
+        "## Next Writing Move\n\n"
+        "- All chapters are marked done. Review the revision checklist or export the manuscript.\n\n"
+        "## Recent Writing\n\n"
+        "No progress entries yet.\n\n"
         "# First Novel Status Board\n\n"
         "## Draft\n\n"
         "No chapters.\n\n"

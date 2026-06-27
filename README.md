@@ -63,6 +63,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Set a target completion date and calculate required daily writing pace
 - Review every project in a workspace dashboard
 - Export workspace dashboard reports to Markdown
+- Show a daily focus brief with the next writing move and recent progress
 - Group chapters into a status board for draft, revising, and done work
 - Show structured project outlines
 - Show a full planning view with metadata, progress, chapters, scenes, notes, and writing logs
@@ -120,11 +121,13 @@ novel --workspace workspace set-target moon-archive 80000
 novel --workspace workspace set-deadline moon-archive 2026-12-31
 novel --workspace workspace dashboard
 novel --workspace workspace export-dashboard exports/workspace-dashboard.md
+novel --workspace workspace focus moon-archive
 novel --workspace workspace stats moon-archive
 novel --workspace workspace doctor
 novel --workspace workspace migrate --dry-run
 novel --workspace workspace search moon-archive rain
 novel --workspace workspace export moon-archive exports/moon-archive.md
+novel --workspace workspace export moon-archive exports/moon-archive-focus.md --template focus
 novel --workspace workspace export moon-archive exports/moon-archive-board.md --template board
 novel --workspace workspace export moon-archive exports/moon-archive-outline.md --template outline
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
@@ -156,6 +159,7 @@ novel create <slug> <title> [--synopsis "..."] [--genre "..."] [--audience "..."
 novel rename <slug> <new-slug> [--title "..."]
 novel import-markdown <slug> <input.md>
 novel show <slug>
+novel focus <slug>
 novel board <slug>
 novel outline <slug>
 novel plan <slug>
@@ -185,7 +189,7 @@ novel add-scene <slug> <chapter> <title> [--summary "..."] [--summary-file path]
 novel list-scenes <slug> <chapter>
 novel update-scene <slug> <chapter> <scene> [--title "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel delete-scene <slug> <chapter> <scene>
-novel export <slug> <output.md> [--template board|default|frontmatter|outline|progress|revision] [--template-file path]
+novel export <slug> <output.md> [--template board|default|focus|frontmatter|outline|progress|revision] [--template-file path]
 novel backup <slug> <output-dir>
 novel restore-backup <backup.json> [--force]
 ```
