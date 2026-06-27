@@ -66,6 +66,16 @@ python -m pip install -e ".[dev]"
 
 ## 60-Second Tour
 
+Run the one-command tour:
+
+```powershell
+novel --workspace workspace tour --output-dir exports
+```
+
+It creates or reuses the sample project, prints the next writing focus, exports AI/editor context JSON, writes a static HTML site, and builds a complete Markdown report pack.
+
+Or run the steps manually:
+
 ```powershell
 novel --workspace workspace sample
 novel --workspace workspace focus moon-archive
@@ -248,6 +258,7 @@ novel dashboard
 novel export-dashboard <output.md>
 novel doctor
 novel migrate [--dry-run]
+novel tour [--slug moon-archive] [--output-dir exports]
 novel completion bash|zsh|powershell
 novel sample [--slug moon-archive]
 novel starter <output.md> [--template three-act|hero-journey|mystery] [--force]

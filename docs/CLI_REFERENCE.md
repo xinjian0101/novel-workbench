@@ -82,6 +82,17 @@ novel --workspace workspace sample
 novel --workspace workspace sample --slug my-demo
 ```
 
+## `novel tour`
+
+Run a one-command sample tour and export shareable outputs.
+
+```powershell
+novel --workspace workspace tour
+novel --workspace workspace tour --slug moon-archive --output-dir exports
+```
+
+The command creates the sample project if it does not already exist, reuses it if it does, prints a writing focus brief, exports `context.json`, writes a static HTML site, and builds a Markdown report pack under `<output-dir>/<slug>/`.
+
 ## `novel starter`
 
 Write an importable Markdown manuscript template.

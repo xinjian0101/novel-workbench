@@ -248,6 +248,28 @@ def test_cli_sample_creates_demo_project(tmp_path: Path, capsys) -> None:
     assert "Moon Archive (moon-archive)" in captured.out
 
 
+def test_cli_tour_creates_sample_and_exports_outputs(tmp_path: Path, capsys) -> None:
+    workspace = tmp_path / "workspace"
+    output_dir = tmp_path / "exports"
+
+    assert main(["--workspace", str(workspace), "tour", "--output-dir", str(output_dir)]) == 0
+    assert main(["--workspace", str(workspace), "tour", "--output-dir", str(output_dir)]) == 0
+
+    captured = capsys.readouterr()
+    assert "Created sample project: moon-archive (2 chapters)" in captured.out
+    assert "Using existing project: moon-archive (2 chapters)" in captured.out
+    assert "Tour outputs:" in captured.out
+    assert "# Moon Archive Focus" in captured.out
+    assert "Context JSON:" in captured.out
+    assert "Static site:" in captured.out
+    assert "Report pack:" in captured.out
+    assert (output_dir / "moon-archive" / "context.json").exists()
+    assert (output_dir / "moon-archive" / "site" / "index.html").exists()
+    assert (output_dir / "moon-archive" / "site" / "manuscript.html").exists()
+    assert (output_dir / "moon-archive" / "site" / "context.json").exists()
+    assert (output_dir / "moon-archive" / "pack" / "moon-archive-handoff.md").exists()
+
+
 def test_cli_dashboard_reports_empty_workspace(tmp_path: Path, capsys) -> None:
     assert main(["--workspace", str(tmp_path), "dashboard"]) == 0
 
@@ -353,6 +375,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "dashboard" in captured.out
     assert "export-dashboard" in captured.out
     assert "migrate" in captured.out
+    assert "tour" in captured.out
     assert "import-markdown" in captured.out
     assert "focus" in captured.out
     assert "handoff" in captured.out
@@ -423,6 +446,7 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
 
     captured = capsys.readouterr()
     assert "Launch readiness: PASS" in captured.out
+    assert "novel --workspace workspace tour --output-dir exports" in captured.out
     assert "docs/DISTRIBUTION.md" in captured.out
     assert "docs/EDITOR_WORKFLOWS.md" in captured.out
     assert "docs/FAQ.md" in captured.out

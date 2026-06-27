@@ -10,7 +10,7 @@ Use this kit when sharing Novel Workbench publicly.
 - Launch announcement: https://github.com/xinjian0101/novel-workbench/discussions/7
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - Release wheel: `python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"`
-- Quick tour: `novel --workspace workspace sample`
+- Quick tour: `novel --workspace workspace tour --output-dir exports`
 - Output examples: `docs/OUTPUT_EXAMPLES.md`
 - Editor workflows: `docs/EDITOR_WORKFLOWS.md`
 - Distribution copy: `docs/DISTRIBUTION.md`
@@ -77,6 +77,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 ## Submission checklist
 
 - README first screen explains the value without scrolling.
+- README includes the one-command `novel tour` path.
 - README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
 - README links to copy-paste editor workflow recipes.
 - README links to output examples for generated Markdown, JSON, static-site, and report-pack proof.

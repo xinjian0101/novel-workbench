@@ -195,6 +195,12 @@ moon-archive-revision.md
 
 ## Reproduce Locally
 
+Run the one-command tour:
+
+```powershell
+novel --workspace workspace tour --output-dir exports
+```
+
 Run the bundled demo script:
 
 ```powershell

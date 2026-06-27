@@ -11,6 +11,7 @@ from . import __version__
 from .storage import (
     STARTER_TEMPLATES,
     VALID_NOTE_KINDS,
+    NotFoundError,
     ProjectStore,
     StorageError,
     board_lines,
@@ -32,6 +33,7 @@ COMPLETION_COMMANDS = (
     "doctor",
     "migrate",
     "sample",
+    "tour",
     "starter",
     "create",
     "rename",
@@ -149,6 +151,15 @@ def _print_indented(content: str, prefix: str = "   ") -> None:
         print(f"{prefix}{line}" if line else "")
 
 
+def _get_or_create_tour_project(store: ProjectStore, slug: str) -> tuple[str, bool]:
+    try:
+        project = store.get_project(slug)
+        return project.slug, False
+    except NotFoundError:
+        project = store.create_sample_project(slug)
+        return project.slug, True
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="novel", description="Manage a local novel writing workspace.")
     parser.add_argument("--workspace", type=Path, default=default_workspace(), help="Workspace directory.")
@@ -166,6 +177,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     sample = subparsers.add_parser("sample", help="Create a small sample project.")
     sample.add_argument("--slug", default="moon-archive", help="Sample project slug.")
+
+    tour = subparsers.add_parser("tour", help="Run a one-command sample tour and export shareable outputs.")
+    tour.add_argument("--slug", default="moon-archive", help="Sample project slug.")
+    tour.add_argument("--output-dir", type=Path, default=Path("exports"), help="Directory for generated tour outputs.")
 
     starter = subparsers.add_parser("starter", help="Write an importable starter Markdown manuscript.")
     starter.add_argument("output", type=Path)
@@ -459,6 +474,30 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "sample":
         project = store.create_sample_project(args.slug)
         print(f"Created sample project: {project.slug} ({len(project.chapters)} chapters)")
+        return 0
+    if args.command == "tour":
+        slug, created = _get_or_create_tour_project(store, args.slug)
+        project = store.get_project(slug)
+        output_root = args.output_dir / project.slug
+        context_path = output_root / "context.json"
+        site_dir = output_root / "site"
+        pack_dir = output_root / "pack"
+        store.export_context_json(project.slug, context_path)
+        site_outputs = store.export_site(project.slug, site_dir)
+        pack_outputs = store.export_pack(project.slug, pack_dir)
+
+        action = "Created sample project" if created else "Using existing project"
+        print(f"{action}: {project.slug} ({len(project.chapters)} chapters)")
+        print(f"Tour outputs: {output_root}")
+        print(f"- Context JSON: {context_path}")
+        print(f"- Static site: {site_dir}")
+        for output in site_outputs:
+            print(f"  - {output}")
+        print(f"- Report pack: {pack_dir}")
+        for output in pack_outputs:
+            print(f"  - {output}")
+        print("")
+        print("\n".join(focus_lines(project)))
         return 0
     if args.command == "starter":
         output = store.write_starter_markdown(args.output, template=args.template, overwrite=args.force)

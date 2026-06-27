@@ -10,7 +10,7 @@ Use this page when sharing Novel Workbench beyond the repository homepage. Keep 
 - Launch announcement: https://github.com/xinjian0101/novel-workbench/discussions/7
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - Release wheel: `python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"`
-- 60-second tour: `novel --workspace workspace sample`
+- 60-second tour: `novel --workspace workspace tour --output-dir exports`
 - Output examples and launch snippets: `docs/OUTPUT_EXAMPLES.md`
 - Editor workflows: `docs/EDITOR_WORKFLOWS.md`
 - Package publishing prep: `docs/PYPI_PUBLISHING.md`
@@ -38,6 +38,8 @@ First comment:
 Novel Workbench is a small Python CLI for people who want novel planning, drafting, progress tracking, Markdown export, and AI/editor handoff context in local files.
 
 The demo is a generated static project site: https://xinjian0101.github.io/novel-workbench/
+
+After installing, the one-command tour is: `novel --workspace workspace tour --output-dir exports`
 
 The latest GitHub Release includes a verified wheel and source distribution: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 

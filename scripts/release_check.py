@@ -44,6 +44,7 @@ def main() -> int:
         venv_dir = tmp_path / "venv"
         workspace = tmp_path / "workspace"
         exports = tmp_path / "exports"
+        tour_exports = tmp_path / "tour-exports"
         old_tmp = os.environ.get("TMP")
         old_temp = os.environ.get("TEMP")
         try:
@@ -71,6 +72,22 @@ def main() -> int:
             )
             if not (exports / "moon-archive.md").exists():
                 raise RuntimeError("Installed wheel did not export the sample manuscript.")
+            run(
+                [
+                    str(python),
+                    "-m",
+                    "novel_workbench.cli",
+                    "--workspace",
+                    str(workspace),
+                    "tour",
+                    "--output-dir",
+                    str(tour_exports),
+                ],
+                root,
+                env=env,
+            )
+            if not (tour_exports / "moon-archive" / "site" / "index.html").exists():
+                raise RuntimeError("Installed wheel did not run the one-command tour.")
         finally:
             _restore_env("TMP", old_tmp)
             _restore_env("TEMP", old_temp)
