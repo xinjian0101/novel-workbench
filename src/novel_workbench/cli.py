@@ -16,6 +16,7 @@ from .storage import (
     focus_lines,
     outline_lines,
     planning_lines,
+    review_lines,
     revision_lines,
 )
 
@@ -37,6 +38,7 @@ COMPLETION_COMMANDS = (
     "board",
     "outline",
     "plan",
+    "review",
     "revision",
     "stats",
     "set-metadata",
@@ -192,6 +194,9 @@ def build_parser() -> argparse.ArgumentParser:
     plan = subparsers.add_parser("plan", help="Show a planning view with progress, chapters, scenes, and notes.")
     plan.add_argument("slug")
 
+    review = subparsers.add_parser("review", help="Show manuscript readiness findings.")
+    review.add_argument("slug")
+
     revision = subparsers.add_parser("revision", help="Show a revision checklist for a project.")
     revision.add_argument("slug")
 
@@ -341,7 +346,7 @@ def build_parser() -> argparse.ArgumentParser:
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
     export.add_argument("output", type=Path)
-    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, outline, progress, or revision.")
+    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, outline, progress, review, or revision.")
     export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
@@ -475,6 +480,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "plan":
         project = store.get_project(args.slug)
         print("\n".join(planning_lines(project)))
+        return 0
+    if args.command == "review":
+        project = store.get_project(args.slug)
+        print("\n".join(review_lines(project)))
         return 0
     if args.command == "revision":
         project = store.get_project(args.slug)

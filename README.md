@@ -67,6 +67,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Group chapters into a status board for draft, revising, and done work
 - Show structured project outlines
 - Show a full planning view with metadata, progress, chapters, scenes, notes, and writing logs
+- Review manuscript readiness with findings for missing setup, empty chapters, open scenes, and progress gaps
 - Generate revision checklists from chapter status, scene status, notes, and revision notes
 - Report chapter, word, character, status, and average chapter counts
 - Track target word count progress and remaining words
@@ -106,6 +107,7 @@ novel --workspace workspace list-scenes moon-archive 1
 novel --workspace workspace board moon-archive
 novel --workspace workspace outline moon-archive
 novel --workspace workspace plan moon-archive
+novel --workspace workspace review moon-archive
 novel --workspace workspace revision moon-archive
 novel --workspace workspace move-chapter moon-archive 2 1
 novel --workspace workspace delete-chapter moon-archive 2
@@ -132,6 +134,7 @@ novel --workspace workspace export moon-archive exports/moon-archive-board.md --
 novel --workspace workspace export moon-archive exports/moon-archive-outline.md --template outline
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
+novel --workspace workspace export moon-archive exports/moon-archive-review.md --template review
 novel --workspace workspace export moon-archive exports/moon-archive-revision.md --template revision
 novel --workspace workspace backup moon-archive backups
 novel --workspace workspace restore-backup backups/moon-archive-20260626T120000000000Z.json --force
@@ -163,6 +166,7 @@ novel focus <slug>
 novel board <slug>
 novel outline <slug>
 novel plan <slug>
+novel review <slug>
 novel revision <slug>
 novel stats <slug>
 novel set-metadata <slug> [--genre "..."] [--audience "..."] [--revision-notes "..."] [--revision-notes-file path]
@@ -189,7 +193,7 @@ novel add-scene <slug> <chapter> <title> [--summary "..."] [--summary-file path]
 novel list-scenes <slug> <chapter>
 novel update-scene <slug> <chapter> <scene> [--title "..."] [--summary "..."] [--summary-file path] [--status draft|revising|done]
 novel delete-scene <slug> <chapter> <scene>
-novel export <slug> <output.md> [--template board|default|focus|frontmatter|outline|progress|revision] [--template-file path]
+novel export <slug> <output.md> [--template board|default|focus|frontmatter|outline|progress|review|revision] [--template-file path]
 novel backup <slug> <output-dir>
 novel restore-backup <backup.json> [--force]
 ```

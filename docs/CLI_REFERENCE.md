@@ -189,6 +189,17 @@ novel --workspace workspace plan moon-archive
 
 Use this when reviewing a project before drafting or revision. `outline` stays focused on chapter structure; `plan` includes the surrounding planning context.
 
+## `novel review`
+
+Show manuscript readiness findings.
+
+```powershell
+novel --workspace workspace review moon-archive
+novel --workspace workspace export moon-archive exports/moon-archive-review.md --template review
+```
+
+The report flags author-facing gaps such as missing synopsis, missing genre or audience, missing target word count, empty chapters, chapters without summaries, unfinished chapters, unfinished scenes, and missing writing logs. Use `doctor` for project-file health and `review` for manuscript readiness.
+
 ## `novel revision`
 
 Show a project revision checklist.
@@ -479,6 +490,7 @@ novel --workspace workspace export moon-archive exports/moon-archive-focus.md --
 novel --workspace workspace export moon-archive exports/moon-archive-outline.md --template outline
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
+novel --workspace workspace export moon-archive exports/moon-archive-review.md --template review
 novel --workspace workspace export moon-archive exports/moon-archive-revision.md --template revision
 ```
 
@@ -490,11 +502,12 @@ Templates:
 - `frontmatter`: YAML front matter followed by the default Markdown body.
 - `outline`: shareable outline document with synopsis, metadata, chapter summaries, and scene beats.
 - `progress`: shareable project progress report with overview, writing log totals, streaks, target deadline pace, remaining words, status word counts, a chapter table, and progress log entries.
+- `review`: shareable manuscript readiness report with findings and strengths.
 - `revision`: shareable revision checklist with project notes, chapter checkboxes, and unfinished scene follow-ups.
 
 Custom template files use Python-style named fields. Supported fields are:
 
-`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `current_streak_days`, `longest_streak_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `focus_brief`, `status_board`, `chapter_table`, `status_summary`, `progress_log`, and `revision_checklist`.
+`title`, `slug`, `synopsis`, `genre`, `audience`, `revision_notes`, `target_words`, `target_date`, `words`, `logged_words`, `writing_days`, `current_streak_days`, `longest_streak_days`, `remaining_words`, `progress_percent`, `days_until_target_date`, `required_daily_words`, `average_chapter_words`, `average_logged_words`, `best_day_words`, `chapters_markdown`, `focus_brief`, `status_board`, `chapter_table`, `status_summary`, `progress_log`, `review_report`, and `revision_checklist`.
 
 Use either `--template` or `--template-file`, not both.
 Files passed with `--template-file` must be readable UTF-8 text.

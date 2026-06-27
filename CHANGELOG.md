@@ -8,6 +8,7 @@
 - Added Markdown export for workspace dashboard reports.
 - Added writing focus briefs for choosing the next drafting or revision move.
 - Added chapter status board output and export for draft, revising, and done work.
+- Added manuscript readiness review reports with author-facing findings and strengths.
 - Added project genre, audience, and revision note metadata.
 - Added project rename support for changing slugs and titles safely.
 - Added chapter creation and update commands.

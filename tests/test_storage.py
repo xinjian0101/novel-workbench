@@ -13,6 +13,7 @@ from novel_workbench.storage import (
     outline_lines,
     parse_markdown_chapters,
     planning_lines,
+    review_lines,
     revision_lines,
     workspace_dashboard_lines,
 )
@@ -315,6 +316,49 @@ def test_focus_lines_handles_finished_or_empty_project(tmp_path: Path) -> None:
     assert "- All chapters are marked done. Review the revision checklist or export the manuscript." in done_lines
 
 
+def test_review_lines_reports_manuscript_readiness_findings(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel")
+    store.add_chapter("first-novel", "Opening", "", "draft")
+    store.add_chapter("first-novel", "Middle", "A clue turns.", "revising", "The first answer fails.")
+    store.add_scene("first-novel", 2, "Midpoint", "Raise the pressure.", "draft")
+
+    lines = review_lines(store.get_project("first-novel"))
+
+    assert "# First Novel Review" in lines
+    assert "- Chapters: 2" in lines
+    assert "- Words: 3" in lines
+    assert "- [ ] Add a synopsis so the project has a clear premise." in lines
+    assert "- [ ] Set a genre to clarify reader expectations." in lines
+    assert "- [ ] Set an audience to clarify tone and positioning." in lines
+    assert "- [ ] Set a target word count to measure drafting progress." in lines
+    assert "- [ ] Log writing progress so streaks and pace are meaningful." in lines
+    assert "- [ ] Draft content for empty chapters: 1. Opening." in lines
+    assert "- [ ] Add chapter summaries for planning clarity: 1. Opening." in lines
+    assert "- [ ] Move unfinished chapters forward: 1. Opening [draft], 2. Middle [revising]." in lines
+    assert "- [ ] Resolve unfinished scenes: 2.1 Midpoint [draft]." in lines
+
+
+def test_review_lines_reports_strengths_when_project_is_ready(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path)
+    store.create_project("first-novel", "First Novel", "A concise premise.")
+    store.update_project_metadata("first-novel", genre="mystery", audience="adult")
+    store.set_target_words("first-novel", 1000)
+    store.add_chapter("first-novel", "Opening", "The story begins.", "done", "Set the hook.")
+    store.add_progress("first-novel", 300, "2026-06-26", "Drafted the opening.")
+    store.add_note("first-novel", "Ada", "Detective protagonist.", "character")
+
+    lines = review_lines(store.get_project("first-novel"))
+
+    assert "No review findings." in lines
+    assert "- Synopsis is present." in lines
+    assert "- Genre and audience are set." in lines
+    assert "- Target word count is set." in lines
+    assert "- Writing progress is being logged." in lines
+    assert "- Planning notes are available." in lines
+    assert "- All chapters are marked done." in lines
+
+
 def test_move_chapter_reorders_and_renumbers(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path)
     store.create_project("first-novel", "First Novel")
@@ -580,6 +624,7 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "{focus_brief}\n\n"
         "{status_board}\n\n"
         "{chapter_table}\n\n"
+        "{review_report}\n\n"
         "{revision_checklist}\n",
         encoding="utf-8",
     )
@@ -618,6 +663,22 @@ def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
         "| # | Title | Status | Words |\n"
         "|---:|---|---|---:|\n"
         "| 1 | Opening | done | 3 |\n\n"
+        "# First Novel Review\n\n"
+        "## Summary\n\n"
+        "- Chapters: 1\n"
+        "- Words: 3\n"
+        "- Notes: 0\n"
+        "- Draft: 0 chapters / 0 words\n"
+        "- Revising: 0 chapters / 0 words\n"
+        "- Done: 1 chapters / 3 words\n\n"
+        "## Findings\n\n"
+        "- [ ] Log writing progress so streaks and pace are meaningful.\n"
+        "- [ ] Add chapter summaries for planning clarity: 1. Opening.\n\n"
+        "## Strengths\n\n"
+        "- Synopsis is present.\n"
+        "- Genre and audience are set.\n"
+        "- Target word count is set.\n"
+        "- All chapters are marked done.\n\n"
         "# First Novel Revision Checklist\n\n"
         "## Snapshot\n\n"
         "- Slug: `first-novel`\n"

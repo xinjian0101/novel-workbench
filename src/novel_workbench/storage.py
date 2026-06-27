@@ -13,7 +13,7 @@ SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_HEADING_PATTERN = re.compile(r"^##\s+(?:Chapter\s+\d+:\s*)?(?P<title>.+?)\s*$", re.IGNORECASE)
 VALID_STATUSES = {"draft", "revising", "done"}
 VALID_NOTE_KINDS = {"general", "character", "location", "plot", "research"}
-EXPORT_TEMPLATES = {"board", "default", "focus", "frontmatter", "outline", "progress", "revision"}
+EXPORT_TEMPLATES = {"board", "default", "focus", "frontmatter", "outline", "progress", "review", "revision"}
 SAMPLE_PROJECT = {
     "slug": "moon-archive",
     "title": "Moon Archive",
@@ -747,6 +747,8 @@ class ProjectStore:
                 lines = outline_lines(project)
             elif template == "progress":
                 lines = _progress_export_lines(project)
+            elif template == "review":
+                lines = review_lines(project)
             elif template == "revision":
                 lines = revision_lines(project)
             else:
@@ -937,6 +939,88 @@ def focus_lines(project: NovelProject) -> list[str]:
     revision_notes = project.revision_notes.strip()
     if revision_notes:
         lines.extend(["", "## Revision Reminder", "", revision_notes])
+    return lines
+
+
+def review_lines(project: NovelProject) -> list[str]:
+    stats = _stats_for_project(project)
+    lines = [f"# {project.title} Review", ""]
+    lines.extend(
+        [
+            "## Summary",
+            "",
+            f"- Chapters: {stats['chapters']}",
+            f"- Words: {stats['words']}",
+            f"- Notes: {stats['notes']}",
+            f"- Draft: {stats['draft']} chapters / {stats['draft_words']} words",
+            f"- Revising: {stats['revising']} chapters / {stats['revising_words']} words",
+            f"- Done: {stats['done']} chapters / {stats['done_words']} words",
+        ]
+    )
+
+    findings: list[str] = []
+    if not project.synopsis.strip():
+        findings.append("Add a synopsis so the project has a clear premise.")
+    if not project.genre.strip():
+        findings.append("Set a genre to clarify reader expectations.")
+    if not project.audience.strip():
+        findings.append("Set an audience to clarify tone and positioning.")
+    if project.target_words is None:
+        findings.append("Set a target word count to measure drafting progress.")
+    if not project.progress:
+        findings.append("Log writing progress so streaks and pace are meaningful.")
+    if not project.chapters:
+        findings.append("Add at least one chapter.")
+
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    empty_chapters = [chapter for chapter in chapters if not chapter.content.strip()]
+    missing_summaries = [chapter for chapter in chapters if not chapter.summary.strip()]
+    unfinished_chapters = [chapter for chapter in chapters if chapter.status != "done"]
+    unfinished_scenes = [
+        (chapter, scene)
+        for chapter in chapters
+        for scene in sorted(chapter.scenes, key=lambda item: item.number)
+        if scene.status != "done"
+    ]
+    if empty_chapters:
+        labels = ", ".join(f"{chapter.number}. {chapter.title}" for chapter in empty_chapters)
+        findings.append(f"Draft content for empty chapters: {labels}.")
+    if missing_summaries:
+        labels = ", ".join(f"{chapter.number}. {chapter.title}" for chapter in missing_summaries)
+        findings.append(f"Add chapter summaries for planning clarity: {labels}.")
+    if unfinished_chapters:
+        labels = ", ".join(f"{chapter.number}. {chapter.title} [{chapter.status}]" for chapter in unfinished_chapters)
+        findings.append(f"Move unfinished chapters forward: {labels}.")
+    if unfinished_scenes:
+        labels = ", ".join(f"{chapter.number}.{scene.number} {scene.title} [{scene.status}]" for chapter, scene in unfinished_scenes)
+        findings.append(f"Resolve unfinished scenes: {labels}.")
+
+    lines.extend(["", "## Findings", ""])
+    if not findings:
+        lines.append("No review findings.")
+    else:
+        for finding in findings:
+            lines.append(f"- [ ] {finding}")
+
+    lines.extend(["", "## Strengths", ""])
+    strengths: list[str] = []
+    if project.synopsis.strip():
+        strengths.append("Synopsis is present.")
+    if project.genre.strip() and project.audience.strip():
+        strengths.append("Genre and audience are set.")
+    if project.target_words is not None:
+        strengths.append("Target word count is set.")
+    if project.progress:
+        strengths.append("Writing progress is being logged.")
+    if project.notes:
+        strengths.append("Planning notes are available.")
+    if chapters and all(chapter.status == "done" for chapter in chapters):
+        strengths.append("All chapters are marked done.")
+    if not strengths:
+        lines.append("No strengths recorded yet.")
+    else:
+        for strength in strengths:
+            lines.append(f"- {strength}")
     return lines
 
 
@@ -1198,6 +1282,7 @@ def _custom_export_lines(project: NovelProject, template: str) -> list[str]:
             ]
         ),
         "progress_log": "\n".join(_progress_log_lines(project)),
+        "review_report": "\n".join(review_lines(project)),
         "revision_checklist": "\n".join(revision_lines(project)),
     }
     try:
