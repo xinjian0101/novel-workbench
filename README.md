@@ -65,6 +65,17 @@ novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 
 The tour creates a sample novel workspace, shows the next writing move, prepares an AI/editor handoff brief, prints machine-readable project context JSON, summarizes drafting momentum, writes a static HTML project site, and exports a complete Markdown report pack.
 
+## Use Cases
+
+| Use case | What it gives you |
+|---|---|
+| Author drafting workspace | Chapters, scenes, notes, progress, deadlines, and Markdown export in local files. |
+| Local-first manuscript archive | UTF-8 JSON projects, safety snapshots, backups, restore, doctor, and migration checks. |
+| AI or editor handoff | Focus briefs, continuation prompts, revision checklists, and project context JSON. |
+| Static project demo | Exportable HTML dashboard, manuscript page, and context JSON for GitHub Pages or any static host. |
+
+See [docs/USE_CASES.md](docs/USE_CASES.md) for workflow examples and fit guidance.
+
 ## Why It Exists
 
 Most writing apps are either too heavy for developers and terminal users, or too cloud-dependent for private drafts. Novel Workbench keeps the core workflow plain:
@@ -359,6 +370,8 @@ Use [docs/GITHUB_LAUNCH.md](docs/GITHUB_LAUNCH.md) before publishing the reposit
 Use [docs/LAUNCH_KIT.md](docs/LAUNCH_KIT.md) for demo links, launch posts, and submission checklists.
 
 Use [docs/SHOWCASE.md](docs/SHOWCASE.md) for visual preview assets and demo proof points.
+
+Use [docs/USE_CASES.md](docs/USE_CASES.md) to match Novel Workbench to author, archive, AI handoff, and static demo workflows.
 
 ## Contributing
 

@@ -16,6 +16,7 @@ REQUIRED_FILES = [
     "docs/LAUNCH_KIT.md",
     "docs/PACKAGING.md",
     "docs/SHOWCASE.md",
+    "docs/USE_CASES.md",
     "examples/quickstart.md",
     "assets/readme-showcase.svg",
     "assets/social-preview.svg",
@@ -39,6 +40,7 @@ REQUIRED_TEXT = {
         "export-site",
         "docs/LAUNCH_KIT.md",
         "docs/SHOWCASE.md",
+        "docs/USE_CASES.md",
     ],
     "docs/GITHUB_LAUNCH.md": [
         "Pages",
@@ -54,6 +56,12 @@ REQUIRED_TEXT = {
         "Pages demo",
         "assets/social-preview.svg",
         "Demo acceptance checks",
+    ],
+    "docs/USE_CASES.md": [
+        "Author Drafting Workspace",
+        "AI or Editor Handoff",
+        "Static Project Demo",
+        "Not a Fit",
     ],
     "pyproject.toml": [
         "Live Demo",

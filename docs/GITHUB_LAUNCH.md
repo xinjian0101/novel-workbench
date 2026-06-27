@@ -16,6 +16,7 @@ Use this checklist before making the repository public or announcing it.
 ## README Review
 
 - The first screen explains what the tool does.
+- The README links to concrete author, archive, AI handoff, and static demo use cases.
 - The install command points to the real GitHub repository.
 - The 60-second tour works after installing from GitHub.
 - The terminal demo matches `python scripts/demo.py`.

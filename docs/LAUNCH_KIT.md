@@ -9,6 +9,7 @@ Use this kit when sharing Novel Workbench publicly.
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - Quick tour: `novel --workspace workspace sample`
 - Showcase assets: `docs/SHOWCASE.md`
+- Use cases: `docs/USE_CASES.md`
 
 ## One-line pitch
 
@@ -57,6 +58,7 @@ Demo: https://xinjian0101.github.io/novel-workbench/
 ## Submission checklist
 
 - README first screen explains the value without scrolling.
+- README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
 - README renders `assets/readme-showcase.svg`.
 - GitHub social preview can use `assets/social-preview.svg`.
 - Live demo returns HTTP 200.
