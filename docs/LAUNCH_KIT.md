@@ -6,7 +6,9 @@ Use this kit when sharing Novel Workbench publicly.
 
 - Repository: https://github.com/xinjian0101/novel-workbench
 - Live demo: https://xinjian0101.github.io/novel-workbench/
+- Latest release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
+- Release wheel: `python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"`
 - Quick tour: `novel --workspace workspace sample`
 - Distribution copy: `docs/DISTRIBUTION.md`
 - PyPI publishing prep: `docs/PYPI_PUBLISHING.md`
@@ -33,6 +35,7 @@ It creates structured projects, tracks chapters and writing progress, exports Ma
 
 Demo: https://xinjian0101.github.io/novel-workbench/
 Repo: https://github.com/xinjian0101/novel-workbench
+Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 ```
 
 Technical post:
@@ -49,6 +52,7 @@ Novel Workbench is a dependency-light Python CLI for long-form fiction projects:
 
 Live demo: https://xinjian0101.github.io/novel-workbench/
 Source: https://github.com/xinjian0101/novel-workbench
+Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 ```
 
 Author-focused post:
@@ -60,6 +64,7 @@ No account, no server, no database. Create a project, track chapters and writing
 
 Try it: https://github.com/xinjian0101/novel-workbench
 Demo: https://xinjian0101.github.io/novel-workbench/
+Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 ```
 
 ## Submission checklist
@@ -71,6 +76,8 @@ Demo: https://xinjian0101.github.io/novel-workbench/
 - GitHub social preview can use `assets/social-preview.svg`.
 - Live demo returns HTTP 200.
 - CI and Pages badges are green.
+- The Release badge points to the latest GitHub Release.
+- The latest release page includes the source distribution and wheel assets.
 - GitHub topics match `writing`, `novel`, `markdown`, `cli`, `local-first`, `author-tools`, and `python`.
 - Issues and Discussions are enabled.
 - Bug, feature, and question issue forms are available.

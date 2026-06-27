@@ -424,6 +424,8 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
     captured = capsys.readouterr()
     assert "Launch readiness: PASS" in captured.out
     assert "docs/DISTRIBUTION.md" in captured.out
+    assert "v0.1.1" in captured.out
+    assert "novel_workbench-0.1.1-py3-none-any.whl" in captured.out
     assert "Hacker News Style" in captured.out
     assert "docs/LAUNCH_KIT.md" in captured.out
     assert "docs/POSITIONING.md" in captured.out

@@ -2,17 +2,17 @@
 
 No external platform setup is required for local development, testing, or package builds.
 
-## Required Before Public GitHub Launch
+## Completed: Public GitHub Launch Setup
 
 1. Item name: create the public GitHub repository and set repository metadata.
 2. Why manual: repository ownership, visibility, topics, social preview, and remote URL require account-level access.
 3. Platform: GitHub.
-4. Action path: create repository, push this worktree, enable Actions, add topics from `docs/GITHUB_LAUNCH.md`, and prepare the first release.
+4. Action path: create repository, push this worktree, enable Actions, add topics from `docs/GITHUB_LAUNCH.md`, publish Pages, and prepare the first release.
 5. Fields: repository name, description, topics, website URL if any, social preview image if any.
 6. Field sources: `README.md`, `pyproject.toml`, and project branding decisions.
-7. Verification: repository page renders README, Actions runs the CI workflow, and issue templates appear when creating a new issue.
+7. Verification: repository page renders README, Actions runs the CI workflow, issue templates appear when creating a new issue, Pages returns HTTP 200, and the latest GitHub Release has wheel and source distribution assets.
 8. Risks and notes: confirm `workspace/`, `exports/`, `.env`, and manuscript files are not committed.
-9. Blocking status: blocks public launch, but not local development or tests.
+9. Blocking status: completed for the current GitHub repository; not blocking local development, tests, GitHub Pages, or GitHub source installs.
 
 ## Optional: Internal Package Distribution
 

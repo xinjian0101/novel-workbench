@@ -4,6 +4,8 @@ Novel Workbench ships as a standard Python source distribution and wheel.
 
 PyPI release preparation lives in [docs/PYPI_PUBLISHING.md](docs/PYPI_PUBLISHING.md). That page separates verified local package checks from account-controlled publishing steps.
 
+The current GitHub Release is [v0.1.1](https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1), with both the wheel and source distribution attached.
+
 ## Local Package Check
 
 Run the full project check:
@@ -53,6 +55,12 @@ The release workflow produces:
 - `novel_workbench-X.Y.Z-py3-none-any.whl`
 
 Because Novel Workbench has no runtime dependencies, the wheel install smoke test uses `pip --no-index` to prove the artifact can install offline.
+
+For the published `v0.1.1` release, users can install the wheel directly:
+
+```powershell
+python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"
+```
 
 ## Package Index Publishing
 

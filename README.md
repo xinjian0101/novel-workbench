@@ -2,12 +2,15 @@
 
 [![CI](https://github.com/xinjian0101/novel-workbench/actions/workflows/ci.yml/badge.svg)](https://github.com/xinjian0101/novel-workbench/actions/workflows/ci.yml)
 [![Pages](https://github.com/xinjian0101/novel-workbench/actions/workflows/pages.yml/badge.svg)](https://github.com/xinjian0101/novel-workbench/actions/workflows/pages.yml)
+[![Release](https://img.shields.io/github/v/release/xinjian0101/novel-workbench?display_name=tag)](https://github.com/xinjian0101/novel-workbench/releases/latest)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Novel Workbench is a fast, local-first command line workspace for writing long-form fiction. It gives authors a simple way to create projects, draft chapters, track progress, and export a clean Markdown manuscript without signing up for a cloud service.
 
 Live demo: [xinjian0101.github.io/novel-workbench](https://xinjian0101.github.io/novel-workbench/)
+
+Latest release: [v0.1.1](https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1)
 
 ![Novel Workbench feature showcase](assets/readme-showcase.svg)
 
@@ -43,6 +46,12 @@ Install directly from GitHub:
 
 ```powershell
 python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"
+```
+
+Or install the verified `v0.1.1` wheel from GitHub Releases:
+
+```powershell
+python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"
 ```
 
 For local development, clone the repository and install it editable:

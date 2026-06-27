@@ -6,7 +6,9 @@ Use this page when sharing Novel Workbench beyond the repository homepage. Keep 
 
 - Repository: https://github.com/xinjian0101/novel-workbench
 - Live demo: https://xinjian0101.github.io/novel-workbench/
+- Latest release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
+- Release wheel: `python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"`
 - 60-second tour: `novel --workspace workspace sample`
 - Package publishing prep: `docs/PYPI_PUBLISHING.md`
 - Positioning: `docs/POSITIONING.md`
@@ -33,6 +35,8 @@ Novel Workbench is a small Python CLI for people who want novel planning, drafti
 
 The demo is a generated static project site: https://xinjian0101.github.io/novel-workbench/
 
+The latest GitHub Release includes a verified wheel and source distribution: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
+
 The repo includes tests, CI, a Pages workflow, release packaging checks, issue forms, and docs for positioning/use cases. It is intentionally offline-first: no account, server, database, or telemetry.
 ```
 
@@ -53,6 +57,7 @@ It can create a structured novel project, track chapters/scenes/notes/progress, 
 
 Repo: https://github.com/xinjian0101/novel-workbench
 Demo: https://xinjian0101.github.io/novel-workbench/
+Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 ```
 
 ## GitHub Discussion Announcement
@@ -65,6 +70,7 @@ It is a local-first command line workspace for planning, drafting, tracking, and
 Start here:
 - README: https://github.com/xinjian0101/novel-workbench
 - Demo: https://xinjian0101.github.io/novel-workbench/
+- Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 - Use cases: docs/USE_CASES.md
 - Positioning: docs/POSITIONING.md
 ```

@@ -11,6 +11,7 @@ REQUIRED_FILES = [
     "CONTRIBUTING.md",
     "CODE_OF_CONDUCT.md",
     "SECURITY.md",
+    ".env.example",
     "docs/CLI_REFERENCE.md",
     "docs/DISTRIBUTION.md",
     "docs/GITHUB_LAUNCH.md",
@@ -37,6 +38,8 @@ REQUIRED_FILES = [
 REQUIRED_TEXT = {
     "README.md": [
         "https://xinjian0101.github.io/novel-workbench/",
+        "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
+        "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl",
         "python -m pip install \"git+https://github.com/xinjian0101/novel-workbench.git\"",
         "60-Second Tour",
         "assets/readme-showcase.svg",
@@ -48,6 +51,8 @@ REQUIRED_TEXT = {
         "docs/USE_CASES.md",
     ],
     "docs/DISTRIBUTION.md": [
+        "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
+        "novel_workbench-0.1.1-py3-none-any.whl",
         "Awesome List Entry",
         "Hacker News Style",
         "GitHub Discussion Announcement",
@@ -59,6 +64,8 @@ REQUIRED_TEXT = {
         "python scripts/build_pages_demo.py public",
     ],
     "docs/LAUNCH_KIT.md": [
+        "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
+        "novel_workbench-0.1.1-py3-none-any.whl",
         "Live demo",
         "Launch posts",
         "Star pitch",
@@ -77,8 +84,13 @@ REQUIRED_TEXT = {
         "Post-Release Updates",
     ],
     "docs/PACKAGING.md": [
+        "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
+        "novel_workbench-0.1.1-py3-none-any.whl",
         "docs/PYPI_PUBLISHING.md",
         "python scripts/release_check.py",
+    ],
+    ".env.example": [
+        "NOVEL_WORKBENCH_HOME=workspace",
     ],
     "docs/SHOWCASE.md": [
         "Pages demo",
