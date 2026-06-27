@@ -6,7 +6,7 @@ Use this guide when making a first contribution to Novel Workbench.
 
 Start with one of the current contributor entry points:
 
-- [#9 Add editor workflow recipes](https://github.com/xinjian0101/novel-workbench/issues/9)
+- [#9 Add editor workflow recipes](https://github.com/xinjian0101/novel-workbench/issues/9), usually by expanding [docs/EDITOR_WORKFLOWS.md](EDITOR_WORKFLOWS.md)
 - [#8 Design a local editor handoff workflow](https://github.com/xinjian0101/novel-workbench/issues/8)
 
 Good first PRs usually touch one document, one command, or one tightly scoped test area.

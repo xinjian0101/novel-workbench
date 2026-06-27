@@ -14,7 +14,7 @@ Novel Workbench uses GitHub Issues and Discussions for public project work.
 
 ## Current Contributor Entry Points
 
-- [#9 Add editor workflow recipes](https://github.com/xinjian0101/novel-workbench/issues/9): a `good first issue` for documenting local editor workflows.
+- [#9 Add editor workflow recipes](https://github.com/xinjian0101/novel-workbench/issues/9): a `good first issue` for expanding [docs/EDITOR_WORKFLOWS.md](EDITOR_WORKFLOWS.md) with more local editor workflows.
 - [#8 Design a local editor handoff workflow](https://github.com/xinjian0101/novel-workbench/issues/8): a `help wanted` workflow design issue for CLI and documentation follow-up.
 
 ## Labels

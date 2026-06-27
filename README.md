@@ -89,6 +89,8 @@ The tour creates a sample novel workspace, shows the next writing move, prepares
 
 See [docs/USE_CASES.md](docs/USE_CASES.md) for workflow examples and fit guidance.
 
+See [docs/EDITOR_WORKFLOWS.md](docs/EDITOR_WORKFLOWS.md) for VS Code, Markdown vault, AI/editor handoff, and Git review recipes.
+
 See [docs/OUTPUT_EXAMPLES.md](docs/OUTPUT_EXAMPLES.md) for sample Markdown, handoff, context JSON, static site, and report-pack outputs.
 
 Common privacy, install, import, and export questions are answered in [docs/FAQ.md](docs/FAQ.md).
@@ -404,6 +406,8 @@ Use [docs/SHOWCASE.md](docs/SHOWCASE.md) for visual preview assets and demo proo
 Use [docs/OUTPUT_EXAMPLES.md](docs/OUTPUT_EXAMPLES.md) to inspect generated Markdown, JSON, static-site, and report-pack examples.
 
 Use [docs/USE_CASES.md](docs/USE_CASES.md) to match Novel Workbench to author, archive, AI handoff, and static demo workflows.
+
+Use [docs/EDITOR_WORKFLOWS.md](docs/EDITOR_WORKFLOWS.md) for editor handoff recipes with VS Code, Markdown vaults, AI tools, and Git review.
 
 Use [docs/POSITIONING.md](docs/POSITIONING.md) for comparison notes and launch positioning.
 

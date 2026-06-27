@@ -4,6 +4,8 @@ Novel Workbench is built for writers and tool builders who want durable local fi
 
 For comparison notes and project tradeoffs, see [docs/POSITIONING.md](POSITIONING.md).
 
+For copy-paste editor recipes, see [docs/EDITOR_WORKFLOWS.md](EDITOR_WORKFLOWS.md).
+
 ## Author Drafting Workspace
 
 Use Novel Workbench when a novel needs structure before it needs a full writing suite.
@@ -54,6 +56,8 @@ novel --workspace workspace context moon-archive
 novel --workspace workspace revision moon-archive
 novel --workspace workspace export-context moon-archive exports/moon-archive-context.json
 ```
+
+For VS Code, Markdown vault, AI handoff, and Git review flows, see [docs/EDITOR_WORKFLOWS.md](EDITOR_WORKFLOWS.md).
 
 ## Static Project Demo
 

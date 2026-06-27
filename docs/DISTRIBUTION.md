@@ -12,6 +12,7 @@ Use this page when sharing Novel Workbench beyond the repository homepage. Keep 
 - Release wheel: `python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl"`
 - 60-second tour: `novel --workspace workspace sample`
 - Output examples and launch snippets: `docs/OUTPUT_EXAMPLES.md`
+- Editor workflows: `docs/EDITOR_WORKFLOWS.md`
 - Package publishing prep: `docs/PYPI_PUBLISHING.md`
 - Positioning: `docs/POSITIONING.md`
 - Use cases: `docs/USE_CASES.md`
@@ -41,6 +42,8 @@ The demo is a generated static project site: https://xinjian0101.github.io/novel
 The latest GitHub Release includes a verified wheel and source distribution: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 
 The repo includes tests, CI, a Pages workflow, release packaging checks, issue forms, and docs for positioning/use cases. It is intentionally offline-first: no account, server, database, or telemetry.
+
+Editor workflow recipes for VS Code, Markdown vaults, AI handoffs, and Git review live in `docs/EDITOR_WORKFLOWS.md`.
 
 Short output snippets for launch posts live in `docs/OUTPUT_EXAMPLES.md`.
 ```
