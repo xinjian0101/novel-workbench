@@ -449,6 +449,9 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
 
     captured = capsys.readouterr()
     assert "Launch readiness: PASS" in captured.out
+    assert "At a Glance" in captured.out
+    assert "Fastest try path" in captured.out
+    assert "https://img.shields.io/github/stars/xinjian0101/novel-workbench?label=stars" in captured.out
     assert "novel --workspace workspace tour --output-dir exports" in captured.out
     assert "docs/DISTRIBUTION.md" in captured.out
     assert "docs/EVALUATION.md" in captured.out

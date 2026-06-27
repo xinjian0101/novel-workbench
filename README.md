@@ -3,8 +3,10 @@
 [![CI](https://github.com/xinjian0101/novel-workbench/actions/workflows/ci.yml/badge.svg)](https://github.com/xinjian0101/novel-workbench/actions/workflows/ci.yml)
 [![Pages](https://github.com/xinjian0101/novel-workbench/actions/workflows/pages.yml/badge.svg)](https://github.com/xinjian0101/novel-workbench/actions/workflows/pages.yml)
 [![Release](https://img.shields.io/github/v/release/xinjian0101/novel-workbench?display_name=tag)](https://github.com/xinjian0101/novel-workbench/releases/latest)
+[![Stars](https://img.shields.io/github/stars/xinjian0101/novel-workbench?label=stars)](https://github.com/xinjian0101/novel-workbench/stargazers)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Topics](https://img.shields.io/badge/topics-writing%20%7C%20novel%20%7C%20local--first%20%7C%20cli-2563eb.svg)](https://github.com/xinjian0101/novel-workbench/topics)
 
 Novel Workbench is a fast, local-first command line workspace for writing long-form fiction. It gives authors a simple way to create projects, draft chapters, track progress, and export a clean Markdown manuscript without signing up for a cloud service.
 
@@ -13,6 +15,15 @@ Live demo: [xinjian0101.github.io/novel-workbench](https://xinjian0101.github.io
 Latest release: [v0.1.1](https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1)
 
 Launch announcement: [GitHub Discussion #7](https://github.com/xinjian0101/novel-workbench/discussions/7)
+
+## At a Glance
+
+| Signal | Proof |
+|---|---|
+| Local-first | No account, server, database, telemetry, or background network calls. |
+| Fastest try path | `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"` then `novel --workspace workspace tour --output-dir exports`. |
+| Shareable proof | Live demo, terminal demo, output examples, and static HTML export are all generated from repository commands. |
+| Star fit | See [docs/EVALUATION.md](docs/EVALUATION.md) for star signals, share targets, and contribution fit. |
 
 ![Novel Workbench feature showcase](assets/readme-showcase.svg)
 

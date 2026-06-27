@@ -78,6 +78,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 ## Submission checklist
 
 - README first screen explains the value without scrolling.
+- README first screen includes stars, topics, local-first proof, fastest try path, and evaluation guide links.
 - README includes the one-command `novel tour` path.
 - README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
 - README links to copy-paste editor workflow recipes.
