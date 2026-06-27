@@ -112,6 +112,7 @@ REQUIRED_TEXT = {
         "python scripts/check.py",
         "python scripts/build_pages_demo.py public",
         "python scripts/verify_public_links.py",
+        "python scripts/verify_public_links.py --min-stars 10000",
     ],
     "docs/LAUNCH_KIT.md": [
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",

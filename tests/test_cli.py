@@ -6,7 +6,7 @@ from novel_workbench.cli import main
 from scripts.launch_audit import main as launch_audit_main
 from scripts.build_pages_demo import main as pages_demo_main
 from scripts.demo import main as demo_main
-from scripts.verify_public_links import main as verify_public_links_main
+from scripts.verify_public_links import main as verify_public_links_main, parse_stars_badge
 
 
 def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) -> None:
@@ -504,3 +504,9 @@ def test_public_link_verifier_lists_launch_targets_offline(capsys) -> None:
     assert "CHECK CI badge:" in captured.out
     assert "CHECK Pages badge:" in captured.out
     assert "CHECK Stars badge:" in captured.out
+
+
+def test_public_link_verifier_parses_star_badge_counts() -> None:
+    assert parse_stars_badge("<svg><text>Stars</text><text>1</text></svg>") == 1
+    assert parse_stars_badge("<svg><text>Stars</text><text>10.4k</text></svg>") == 10400
+    assert parse_stars_badge("<svg><text>Stars</text><text>1,234</text></svg>") == 1234

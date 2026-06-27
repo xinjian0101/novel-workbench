@@ -47,7 +47,8 @@ Use this checklist before making the repository public or announcing it.
 3. Use `docs/RELEASE_TEMPLATE.md` and the matching version section from `CHANGELOG.md` as release notes.
 4. Push the tag to let the Release workflow build, verify, and attach the source distribution and wheel.
 5. Confirm the `Pages` workflow publishes `index.html`, `manuscript.html`, and `context.json`.
-6. Run `python scripts/verify_public_links.py` after publish to confirm the repository, Pages demo, badges, and release wheel resolve from a clean public path.
+6. Run `python scripts/verify_public_links.py` after publish to confirm the repository, Pages demo, badges, release wheel, and reported star count resolve from a clean public path.
+7. When auditing a star-count milestone, run `python scripts/verify_public_links.py --min-stars 10000` and rely on the command result instead of estimating from README badges by eye.
 
 ## Social Preview
 
