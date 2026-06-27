@@ -12,6 +12,8 @@ Live demo: [xinjian0101.github.io/novel-workbench](https://xinjian0101.github.io
 
 Latest release: [v0.1.1](https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1)
 
+Launch announcement: [GitHub Discussion #7](https://github.com/xinjian0101/novel-workbench/discussions/7)
+
 ![Novel Workbench feature showcase](assets/readme-showcase.svg)
 
 ```text
@@ -402,6 +404,8 @@ Use [docs/POSITIONING.md](docs/POSITIONING.md) for comparison notes and launch p
 Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), then open a focused issue or pull request.
 
 Community and issue labels are described in [docs/COMMUNITY.md](docs/COMMUNITY.md).
+
+The public launch announcement lives in [GitHub Discussion #7](https://github.com/xinjian0101/novel-workbench/discussions/7).
 
 ## Security
 

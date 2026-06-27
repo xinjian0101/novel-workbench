@@ -39,6 +39,7 @@ REQUIRED_TEXT = {
     "README.md": [
         "https://xinjian0101.github.io/novel-workbench/",
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
+        "https://github.com/xinjian0101/novel-workbench/discussions/7",
         "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl",
         "python -m pip install \"git+https://github.com/xinjian0101/novel-workbench.git\"",
         "60-Second Tour",
@@ -52,6 +53,7 @@ REQUIRED_TEXT = {
     ],
     "docs/DISTRIBUTION.md": [
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
+        "https://github.com/xinjian0101/novel-workbench/discussions/7",
         "novel_workbench-0.1.1-py3-none-any.whl",
         "Awesome List Entry",
         "Hacker News Style",
@@ -65,6 +67,7 @@ REQUIRED_TEXT = {
     ],
     "docs/LAUNCH_KIT.md": [
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
+        "https://github.com/xinjian0101/novel-workbench/discussions/7",
         "novel_workbench-0.1.1-py3-none-any.whl",
         "Live demo",
         "Launch posts",
@@ -94,6 +97,7 @@ REQUIRED_TEXT = {
     ],
     "docs/SHOWCASE.md": [
         "Pages demo",
+        "https://github.com/xinjian0101/novel-workbench/discussions/7",
         "assets/social-preview.svg",
         "Demo acceptance checks",
     ],
