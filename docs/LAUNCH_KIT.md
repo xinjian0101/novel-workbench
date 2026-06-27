@@ -101,6 +101,8 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 - At least one open `good first issue` and one open `help wanted` issue are available.
 - First-time contributors have a concrete PR guide in `docs/FIRST_PR.md`.
 - The pull request template asks for `python scripts/check.py`.
+- Maintainer review routing and release gates are documented in `docs/MAINTAINER_GUIDE.md`.
+- `.github/CODEOWNERS` routes repository-wide review ownership.
 - PyPI publishing prep is documented without claiming the package is already published.
 - `python scripts/check.py` passes.
 - `python scripts/launch_audit.py` passes.

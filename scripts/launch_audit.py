@@ -7,6 +7,7 @@ from pathlib import Path
 REQUIRED_FILES = [
     "README.md",
     "LICENSE",
+    "MANIFEST.in",
     "CHANGELOG.md",
     "ROADMAP.md",
     "CONTRIBUTING.md",
@@ -34,11 +35,13 @@ REQUIRED_FILES = [
     ".github/workflows/ci.yml",
     ".github/workflows/pages.yml",
     ".github/workflows/release.yml",
+    ".github/CODEOWNERS",
     ".github/ISSUE_TEMPLATE/bug_report.yml",
     ".github/ISSUE_TEMPLATE/feature_request.yml",
     ".github/ISSUE_TEMPLATE/question.yml",
     ".github/ISSUE_TEMPLATE/config.yml",
     ".github/pull_request_template.md",
+    "docs/MAINTAINER_GUIDE.md",
     "scripts/build_pages_demo.py",
     "scripts/verify_public_links.py",
 ]
@@ -65,6 +68,7 @@ REQUIRED_TEXT = {
         "docs/EDITOR_WORKFLOWS.md",
         "docs/FAQ.md",
         "docs/FIRST_PR.md",
+        "docs/MAINTAINER_GUIDE.md",
         "docs/OUTPUT_EXAMPLES.md",
         "export-site",
         "--theme classic|editorial|focus",
@@ -116,6 +120,8 @@ REQUIRED_TEXT = {
         "python scripts/verify_public_links.py --min-stars 10000",
         "sitemap.xml",
         "robots.txt",
+        ".github/CODEOWNERS",
+        "docs/MAINTAINER_GUIDE.md",
     ],
     "docs/LAUNCH_KIT.md": [
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
@@ -167,6 +173,10 @@ REQUIRED_TEXT = {
     ],
     ".env.example": [
         "NOVEL_WORKBENCH_HOME=workspace",
+    ],
+    "MANIFEST.in": [
+        "include .github/CODEOWNERS",
+        "recursive-include .github *.md *.yml",
     ],
     "docs/SHOWCASE.md": [
         "Pages demo",
@@ -238,7 +248,26 @@ REQUIRED_TEXT = {
     "CONTRIBUTING.md": [
         "docs/FIRST_PR.md",
         "python scripts/check.py",
+        "docs/MAINTAINER_GUIDE.md",
         "Current contributor entry points",
+    ],
+    "docs/MAINTAINER_GUIDE.md": [
+        "Maintainer Guide",
+        ".github/CODEOWNERS",
+        "@xinjian0101",
+        "python scripts/check.py",
+        "python scripts/release_check.py",
+        "python scripts/launch_audit.py",
+        "python scripts/build_pages_demo.py public",
+        "python scripts/verify_public_links.py",
+        "python scripts/verify_public_links.py --min-stars 10000",
+        "Do not mark a milestone complete unless the verifier passes against the live GitHub repository.",
+        "good first issue",
+        "help wanted",
+        "roadmap",
+        "question",
+        "export-site --base-url",
+        "no account requirement, telemetry, background network calls, or cloud dependency",
     ],
     "docs/FIRST_PR.md": [
         "First Pull Request Guide",

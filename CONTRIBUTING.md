@@ -3,6 +3,7 @@
 Thanks for improving Novel Workbench. Keep contributions focused and easy to review.
 
 First-time contributors can use [docs/FIRST_PR.md](docs/FIRST_PR.md) for a concrete issue-to-PR workflow.
+Maintainer review and release gates are documented in [docs/MAINTAINER_GUIDE.md](docs/MAINTAINER_GUIDE.md).
 
 ## Setup
 

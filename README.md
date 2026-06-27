@@ -447,6 +447,8 @@ First-time contributors can follow [docs/FIRST_PR.md](docs/FIRST_PR.md).
 
 Community and issue labels are described in [docs/COMMUNITY.md](docs/COMMUNITY.md).
 
+Maintainer review routing, release gates, and public milestone checks are documented in [docs/MAINTAINER_GUIDE.md](docs/MAINTAINER_GUIDE.md).
+
 Current contributor entry points include [#9 editor workflow recipes](https://github.com/xinjian0101/novel-workbench/issues/9) and [#8 local editor handoff workflow](https://github.com/xinjian0101/novel-workbench/issues/8).
 
 The public launch announcement lives in [GitHub Discussion #7](https://github.com/xinjian0101/novel-workbench/discussions/7).

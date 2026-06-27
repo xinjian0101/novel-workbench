@@ -9,6 +9,7 @@ Novel Workbench uses GitHub Issues and Discussions for public project work.
 - Questions that should become documentation: use the question issue template.
 - New contributors: start with issues labeled `good first issue`.
 - First pull request workflow: use [docs/FIRST_PR.md](FIRST_PR.md).
+- Maintainer review and release gates: use [docs/MAINTAINER_GUIDE.md](MAINTAINER_GUIDE.md).
 - Roadmap discussion: use issues labeled `roadmap`.
 - Questions and workflow ideas: use GitHub Discussions.
 
@@ -29,4 +30,4 @@ Novel Workbench uses GitHub Issues and Discussions for public project work.
 
 ## Maintainer Notes
 
-Keep public issues focused and actionable. If a request needs product discussion before implementation, leave it as an issue or discussion until the acceptance criteria are clear.
+Keep public issues focused and actionable. If a request needs product discussion before implementation, leave it as an issue or discussion until the acceptance criteria are clear. Use [docs/MAINTAINER_GUIDE.md](MAINTAINER_GUIDE.md) for review routing, release gates, public link checks, and milestone verification.

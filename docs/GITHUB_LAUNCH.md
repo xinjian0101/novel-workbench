@@ -12,6 +12,7 @@ Use this checklist before making the repository public or announcing it.
 - Dependabot: enabled for GitHub Actions through `.github/dependabot.yml`.
 - Pages: enable GitHub Actions as the Pages source so `.github/workflows/pages.yml` can publish the generated demo site.
 - Community intake: issue forms and the pull request template should stay focused on reproducible bugs, author workflows, and the local-first project model.
+- Maintainer trust: `.github/CODEOWNERS` and `docs/MAINTAINER_GUIDE.md` should describe review routing, release gates, public link checks, and milestone verification.
 
 ## README Review
 
@@ -49,6 +50,7 @@ Use this checklist before making the repository public or announcing it.
 5. Confirm the `Pages` workflow publishes `index.html`, `manuscript.html`, `context.json`, `sitemap.xml`, and `robots.txt`.
 6. Run `python scripts/verify_public_links.py` after publish to confirm the repository, Pages demo, badges, release wheel, and reported star count resolve from a clean public path.
 7. When auditing a star-count milestone, run `python scripts/verify_public_links.py --min-stars 10000` and rely on the command result instead of estimating from README badges by eye.
+8. Do not mark a milestone complete unless the live GitHub verifier passes.
 
 ## Social Preview
 
