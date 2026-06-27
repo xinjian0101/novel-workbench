@@ -105,6 +105,8 @@ See [docs/OUTPUT_EXAMPLES.md](docs/OUTPUT_EXAMPLES.md) for sample Markdown, hand
 
 Common privacy, install, import, and export questions are answered in [docs/FAQ.md](docs/FAQ.md).
 
+Use [docs/EVALUATION.md](docs/EVALUATION.md) for a two-minute fit check before starring, sharing, or contributing.
+
 ## Why Star It
 
 - Local-first writing data: no account, server, database, or telemetry.
@@ -113,6 +115,8 @@ Common privacy, install, import, and export questions are answered in [docs/FAQ.
 - AI/editor ready: handoff briefs and project context JSON are built in.
 
 See [docs/POSITIONING.md](docs/POSITIONING.md) for comparison notes, tradeoffs, and project fit.
+
+See [docs/EVALUATION.md](docs/EVALUATION.md) for the fastest proof, star signals, share targets, and contribution fit.
 
 ## Why It Exists
 

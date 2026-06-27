@@ -13,6 +13,7 @@ Use this kit when sharing Novel Workbench publicly.
 - Quick tour: `novel --workspace workspace tour --output-dir exports`
 - Output examples: `docs/OUTPUT_EXAMPLES.md`
 - Editor workflows: `docs/EDITOR_WORKFLOWS.md`
+- Evaluation guide: `docs/EVALUATION.md`
 - Distribution copy: `docs/DISTRIBUTION.md`
 - PyPI publishing prep: `docs/PYPI_PUBLISHING.md`
 - Showcase assets: `docs/SHOWCASE.md`
@@ -81,6 +82,7 @@ Discussion: https://github.com/xinjian0101/novel-workbench/discussions/7
 - README links to concrete use cases for authors, local archives, AI handoffs, and static demos.
 - README links to copy-paste editor workflow recipes.
 - README links to output examples for generated Markdown, JSON, static-site, and report-pack proof.
+- README links to a two-minute evaluation guide for star, share, and contribution fit.
 - Distribution copy links to short output snippets for launch posts.
 - README links to the FAQ for privacy, install, import, export, and PyPI status questions.
 - README explains why the repository is worth starring.

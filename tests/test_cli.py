@@ -451,6 +451,7 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
     assert "Launch readiness: PASS" in captured.out
     assert "novel --workspace workspace tour --output-dir exports" in captured.out
     assert "docs/DISTRIBUTION.md" in captured.out
+    assert "docs/EVALUATION.md" in captured.out
     assert "docs/EDITOR_WORKFLOWS.md" in captured.out
     assert "docs/FAQ.md" in captured.out
     assert "docs/OUTPUT_EXAMPLES.md" in captured.out
@@ -473,6 +474,8 @@ def test_launch_audit_passes_for_repository(capsys) -> None:
     assert "docs/USE_CASES.md" in captured.out
     assert "AI or Editor Handoff" in captured.out
     assert "VS Code Draft Loop" in captured.out
+    assert "Two-Minute Fit Check" in captured.out
+    assert "Star Signals" in captured.out
     assert ".github/ISSUE_TEMPLATE/question.yml" in captured.out
     assert "Existing project JSON files remain readable" in captured.out
     assert "Live Demo" in captured.out

@@ -13,6 +13,7 @@ Use this page when sharing Novel Workbench beyond the repository homepage. Keep 
 - 60-second tour: `novel --workspace workspace tour --output-dir exports`
 - Output examples and launch snippets: `docs/OUTPUT_EXAMPLES.md`
 - Editor workflows: `docs/EDITOR_WORKFLOWS.md`
+- Evaluation guide: `docs/EVALUATION.md`
 - Package publishing prep: `docs/PYPI_PUBLISHING.md`
 - Positioning: `docs/POSITIONING.md`
 - Use cases: `docs/USE_CASES.md`
@@ -48,6 +49,8 @@ The repo includes tests, CI, a Pages workflow, release packaging checks, issue f
 Editor workflow recipes for VS Code, Markdown vaults, AI handoffs, and Git review live in `docs/EDITOR_WORKFLOWS.md`.
 
 Short output snippets for launch posts live in `docs/OUTPUT_EXAMPLES.md`.
+
+A two-minute fit check for readers deciding whether to star, share, or contribute lives in `docs/EVALUATION.md`.
 ```
 
 ## Reddit or Forum Style
