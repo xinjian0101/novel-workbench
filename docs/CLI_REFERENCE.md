@@ -558,6 +558,16 @@ novel --workspace workspace export-context moon-archive exports/moon-archive-con
 
 The exported file uses the same payload as `novel context`, with `format` set to `novel-workbench-project-context` and `format_version` set to `1`.
 
+## `novel export-site`
+
+Export a static HTML project site.
+
+```powershell
+novel --workspace workspace export-site moon-archive exports/moon-archive-site
+```
+
+The command writes `index.html`, `manuscript.html`, and `context.json`. The index page summarizes project metadata, progress, the next action, chapters, notes, and recent writing. The manuscript page provides a clean reading view. The JSON file matches `novel context`, which makes the site directory useful for GitHub Pages, local review, or AI/editor automation.
+
 ## `novel export-pack`
 
 Export every standard project report to one directory.

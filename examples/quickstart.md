@@ -16,6 +16,7 @@ novel --workspace workspace focus moon-archive
 novel --workspace workspace handoff moon-archive
 novel --workspace workspace context moon-archive
 novel --workspace workspace momentum moon-archive
+novel --workspace workspace export-site moon-archive exports/moon-archive-site
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 ```
 
@@ -40,6 +41,7 @@ novel --workspace workspace export moon-archive exports/moon-archive.md
 novel --workspace workspace export moon-archive exports/moon-archive-frontmatter.md --template frontmatter
 novel --workspace workspace export moon-archive exports/moon-archive-progress.md --template progress
 novel --workspace workspace export-context moon-archive exports/moon-archive-context.json
+novel --workspace workspace export-site moon-archive exports/moon-archive-site
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 novel --workspace workspace backup moon-archive backups
 ```
@@ -104,6 +106,14 @@ moon-archive-outline.md
 moon-archive-progress.md
 moon-archive-review.md
 moon-archive-revision.md
+```
+
+Expected static site files:
+
+```text
+index.html
+manuscript.html
+context.json
 ```
 
 Expected context JSON starts with:

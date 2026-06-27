@@ -752,6 +752,30 @@ def test_export_context_json_writes_agent_payload(tmp_path: Path) -> None:
     assert payload["next_action"]["kind"] == "continue_chapter"
 
 
+def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First <Novel>", "A concise & private premise.")
+    store.update_project_metadata("first-novel", genre="mystery", audience="adult")
+    store.add_chapter("first-novel", "Opening", "The story begins.\nA clue <appears>.", "draft", "Start with pressure.")
+    store.add_note("first-novel", "Ada", "Detective & protagonist.", "character")
+    store.add_progress("first-novel", 300, "2026-06-26", "Drafted <opening>.")
+    output_dir = tmp_path / "site"
+
+    outputs = store.export_site("first-novel", output_dir)
+
+    assert [path.name for path in outputs] == ["index.html", "manuscript.html", "context.json"]
+    index = (output_dir / "index.html").read_text(encoding="utf-8")
+    manuscript = (output_dir / "manuscript.html").read_text(encoding="utf-8")
+    context = json.loads((output_dir / "context.json").read_text(encoding="utf-8"))
+    assert "<h1>First &lt;Novel&gt;</h1>" in index
+    assert "A concise &amp; private premise." in index
+    assert "Read manuscript" in index
+    assert "Download context JSON" in index
+    assert "Drafted &lt;opening&gt;." in index
+    assert "A clue &lt;appears&gt;." in manuscript
+    assert context["format"] == "novel-workbench-project-context"
+
+
 def test_export_markdown_custom_template_file(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")

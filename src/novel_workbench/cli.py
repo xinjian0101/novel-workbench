@@ -73,6 +73,7 @@ COMPLETION_COMMANDS = (
     "delete-scene",
     "export",
     "export-context",
+    "export-site",
     "export-pack",
     "backup",
     "restore-backup",
@@ -369,6 +370,10 @@ def build_parser() -> argparse.ArgumentParser:
     export_context = subparsers.add_parser("export-context", help="Export an AI/editor project context JSON document.")
     export_context.add_argument("slug")
     export_context.add_argument("output", type=Path)
+
+    export_site = subparsers.add_parser("export-site", help="Export a static HTML project site.")
+    export_site.add_argument("slug")
+    export_site.add_argument("output_dir", type=Path)
 
     export_pack = subparsers.add_parser("export-pack", help="Export all standard Markdown reports for a project.")
     export_pack.add_argument("slug")
@@ -771,6 +776,12 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "export-context":
         output = store.export_context_json(args.slug, args.output)
         print(f"Exported context: {output}")
+        return 0
+    if args.command == "export-site":
+        outputs = store.export_site(args.slug, args.output_dir)
+        print(f"Exported site: {args.output_dir}")
+        for output in outputs:
+            print(f"- {output}")
         return 0
     if args.command == "export-pack":
         outputs = store.export_pack(args.slug, args.output_dir)

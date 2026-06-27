@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import json
 import math
 import re
@@ -697,6 +698,18 @@ class ProjectStore:
         output_path.write_text(json.dumps(context, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         return output_path
 
+    def export_site(self, slug: str, output_dir: Path) -> list[Path]:
+        project = self.get_project(slug)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        files = {
+            output_dir / "index.html": _site_index_html(project),
+            output_dir / "manuscript.html": _site_manuscript_html(project),
+            output_dir / "context.json": json.dumps(_context_for_project(project), indent=2, ensure_ascii=False) + "\n",
+        }
+        for path, content in files.items():
+            path.write_text(content, encoding="utf-8")
+        return list(files)
+
     def search(self, slug: str, query: str) -> list[dict[str, str | int]]:
         normalized_query = query.strip().lower()
         if not normalized_query:
@@ -873,6 +886,164 @@ def workspace_dashboard_lines(rows: list[dict[str, str | int | None]]) -> list[s
             f"{_escape_table_cell(str(row['updated_at']))} |"
         )
     return lines
+
+
+def _site_index_html(project: NovelProject) -> str:
+    stats = _stats_for_project(project)
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    notes = sorted(project.notes, key=lambda item: item.id)
+    progress = sorted(project.progress, key=lambda item: (item.date, item.id), reverse=True)[:8]
+    next_action = _context_next_action(project, next((chapter for chapter in chapters if chapter.status != "done"), None))
+    metadata = [
+        ("Chapters", str(stats["chapters"])),
+        ("Words", str(stats["words"])),
+        ("Logged", str(stats["logged_words"])),
+        ("Streak", f"{stats['current_streak_days']} days"),
+        ("Target", "-" if stats["target_words"] is None else str(stats["target_words"])),
+        ("Progress", "-" if stats["progress_percent"] is None else f"{stats['progress_percent']}%"),
+    ]
+    body = [
+        '<!doctype html>',
+        '<html lang="en">',
+        "<head>",
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        f"<title>{_html(project.title)} - Novel Workbench</title>",
+        f"<style>{_site_css()}</style>",
+        "</head>",
+        "<body>",
+        '<header class="hero">',
+        '<div class="wrap">',
+        '<p class="eyebrow">Novel Workbench</p>',
+        f"<h1>{_html(project.title)}</h1>",
+        f"<p>{_html(project.synopsis or 'A local-first novel project workspace.')}</p>",
+        '<nav><a href="manuscript.html">Read manuscript</a><a href="context.json">Download context JSON</a></nav>',
+        "</div>",
+        "</header>",
+        '<main class="wrap">',
+        '<section class="metrics" aria-label="Project metrics">',
+    ]
+    for label, value in metadata:
+        body.append(f'<div><span>{_html(label)}</span><strong>{_html(value)}</strong></div>')
+    body.extend(
+        [
+            "</section>",
+            '<section class="panel">',
+            "<h2>Next Action</h2>",
+            f"<p>{_html(str(next_action['prompt']))}</p>",
+            "</section>",
+            '<section class="grid">',
+            '<div class="panel">',
+            "<h2>Chapters</h2>",
+            _site_chapter_list(chapters),
+            "</div>",
+            '<div class="panel">',
+            "<h2>Notes</h2>",
+            _site_note_list(notes),
+            "</div>",
+            "</section>",
+            '<section class="panel">',
+            "<h2>Recent Progress</h2>",
+            _site_progress_table(progress),
+            "</section>",
+            "</main>",
+            "</body>",
+            "</html>",
+        ]
+    )
+    return "\n".join(body) + "\n"
+
+
+def _site_manuscript_html(project: NovelProject) -> str:
+    body = [
+        '<!doctype html>',
+        '<html lang="en">',
+        "<head>",
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        f"<title>{_html(project.title)} Manuscript</title>",
+        f"<style>{_site_css()}</style>",
+        "</head>",
+        "<body>",
+        '<main class="wrap manuscript">',
+        f'<p><a href="index.html">Back to project dashboard</a></p>',
+        f"<h1>{_html(project.title)}</h1>",
+    ]
+    if project.synopsis:
+        body.append(f'<p class="synopsis">{_html(project.synopsis)}</p>')
+    chapters = sorted(project.chapters, key=lambda item: item.number)
+    if not chapters:
+        body.append("<p>No chapters yet.</p>")
+    for chapter in chapters:
+        body.extend(
+            [
+                f"<article><h2>Chapter {chapter.number}: {_html(chapter.title)}</h2>",
+                f"<p>{_html(chapter.content.strip()).replace(chr(10), '<br>')}</p></article>",
+            ]
+        )
+    body.extend(["</main>", "</body>", "</html>"])
+    return "\n".join(body) + "\n"
+
+
+def _site_chapter_list(chapters: list[Chapter]) -> str:
+    if not chapters:
+        return "<p>No chapters yet.</p>"
+    items = []
+    for chapter in chapters:
+        summary = f"<p>{_html(chapter.summary)}</p>" if chapter.summary else ""
+        items.append(
+            "<li>"
+            f"<strong>{chapter.number}. {_html(chapter.title)}</strong>"
+            f"<span>{_html(chapter.status)} / {count_words(chapter.content)} words</span>"
+            f"{summary}"
+            "</li>"
+        )
+    return f"<ol>{''.join(items)}</ol>"
+
+
+def _site_note_list(notes: list[ProjectNote]) -> str:
+    if not notes:
+        return "<p>No planning notes yet.</p>"
+    items = []
+    for note in notes[:8]:
+        preview = _note_preview(note.content) if note.content else ""
+        items.append(
+            "<li>"
+            f"<strong>{_html(note.title)}</strong>"
+            f"<span>{_html(note.kind)}</span>"
+            f"<p>{_html(preview)}</p>"
+            "</li>"
+        )
+    return f"<ul>{''.join(items)}</ul>"
+
+
+def _site_progress_table(entries: list[ProgressEntry]) -> str:
+    if not entries:
+        return "<p>No progress entries yet.</p>"
+    rows = [
+        f"<tr><td>{_html(entry.date)}</td><td>{entry.words}</td><td>{_html(entry.note)}</td></tr>"
+        for entry in entries
+    ]
+    return "<table><thead><tr><th>Date</th><th>Words</th><th>Note</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
+
+
+def _site_css() -> str:
+    return (
+        ":root{color-scheme:light;--ink:#1f2933;--muted:#5f6c7b;--line:#d8dee6;--paper:#f7f8fa;--accent:#0f766e;}"
+        "*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}"
+        ".wrap{width:min(1040px,92vw);margin:0 auto}.hero{background:#111827;color:white;padding:56px 0 40px}.hero p{max-width:760px;color:#d1d5db}"
+        ".eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;color:#99f6e4}.hero h1{font-size:clamp(36px,7vw,72px);line-height:1;margin:0 0 16px}"
+        "nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}a{color:var(--accent);font-weight:700}nav a{color:white;border:1px solid #5eead4;padding:10px 14px;text-decoration:none}"
+        ".metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:24px 0}.metrics div,.panel{background:white;border:1px solid var(--line);padding:18px}"
+        ".metrics span{display:block;color:var(--muted);font-size:13px}.metrics strong{font-size:24px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}"
+        "h2{margin-top:0}ol,ul{padding-left:22px}li{margin:0 0 14px}li span{display:block;color:var(--muted);font-size:14px}"
+        "table{width:100%;border-collapse:collapse}th,td{text-align:left;border-bottom:1px solid var(--line);padding:10px}.manuscript{background:white;padding:30px;margin-top:24px;margin-bottom:24px}"
+        ".manuscript article{border-top:1px solid var(--line);padding-top:20px}.synopsis{color:var(--muted);font-size:18px}"
+    )
+
+
+def _html(value: object) -> str:
+    return html.escape(str(value), quote=True)
 
 
 def outline_lines(project: NovelProject) -> list[str]:

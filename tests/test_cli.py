@@ -106,6 +106,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "review.md"), "--template", "review"]) == 0
     assert main(["--workspace", str(workspace), "export", "renamed-novel", str(tmp_path / "revision.md"), "--template", "revision"]) == 0
     assert main(["--workspace", str(workspace), "export-context", "renamed-novel", str(tmp_path / "context.json")]) == 0
+    assert main(["--workspace", str(workspace), "export-site", "renamed-novel", str(tmp_path / "site")]) == 0
     assert main(["--workspace", str(workspace), "export-pack", "renamed-novel", str(tmp_path / "pack")]) == 0
     assert main(["--workspace", str(workspace), "delete-note", "renamed-novel", "1"]) == 0
     assert main(["--workspace", str(workspace), "backup", "renamed-novel", str(backup_dir)]) == 0
@@ -156,6 +157,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Exported dashboard:" in captured.out
     assert '"format": "novel-workbench-project-context"' in captured.out
     assert "Exported context:" in captured.out
+    assert "Exported site:" in captured.out
     assert "Exported pack:" in captured.out
     assert "Notes: 3" in captured.out
     assert "Words: 2" in captured.out
@@ -192,6 +194,9 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     context = json.loads((tmp_path / "context.json").read_text(encoding="utf-8"))
     assert context["project"]["slug"] == "renamed-novel"
     assert context["next_action"]["kind"] == "continue_chapter"
+    assert "<h1>Renamed Novel</h1>" in (tmp_path / "site" / "index.html").read_text(encoding="utf-8")
+    assert "Goodbye" in (tmp_path / "site" / "manuscript.html").read_text(encoding="utf-8")
+    assert json.loads((tmp_path / "site" / "context.json").read_text(encoding="utf-8"))["project"]["slug"] == "renamed-novel"
     assert "# Renamed Novel Momentum" in (tmp_path / "pack" / "renamed-novel-momentum.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Handoff" in (tmp_path / "pack" / "renamed-novel-handoff.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "pack" / "renamed-novel-revision.md").read_text(encoding="utf-8")
@@ -364,6 +369,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "update-progress" in captured.out
     assert "delete-progress" in captured.out
     assert "export-context" in captured.out
+    assert "export-site" in captured.out
     assert "export-pack" in captured.out
 
 
