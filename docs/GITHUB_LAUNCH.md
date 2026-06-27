@@ -31,6 +31,7 @@ Use this checklist before making the repository public or announcing it.
    python scripts/check.py
    python scripts/release_check.py
    python scripts/build_pages_demo.py public
+   python scripts/launch_audit.py
    ```
 
 2. Tag the first release as `v0.1.0`.

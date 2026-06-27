@@ -7,6 +7,8 @@
 
 Novel Workbench is a fast, local-first command line workspace for writing long-form fiction. It gives authors a simple way to create projects, draft chapters, track progress, and export a clean Markdown manuscript without signing up for a cloud service.
 
+Live demo: [xinjian0101.github.io/novel-workbench](https://xinjian0101.github.io/novel-workbench/)
+
 ```text
 $ novel sample
 Created sample project: moon-archive (2 chapters)
@@ -351,6 +353,8 @@ See [ROADMAP.md](ROADMAP.md) for planned improvements. The current project inten
 ## GitHub Launch
 
 Use [docs/GITHUB_LAUNCH.md](docs/GITHUB_LAUNCH.md) before publishing the repository. It covers repository description, topics, release notes, CI, and README checks.
+
+Use [docs/LAUNCH_KIT.md](docs/LAUNCH_KIT.md) for demo links, launch posts, and submission checklists.
 
 ## Contributing
 

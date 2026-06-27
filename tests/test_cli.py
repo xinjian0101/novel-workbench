@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import date, timedelta
 
 from novel_workbench.cli import main
+from scripts.launch_audit import main as launch_audit_main
 from scripts.build_pages_demo import main as pages_demo_main
 from scripts.demo import main as demo_main
 
@@ -415,3 +416,12 @@ def test_pages_demo_script_builds_static_site(tmp_path: Path, capsys) -> None:
     assert "<h1>Moon Archive</h1>" in (output_dir / "index.html").read_text(encoding="utf-8")
     assert "They opened the hatch" in (output_dir / "manuscript.html").read_text(encoding="utf-8")
     assert json.loads((output_dir / "context.json").read_text(encoding="utf-8"))["project"]["slug"] == "moon-archive"
+
+
+def test_launch_audit_passes_for_repository(capsys) -> None:
+    assert launch_audit_main([]) == 0
+
+    captured = capsys.readouterr()
+    assert "Launch readiness: PASS" in captured.out
+    assert "docs/LAUNCH_KIT.md" in captured.out
+    assert "Live Demo" in captured.out

@@ -16,6 +16,12 @@ Run only the packaging smoke test:
 python scripts/release_check.py
 ```
 
+Run the launch readiness audit:
+
+```powershell
+python scripts/launch_audit.py
+```
+
 The release check builds `dist/`, creates a temporary virtual environment, installs the wheel without reaching package indexes, then runs the installed CLI against a sample workspace.
 
 ## GitHub Release Flow

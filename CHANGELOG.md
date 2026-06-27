@@ -13,6 +13,7 @@
 - Added machine-readable AI/editor project context JSON output and export.
 - Added static HTML project site export with dashboard, manuscript, and context JSON files.
 - Added a GitHub Pages workflow and demo site builder for publishing a live project preview.
+- Added a launch readiness audit and launch kit for public sharing.
 - Added writing momentum reports with weekly totals and recent progress entries.
 - Added chapter status board output and export for draft, revising, and done work.
 - Added manuscript readiness review reports with author-facing findings and strengths.

@@ -26,6 +26,9 @@ dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/xinjian0101/novel-workbench"
+Source = "https://github.com/xinjian0101/novel-workbench"
+Documentation = "https://github.com/xinjian0101/novel-workbench/blob/master/docs/CLI_REFERENCE.md"
+"Live Demo" = "https://xinjian0101.github.io/novel-workbench/"
 Issues = "https://github.com/xinjian0101/novel-workbench/issues"
 Changelog = "https://github.com/xinjian0101/novel-workbench/blob/master/CHANGELOG.md"
 
