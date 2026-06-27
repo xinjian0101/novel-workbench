@@ -14,6 +14,7 @@ COMPLETION_COMMANDS = (
     "init",
     "list",
     "dashboard",
+    "export-dashboard",
     "doctor",
     "migrate",
     "sample",
@@ -133,6 +134,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("init", help="Create the workspace directory.")
     subparsers.add_parser("list", help="List projects.")
     subparsers.add_parser("dashboard", help="Show a workspace progress dashboard.")
+    export_dashboard = subparsers.add_parser("export-dashboard", help="Export the workspace dashboard to Markdown.")
+    export_dashboard.add_argument("output", type=Path)
     subparsers.add_parser("doctor", help="Validate workspace project files.")
     migrate = subparsers.add_parser("migrate", help="Normalize project files to the current schema.")
     migrate.add_argument("--dry-run", action="store_true", help="Report projects that would change without writing files.")
@@ -364,6 +367,10 @@ def run(args: argparse.Namespace) -> int:
                 f"{row['slug']}\t{row['title']}\t{row['chapters']}\t{row['words']}\t"
                 f"{row['logged_words']}\t{row['current_streak_days']}\t{target}\t{progress}\t{row['updated_at']}"
             )
+        return 0
+    if args.command == "export-dashboard":
+        output = store.export_dashboard(args.output)
+        print(f"Exported dashboard: {output}")
         return 0
     if args.command == "doctor":
         report = store.check_workspace()

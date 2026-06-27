@@ -11,6 +11,7 @@ from novel_workbench.storage import (
     outline_lines,
     parse_markdown_chapters,
     planning_lines,
+    workspace_dashboard_lines,
 )
 
 
@@ -76,6 +77,25 @@ def test_workspace_dashboard_summarizes_projects(tmp_path: Path) -> None:
     assert by_slug["first-novel"]["current_streak_days"] == 1
     assert by_slug["first-novel"]["target_words"] == 10
     assert by_slug["first-novel"]["progress_percent"] == 30
+
+
+def test_export_dashboard_writes_markdown_report(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First | Novel")
+    store.add_chapter("first-novel", "Opening", "The story begins.")
+    store.set_target_words("first-novel", 10)
+    output = tmp_path / "reports" / "dashboard.md"
+
+    store.export_dashboard(output)
+
+    text = output.read_text(encoding="utf-8")
+    assert text.startswith("# Novel Workbench Dashboard\n\n")
+    assert "| Slug | Title | Chapters | Words | Logged | Streak | Target | Progress | Updated |" in text
+    assert "| first-novel | First \\| Novel | 1 | 3 | 0 | 0 | 10 | 30% |" in text
+
+
+def test_workspace_dashboard_lines_handles_empty_workspace() -> None:
+    assert workspace_dashboard_lines([]) == ["# Novel Workbench Dashboard", "", "No projects found."]
 
 
 def test_validates_slug_title_and_status(tmp_path: Path) -> None:

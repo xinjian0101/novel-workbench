@@ -28,6 +28,16 @@ novel --workspace workspace dashboard
 
 The table includes slug, title, chapter count, manuscript words, logged words, current writing streak, target words, target progress, and last updated timestamp. Use this command to choose what needs attention before opening a specific project with `plan` or `stats`.
 
+## `novel export-dashboard`
+
+Export the workspace progress dashboard to Markdown.
+
+```powershell
+novel --workspace workspace export-dashboard exports/workspace-dashboard.md
+```
+
+The report uses the same project summary fields as `dashboard`, but writes a Markdown table that can be committed, shared, or attached to a planning note.
+
 ## `novel doctor`
 
 Validate project files in the workspace.

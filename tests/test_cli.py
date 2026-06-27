@@ -73,6 +73,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert main(["--workspace", str(workspace), "list-notes", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "doctor"]) == 0
     assert main(["--workspace", str(workspace), "dashboard"]) == 0
+    assert main(["--workspace", str(workspace), "export-dashboard", str(tmp_path / "dashboard.md")]) == 0
     assert main(["--workspace", str(workspace), "show", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "outline", "renamed-novel"]) == 0
     assert main(["--workspace", str(workspace), "plan", "renamed-novel"]) == 0
@@ -130,6 +131,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Workspace healthy." in captured.out
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
     assert "renamed-novel\tRenamed Novel\t2\t2\t500\t1\t-\t-" in captured.out
+    assert "Exported dashboard:" in captured.out
     assert "Notes: 3" in captured.out
     assert "Words: 2" in captured.out
     assert "Logged words: 500" in captured.out
@@ -152,6 +154,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "Chapter 2: Opening [draft]" in captured.out
     assert export_path.exists()
     assert "# Renamed Novel" in custom_export.read_text(encoding="utf-8")
+    assert "# Novel Workbench Dashboard" in (tmp_path / "dashboard.md").read_text(encoding="utf-8")
     assert "Draft: 2 chapters / 2 words" in custom_export.read_text(encoding="utf-8")
     assert "# Renamed Novel Outline" in (tmp_path / "outline.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Progress" in (tmp_path / "progress.md").read_text(encoding="utf-8")
@@ -206,6 +209,16 @@ def test_cli_dashboard_reports_empty_workspace(tmp_path: Path, capsys) -> None:
 
     captured = capsys.readouterr()
     assert "No projects found." in captured.out
+
+
+def test_cli_exports_empty_dashboard(tmp_path: Path, capsys) -> None:
+    output = tmp_path / "dashboard.md"
+
+    assert main(["--workspace", str(tmp_path / "workspace"), "export-dashboard", str(output)]) == 0
+
+    captured = capsys.readouterr()
+    assert "Exported dashboard:" in captured.out
+    assert output.read_text(encoding="utf-8") == "# Novel Workbench Dashboard\n\nNo projects found.\n"
 
 
 def test_cli_deletes_progress_entry(tmp_path: Path, capsys) -> None:
@@ -294,6 +307,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "#compdef novel" in captured.out
     assert "Register-ArgumentCompleter" in captured.out
     assert "dashboard" in captured.out
+    assert "export-dashboard" in captured.out
     assert "migrate" in captured.out
     assert "import-markdown" in captured.out
     assert "plan" in captured.out
@@ -324,6 +338,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "Updated progress 1: 2026-06-26 +1250 words" in captured.out
     assert "Words:" in captured.out
     assert "Target words: 80000" in captured.out
+    assert "Exported dashboard:" in captured.out
     assert "Slug\tTitle\tChapters\tWords\tLogged\tStreak\tTarget\tProgress\tUpdated" in captured.out
     assert "moon-archive\tMoon Archive\t1\t8\t1250\t" in captured.out
     assert "moon-archive-outline.md" in captured.out

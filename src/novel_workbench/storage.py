@@ -245,6 +245,11 @@ class ProjectStore:
             )
         return rows
 
+    def export_dashboard(self, output_path: Path) -> Path:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text("\n".join(workspace_dashboard_lines(self.workspace_dashboard())).rstrip() + "\n", encoding="utf-8")
+        return output_path
+
     def check_workspace(self) -> dict[str, int | list[dict[str, str]]]:
         self.initialize()
         checked = 0
@@ -787,6 +792,35 @@ def _default_export_lines(project: NovelProject) -> list[str]:
     return lines
 
 
+def workspace_dashboard_lines(rows: list[dict[str, str | int | None]]) -> list[str]:
+    lines = ["# Novel Workbench Dashboard", ""]
+    if not rows:
+        lines.append("No projects found.")
+        return lines
+    lines.extend(
+        [
+            "| Slug | Title | Chapters | Words | Logged | Streak | Target | Progress | Updated |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---|",
+        ]
+    )
+    for row in rows:
+        target = "" if row["target_words"] is None else str(row["target_words"])
+        progress = "" if row["progress_percent"] is None else f"{row['progress_percent']}%"
+        lines.append(
+            "| "
+            f"{_escape_table_cell(str(row['slug']))} | "
+            f"{_escape_table_cell(str(row['title']))} | "
+            f"{row['chapters']} | "
+            f"{row['words']} | "
+            f"{row['logged_words']} | "
+            f"{row['current_streak_days']} | "
+            f"{target} | "
+            f"{progress} | "
+            f"{_escape_table_cell(str(row['updated_at']))} |"
+        )
+    return lines
+
+
 def outline_lines(project: NovelProject) -> list[str]:
     lines = [f"# {project.title} Outline", ""]
     if project.synopsis:
@@ -1130,6 +1164,10 @@ def _progress_streaks(progress_dates: set[str]) -> tuple[int, int]:
 
 def _escape_yaml(value: str) -> str:
     return value.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def _escape_table_cell(value: str) -> str:
+    return value.replace("|", "\\|").replace("\n", " ")
 
 
 def _backup_timestamp() -> str:
