@@ -19,6 +19,7 @@ Use this checklist before making the repository public or announcing it.
 - The 60-second tour works after installing from GitHub.
 - The terminal demo matches `python scripts/demo.py`.
 - The Pages demo builds with `python scripts/build_pages_demo.py public`.
+- The showcase assets in `docs/SHOWCASE.md` render in the README and social preview.
 - Quick Start works on a clean checkout.
 - No temporary or example-only GitHub URLs remain.
 - Security and contribution links resolve.

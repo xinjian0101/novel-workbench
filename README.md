@@ -9,6 +9,8 @@ Novel Workbench is a fast, local-first command line workspace for writing long-f
 
 Live demo: [xinjian0101.github.io/novel-workbench](https://xinjian0101.github.io/novel-workbench/)
 
+![Novel Workbench feature showcase](assets/readme-showcase.svg)
+
 ```text
 $ novel sample
 Created sample project: moon-archive (2 chapters)
@@ -355,6 +357,8 @@ See [ROADMAP.md](ROADMAP.md) for planned improvements. The current project inten
 Use [docs/GITHUB_LAUNCH.md](docs/GITHUB_LAUNCH.md) before publishing the repository. It covers repository description, topics, release notes, CI, and README checks.
 
 Use [docs/LAUNCH_KIT.md](docs/LAUNCH_KIT.md) for demo links, launch posts, and submission checklists.
+
+Use [docs/SHOWCASE.md](docs/SHOWCASE.md) for visual preview assets and demo proof points.
 
 ## Contributing
 

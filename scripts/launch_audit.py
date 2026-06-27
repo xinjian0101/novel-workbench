@@ -15,7 +15,10 @@ REQUIRED_FILES = [
     "docs/GITHUB_LAUNCH.md",
     "docs/LAUNCH_KIT.md",
     "docs/PACKAGING.md",
+    "docs/SHOWCASE.md",
     "examples/quickstart.md",
+    "assets/readme-showcase.svg",
+    "assets/social-preview.svg",
     ".github/workflows/ci.yml",
     ".github/workflows/pages.yml",
     ".github/workflows/release.yml",
@@ -29,8 +32,10 @@ REQUIRED_TEXT = {
         "https://xinjian0101.github.io/novel-workbench/",
         "python -m pip install \"git+https://github.com/xinjian0101/novel-workbench.git\"",
         "60-Second Tour",
+        "assets/readme-showcase.svg",
         "export-site",
         "docs/LAUNCH_KIT.md",
+        "docs/SHOWCASE.md",
     ],
     "docs/GITHUB_LAUNCH.md": [
         "Pages",
@@ -41,6 +46,11 @@ REQUIRED_TEXT = {
         "Live demo",
         "Launch posts",
         "Submission checklist",
+    ],
+    "docs/SHOWCASE.md": [
+        "Pages demo",
+        "assets/social-preview.svg",
+        "Demo acceptance checks",
     ],
     "pyproject.toml": [
         "Live Demo",

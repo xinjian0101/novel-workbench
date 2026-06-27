@@ -8,6 +8,7 @@ Use this kit when sharing Novel Workbench publicly.
 - Live demo: https://xinjian0101.github.io/novel-workbench/
 - Install: `python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"`
 - Quick tour: `novel --workspace workspace sample`
+- Showcase assets: `docs/SHOWCASE.md`
 
 ## One-line pitch
 
@@ -56,6 +57,8 @@ Demo: https://xinjian0101.github.io/novel-workbench/
 ## Submission checklist
 
 - README first screen explains the value without scrolling.
+- README renders `assets/readme-showcase.svg`.
+- GitHub social preview can use `assets/social-preview.svg`.
 - Live demo returns HTTP 200.
 - CI and Pages badges are green.
 - GitHub topics match `writing`, `novel`, `markdown`, `cli`, `local-first`, `author-tools`, and `python`.
