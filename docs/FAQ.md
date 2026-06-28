@@ -50,7 +50,7 @@ novel --workspace workspace export-site my-novel exports\my-novel-site
 
 The live repository demo uses the same static-site path: https://xinjian0101.github.io/novel-workbench/
 
-Use `--base-url` when exporting for a public URL to add absolute preview metadata, RSS discovery metadata, `sitemap.xml`, `robots.txt`, and `feed.xml` for crawlers and subscribers.
+Use `--base-url` when exporting for a public URL to add absolute preview metadata, RSS discovery metadata, `sitemap.xml`, `robots.txt`, `feed.xml`, and `llms.txt` for crawlers, subscribers, and AI coding tools.
 
 ## Does it work without installing runtime dependencies?
 

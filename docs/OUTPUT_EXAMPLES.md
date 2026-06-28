@@ -49,6 +49,7 @@ social-card.svg
 sitemap.xml
 robots.txt
 feed.xml
+llms.txt
 Demo: https://xinjian0101.github.io/novel-workbench/
 Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 ```
@@ -71,6 +72,7 @@ social-card.svg
 sitemap.xml
 robots.txt
 feed.xml
+llms.txt
 ```
 
 ## Manuscript Markdown

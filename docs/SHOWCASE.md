@@ -23,8 +23,8 @@ Use this page as the source of truth for visual and demo assets.
 - The project can be enriched with metadata, notes, progress, and a target word count.
 - The project can be exported as Markdown reports, AI/editor context JSON, and a static HTML site.
 - The Pages demo includes chapter-level scene summaries, so readers can inspect story planning depth before opening the manuscript view.
-- The exported HTML includes description, Open Graph, Twitter summary metadata, and RSS discovery metadata for cleaner social link previews and subscriptions.
-- The Pages demo publishes `social-card.svg`, `sitemap.xml`, `robots.txt`, and `feed.xml` so public crawlers and social platforms can discover the dashboard, manuscript, context JSON, preview image, and update feed.
+- The exported HTML includes description, Open Graph, Twitter summary metadata, RSS discovery metadata, and an `llms.txt` pointer for cleaner social link previews, subscriptions, and AI tool handoffs.
+- The Pages demo publishes `social-card.svg`, `sitemap.xml`, `robots.txt`, `feed.xml`, and `llms.txt` so public crawlers, social platforms, and AI coding tools can discover the dashboard, manuscript, context JSON, preview image, update feed, and structured project guide.
 - The Codespaces quick start gives reviewers a disposable environment for running the same tour without local setup.
 - GitHub Pages can publish a working static project dashboard.
 - The static site includes a "Try Novel Workbench" callout with the install command and `novel --workspace workspace tour --output-dir exports`.
@@ -64,6 +64,8 @@ python scripts/check.py
 - `public/sitemap.xml` contains `https://xinjian0101.github.io/novel-workbench/index.html`.
 - `public/sitemap.xml` contains `https://xinjian0101.github.io/novel-workbench/social-card.svg`.
 - `public/sitemap.xml` contains `https://xinjian0101.github.io/novel-workbench/feed.xml`.
+- `public/sitemap.xml` contains `https://xinjian0101.github.io/novel-workbench/llms.txt`.
 - `public/robots.txt` contains `Sitemap: https://xinjian0101.github.io/novel-workbench/sitemap.xml`.
 - `public/feed.xml` contains `Moon Archive - Novel Workbench`.
+- `public/llms.txt` contains `Context JSON`.
 - The published Pages URL returns HTTP 200.

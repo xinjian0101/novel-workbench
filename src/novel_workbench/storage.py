@@ -777,9 +777,10 @@ class ProjectStore:
         social_card_name = "social-card.svg"
         social_card_url = f"{base_url}/{social_card_name}" if base_url else social_card_name
         feed_url = f"{base_url}/feed.xml" if base_url else ""
+        llms_url = f"{base_url}/llms.txt" if base_url else ""
         files = {
-            output_dir / "index.html": _site_index_html(project, theme, social_card_url, feed_url),
-            output_dir / "manuscript.html": _site_manuscript_html(project, theme, social_card_url, feed_url),
+            output_dir / "index.html": _site_index_html(project, theme, social_card_url, feed_url, llms_url),
+            output_dir / "manuscript.html": _site_manuscript_html(project, theme, social_card_url, feed_url, llms_url),
             output_dir / "context.json": json.dumps(_context_for_project(project), indent=2, ensure_ascii=False) + "\n",
             output_dir / social_card_name: social_card_svg(project, theme),
         }
@@ -787,6 +788,7 @@ class ProjectStore:
             files[output_dir / "sitemap.xml"] = _site_sitemap_xml(base_url)
             files[output_dir / "robots.txt"] = _site_robots_txt(base_url)
             files[output_dir / "feed.xml"] = _site_feed_xml(project, base_url)
+            files[output_dir / "llms.txt"] = _site_llms_txt(project, base_url)
         for path, content in files.items():
             path.write_text(content, encoding="utf-8")
         return list(files)
@@ -1009,7 +1011,13 @@ def validate_site_theme(theme: str) -> str:
     return normalized
 
 
-def _site_index_html(project: NovelProject, theme: str = "classic", image_url: str = "social-card.svg", feed_url: str = "") -> str:
+def _site_index_html(
+    project: NovelProject,
+    theme: str = "classic",
+    image_url: str = "social-card.svg",
+    feed_url: str = "",
+    llms_url: str = "",
+) -> str:
     stats = _stats_for_project(project)
     chapters = sorted(project.chapters, key=lambda item: item.number)
     notes = sorted(project.notes, key=lambda item: item.id)
@@ -1032,6 +1040,7 @@ def _site_index_html(project: NovelProject, theme: str = "classic", image_url: s
         f"<title>{_html(project.title)} - Novel Workbench</title>",
         _site_meta_tags(project, "Project dashboard", image_url),
         _site_feed_link(project, feed_url),
+        _site_llms_link(llms_url),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1083,7 +1092,13 @@ def _site_index_html(project: NovelProject, theme: str = "classic", image_url: s
     return "\n".join(body) + "\n"
 
 
-def _site_manuscript_html(project: NovelProject, theme: str = "classic", image_url: str = "social-card.svg", feed_url: str = "") -> str:
+def _site_manuscript_html(
+    project: NovelProject,
+    theme: str = "classic",
+    image_url: str = "social-card.svg",
+    feed_url: str = "",
+    llms_url: str = "",
+) -> str:
     body = [
         '<!doctype html>',
         f'<html lang="en" data-theme="{_html(theme)}">',
@@ -1093,6 +1108,7 @@ def _site_manuscript_html(project: NovelProject, theme: str = "classic", image_u
         f"<title>{_html(project.title)} Manuscript</title>",
         _site_meta_tags(project, "Manuscript", image_url),
         _site_feed_link(project, feed_url),
+        _site_llms_link(llms_url),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1140,6 +1156,12 @@ def _site_feed_link(project: NovelProject, feed_url: str) -> str:
     if not feed_url:
         return ""
     return f'<link rel="alternate" type="application/rss+xml" title="{_html(project.title)} updates" href="{_html(feed_url)}">'
+
+
+def _site_llms_link(llms_url: str) -> str:
+    if not llms_url:
+        return ""
+    return f'<link rel="help" type="text/plain" href="{_html(llms_url)}">'
 
 
 def social_card_svg(project: NovelProject, theme: str = "classic") -> str:
@@ -1246,7 +1268,7 @@ def _normalize_site_base_url(base_url: str) -> str:
 
 
 def _site_sitemap_xml(base_url: str) -> str:
-    urls = ["index.html", "manuscript.html", "context.json", "social-card.svg", "feed.xml"]
+    urls = ["index.html", "manuscript.html", "context.json", "social-card.svg", "feed.xml", "llms.txt"]
     entries = "\n".join(f"  <url><loc>{_html(base_url + '/' + url)}</loc></url>" for url in urls)
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -1314,6 +1336,39 @@ def _rss_pub_date(timestamp: str) -> str:
     if parsed.tzinfo is None:
         parsed = parsed.replace(tzinfo=timezone.utc)
     return parsed.astimezone(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+
+
+def _site_llms_txt(project: NovelProject, base_url: str) -> str:
+    description = project.synopsis or "A local-first novel project workspace exported by Novel Workbench."
+    lines = [
+        f"# {project.title}",
+        "",
+        f"> {description}",
+        "",
+        "This is a static Novel Workbench project export. Use these public files to understand the project without requiring an account, server, database, or background network calls.",
+        "",
+        "## Core Files",
+        "",
+        f"- [Project dashboard]({base_url}/index.html): project summary, chapter state, notes, and recent writing progress.",
+        f"- [Manuscript]({base_url}/manuscript.html): readable manuscript export.",
+        f"- [Context JSON]({base_url}/context.json): structured AI/editor handoff context with project data, stats, next action, chapter state, and recent progress.",
+        f"- [Social preview]({base_url}/social-card.svg): SVG preview card for public posts.",
+        f"- [RSS feed]({base_url}/feed.xml): update feed for the public static export.",
+        "",
+        "## Tooling",
+        "",
+        "- Source project: https://github.com/xinjian0101/novel-workbench",
+        "- Recommended local trial: `novel --workspace workspace tour --output-dir exports`",
+        "- Data model: local UTF-8 JSON projects plus generated Markdown, HTML, SVG, RSS, and context JSON exports.",
+        "",
+        "## Use Guidelines",
+        "",
+        "- Prefer `context.json` for structured automation and editor handoff.",
+        "- Prefer `manuscript.html` for prose review.",
+        "- Prefer `index.html` for project status and navigation.",
+        "- Do not assume private workspace files exist beyond the public export listed here.",
+    ]
+    return "\n".join(lines) + "\n"
 
 
 def _site_chapter_list(chapters: list[Chapter]) -> str:

@@ -142,6 +142,7 @@ REQUIRED_TEXT = {
         "robots.txt",
         "social-card.svg",
         "feed.xml",
+        "llms.txt",
         ".github/CODEOWNERS",
         "docs/MAINTAINER_GUIDE.md",
     ],
@@ -194,6 +195,7 @@ REQUIRED_TEXT = {
         "sitemap.xml",
         "robots.txt",
         "feed.xml",
+        "llms.txt",
     ],
     ".env.example": [
         "NOVEL_WORKBENCH_HOME=workspace",
@@ -229,6 +231,7 @@ REQUIRED_TEXT = {
         "Open Graph",
         "Twitter summary metadata",
         "RSS discovery metadata",
+        "llms.txt",
         "social-card.svg",
         "sitemap.xml",
         "robots.txt",
@@ -264,6 +267,7 @@ REQUIRED_TEXT = {
         "robots.txt",
         "social-card.svg",
         "feed.xml",
+        "llms.txt",
         "python scripts/check.py",
     ],
     "scripts/demo.py": [

@@ -19,6 +19,8 @@ class PublicTarget:
 PUBLIC_TARGETS = (
     PublicTarget("Repository", "https://github.com/xinjian0101/novel-workbench", "Novel Workbench"),
     PublicTarget("Pages demo", "https://xinjian0101.github.io/novel-workbench/", "Moon Archive"),
+    PublicTarget("Pages RSS feed", "https://xinjian0101.github.io/novel-workbench/feed.xml", "Moon Archive - Novel Workbench"),
+    PublicTarget("Pages LLM guide", "https://xinjian0101.github.io/novel-workbench/llms.txt", "Context JSON"),
     PublicTarget(
         "Release wheel",
         "https://github.com/xinjian0101/novel-workbench/releases/download/v0.1.1/novel_workbench-0.1.1-py3-none-any.whl",
