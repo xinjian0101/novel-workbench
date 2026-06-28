@@ -608,6 +608,17 @@ novel --workspace workspace export-site moon-archive exports/moon-archive-site -
 
 The command writes `index.html`, `manuscript.html`, and `context.json`. The index page summarizes project metadata, progress, the next action, chapters, scene summaries, notes, and recent writing. The manuscript page provides a clean reading view. Both HTML pages include description, Open Graph, and Twitter summary metadata for cleaner link previews when shared from GitHub Pages or another static host. Use `--base-url` when exporting for a public URL to add `sitemap.xml` and `robots.txt`. Use `--theme classic`, `--theme editorial`, or `--theme focus` to choose the static-site presentation without adding runtime dependencies. The JSON file matches `novel context`, which makes the site directory useful for GitHub Pages, local review, or AI/editor automation.
 
+## `novel social-card`
+
+Export a dependency-free SVG preview card for a project announcement or launch post.
+
+```powershell
+novel --workspace workspace social-card moon-archive exports/moon-archive-social-card.svg
+novel --workspace workspace social-card moon-archive exports/moon-archive-social-card.svg --theme editorial
+```
+
+The SVG includes the project title, synopsis, genre, audience, chapter count, word count, and target progress when available. Use it next to `novel pitch`, `novel share-kit`, or a static-site export when preparing a public project update.
+
 ## `novel export-pack`
 
 Export every standard project report to one directory.
@@ -628,7 +639,7 @@ novel --workspace workspace share-kit moon-archive exports/moon-archive-share --
 novel --workspace workspace share-kit moon-archive exports/moon-archive-share --base-url https://example.com/moon-archive
 ```
 
-The command writes `<slug>-pitch.md`, `<slug>-announcement.md`, a static site under `site/`, and the full Markdown report pack under `pack/`. Use it when preparing a beta-reader packet, public progress update, editor note, or launch post.
+The command writes `<slug>-pitch.md`, `<slug>-announcement.md`, `<slug>-social-card.svg`, a static site under `site/`, and the full Markdown report pack under `pack/`. Use it when preparing a beta-reader packet, public progress update, editor note, or launch post.
 
 ## `novel backup`
 

@@ -219,6 +219,7 @@ Output files:
 ```text
 moon-archive-pitch.md
 moon-archive-announcement.md
+moon-archive-social-card.svg
 site/index.html
 site/manuscript.html
 site/context.json
@@ -226,6 +227,22 @@ pack/moon-archive.md
 pack/moon-archive-pitch.md
 pack/moon-archive-handoff.md
 ```
+
+## Social Preview Card
+
+Command:
+
+```powershell
+novel --workspace workspace social-card moon-archive exports\moon-archive-social-card.svg --theme editorial
+```
+
+Output:
+
+```text
+moon-archive-social-card.svg
+```
+
+The SVG card includes the project title, synopsis, genre, audience, chapter count, word count, and target progress when available. It is safe to commit, upload as a launch image, or include in a share kit.
 
 ## Reproduce Locally
 

@@ -103,6 +103,7 @@ COMPLETION_COMMANDS = (
     "export",
     "export-context",
     "export-site",
+    "social-card",
     "export-pack",
     "share-kit",
     "backup",
@@ -424,6 +425,11 @@ def build_parser() -> argparse.ArgumentParser:
     export_site.add_argument("output_dir", type=Path)
     export_site.add_argument("--theme", choices=("classic", "editorial", "focus"), default="classic", help="Static site theme.")
     export_site.add_argument("--base-url", default="", help="Public site URL used to generate sitemap.xml and robots.txt.")
+
+    social_card = subparsers.add_parser("social-card", help="Export a shareable SVG social preview card.")
+    social_card.add_argument("slug")
+    social_card.add_argument("output", type=Path)
+    social_card.add_argument("--theme", choices=("classic", "editorial", "focus"), default="classic", help="Card theme.")
 
     export_pack = subparsers.add_parser("export-pack", help="Export all standard Markdown reports for a project.")
     export_pack.add_argument("slug")
@@ -879,6 +885,10 @@ def run(args: argparse.Namespace) -> int:
         print(f"Exported site: {args.output_dir}")
         for output in outputs:
             print(f"- {output}")
+        return 0
+    if args.command == "social-card":
+        output = store.export_social_card(args.slug, args.output, theme=args.theme)
+        print(f"Exported social card: {output}")
         return 0
     if args.command == "export-pack":
         outputs = store.export_pack(args.slug, args.output_dir)

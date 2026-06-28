@@ -127,6 +127,20 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
         )
         == 0
     )
+    assert (
+        main(
+            [
+                "--workspace",
+                str(workspace),
+                "social-card",
+                "renamed-novel",
+                str(tmp_path / "renamed-novel-social-card.svg"),
+                "--theme",
+                "focus",
+            ]
+        )
+        == 0
+    )
     assert main(["--workspace", str(workspace), "export-pack", "renamed-novel", str(tmp_path / "pack")]) == 0
     assert (
         main(
@@ -195,6 +209,7 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert '"format": "novel-workbench-project-context"' in captured.out
     assert "Exported context:" in captured.out
     assert "Exported site:" in captured.out
+    assert "Exported social card:" in captured.out
     assert "Exported pack:" in captured.out
     assert "Exported share kit:" in captured.out
     assert "Notes: 3" in captured.out
@@ -240,12 +255,14 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert json.loads((tmp_path / "site" / "context.json").read_text(encoding="utf-8"))["project"]["slug"] == "renamed-novel"
     assert "https://example.com/renamed-novel/index.html" in (tmp_path / "site" / "sitemap.xml").read_text(encoding="utf-8")
     assert "Sitemap: https://example.com/renamed-novel/sitemap.xml" in (tmp_path / "site" / "robots.txt").read_text(encoding="utf-8")
+    assert "Novel Workbench Share Card" in (tmp_path / "renamed-novel-social-card.svg").read_text(encoding="utf-8")
     assert "# Renamed Novel Momentum" in (tmp_path / "pack" / "renamed-novel-momentum.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Pitch" in (tmp_path / "pack" / "renamed-novel-pitch.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Handoff" in (tmp_path / "pack" / "renamed-novel-handoff.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Revision Checklist" in (tmp_path / "pack" / "renamed-novel-revision.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Share Kit" in (tmp_path / "share-kit" / "renamed-novel-announcement.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Pitch" in (tmp_path / "share-kit" / "renamed-novel-pitch.md").read_text(encoding="utf-8")
+    assert "Novel Workbench Share Card" in (tmp_path / "share-kit" / "renamed-novel-social-card.svg").read_text(encoding="utf-8")
     assert '<html lang="en" data-theme="editorial">' in (tmp_path / "share-kit" / "site" / "index.html").read_text(encoding="utf-8")
     assert "https://example.com/renamed-novel/index.html" in (tmp_path / "share-kit" / "site" / "sitemap.xml").read_text(encoding="utf-8")
     assert backup_file.exists()
@@ -443,6 +460,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "delete-progress" in captured.out
     assert "export-context" in captured.out
     assert "export-site" in captured.out
+    assert "social-card" in captured.out
     assert "export-pack" in captured.out
     assert "share-kit" in captured.out
 
@@ -495,6 +513,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "Exported pack:" in captured.out
     assert "Exported share kit:" in captured.out
     assert "moon-archive-announcement.md" in captured.out
+    assert "moon-archive-social-card.svg" in captured.out
     assert "Backed up:" in captured.out
 
 

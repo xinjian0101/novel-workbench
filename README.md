@@ -187,6 +187,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export shareable progress reports with chapter, status, target, and streak tables
 - Export shareable revision checklists for manuscript edit passes
 - Export a share kit with pitch copy, static site, and report pack assets
+- Export SVG social preview cards for project announcements and launch posts
 - Export through custom Markdown template files
 - Automatically snapshot project JSON before renames and destructive deletes
 - Back up project JSON on demand
@@ -252,6 +253,7 @@ novel --workspace workspace export moon-archive exports/moon-archive-review.md -
 novel --workspace workspace export moon-archive exports/moon-archive-revision.md --template revision
 novel --workspace workspace export-context moon-archive exports/moon-archive-context.json
 novel --workspace workspace export-site moon-archive exports/moon-archive-site
+novel --workspace workspace social-card moon-archive exports/moon-archive-social-card.svg
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 novel --workspace workspace share-kit moon-archive exports/moon-archive-share
 novel --workspace workspace backup moon-archive backups
@@ -326,6 +328,7 @@ novel delete-scene <slug> <chapter> <scene>
 novel export <slug> <output.md> [--template board|default|focus|frontmatter|handoff|momentum|outline|pitch|progress|review|revision] [--template-file path]
 novel export-context <slug> <output.json>
 novel export-site <slug> <output-dir> [--theme classic|editorial|focus] [--base-url https://example.com/site]
+novel social-card <slug> <output.svg> [--theme classic|editorial|focus]
 novel export-pack <slug> <output-dir>
 novel share-kit <slug> <output-dir> [--theme classic|editorial|focus] [--base-url https://example.com/site]
 novel backup <slug> <output-dir>

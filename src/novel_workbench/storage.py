@@ -786,6 +786,12 @@ class ProjectStore:
             path.write_text(content, encoding="utf-8")
         return list(files)
 
+    def export_social_card(self, slug: str, output_path: Path, theme: str = "classic") -> Path:
+        project = self.get_project(slug)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(social_card_svg(project, theme), encoding="utf-8")
+        return output_path
+
     def search(self, slug: str, query: str) -> list[dict[str, str | int]]:
         normalized_query = query.strip().lower()
         if not normalized_query:
@@ -900,12 +906,14 @@ class ProjectStore:
 
         pitch_path = output_dir / f"{project.slug}-pitch.md"
         announcement_path = output_dir / f"{project.slug}-announcement.md"
+        social_card_path = output_dir / f"{project.slug}-social-card.svg"
         pitch_path.write_text("\n".join(pitch_lines(project)).rstrip() + "\n", encoding="utf-8")
         announcement_path.write_text("\n".join(share_announcement_lines(project, normalized_base_url)).rstrip() + "\n", encoding="utf-8")
+        social_card_path.write_text(social_card_svg(project, theme), encoding="utf-8")
 
         site_paths = self.export_site(project.slug, output_dir / "site", theme=theme, base_url=normalized_base_url)
         pack_paths = self.export_pack(project.slug, output_dir / "pack")
-        return [pitch_path, announcement_path, *site_paths, *pack_paths]
+        return [pitch_path, announcement_path, social_card_path, *site_paths, *pack_paths]
 
     def _read_project(self, path: Path) -> NovelProject:
         try:
@@ -1109,6 +1117,100 @@ def _site_meta_tags(project: NovelProject, page_label: str) -> str:
             f'<meta name="twitter:description" content="{_html(description)}">',
         ]
     )
+
+
+def social_card_svg(project: NovelProject, theme: str = "classic") -> str:
+    theme = validate_site_theme(theme)
+    palette = {
+        "classic": ("#0f172a", "#14b8a6", "#d1fae5", "#f8fafc", "#cbd5e1"),
+        "editorial": ("#1f2937", "#b45309", "#fef3c7", "#fff7ed", "#e5e7eb"),
+        "focus": ("#111827", "#4f46e5", "#e0e7ff", "#f9fafb", "#d1d5db"),
+    }[theme]
+    background, accent, accent_soft, foreground, muted = palette
+    stats = _stats_for_project(project)
+    title_lines = _svg_wrap_text(project.title, 23, 2)
+    synopsis = project.synopsis or "A local-first novel project managed with Novel Workbench."
+    synopsis_lines = _svg_wrap_text(synopsis, 56, 3)
+    metadata = []
+    if project.genre:
+        metadata.append(project.genre)
+    if project.audience:
+        metadata.append(f"{project.audience} readers")
+    metadata.append(_count_label(stats["chapters"], "chapter"))
+    metadata.append(_count_label(stats["words"], "word"))
+    if stats["target_words"] is not None:
+        metadata.append(f"{stats['progress_percent']}% of {stats['target_words']} words")
+    metadata_line = " / ".join(metadata)
+
+    title_svg = "\n".join(
+        f'<text x="96" y="{156 + index * 78}" class="title">{_html(line)}</text>' for index, line in enumerate(title_lines)
+    )
+    synopsis_start = 318 if len(title_lines) == 2 else 250
+    synopsis_svg = "\n".join(
+        f'<text x="96" y="{synopsis_start + index * 44}" class="synopsis">{_html(line)}</text>'
+        for index, line in enumerate(synopsis_lines)
+    )
+    return "\n".join(
+        [
+            '<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img">',
+            f"<title>{_html(project.title)} social preview</title>",
+            "<style>",
+            ".label{font:700 24px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase}",
+            ".title{font:800 66px Arial,sans-serif}",
+            ".synopsis{font:400 34px Arial,sans-serif}",
+            ".meta{font:700 28px Arial,sans-serif}",
+            ".footer{font:700 24px Arial,sans-serif}",
+            "</style>",
+            f'<rect width="1280" height="640" fill="{background}"/>',
+            f'<rect x="46" y="46" width="1188" height="548" rx="28" fill="{background}" stroke="{accent}" stroke-width="4"/>',
+            f'<path d="M930 46h304v548H790z" fill="{accent}" opacity="0.18"/>',
+            f'<path d="M1040 46h194v548H900z" fill="{accent_soft}" opacity="0.12"/>',
+            f'<text x="96" y="104" class="label" fill="{accent_soft}">Novel Workbench Share Card</text>',
+            title_svg.replace('class="title"', f'class="title" fill="{foreground}"'),
+            synopsis_svg.replace('class="synopsis"', f'class="synopsis" fill="{muted}"'),
+            f'<rect x="96" y="474" width="1088" height="74" rx="18" fill="{accent}" opacity="0.22"/>',
+            f'<text x="126" y="521" class="meta" fill="{foreground}">{_html(metadata_line)}</text>',
+            f'<text x="96" y="584" class="footer" fill="{accent_soft}">local-first / markdown export / static HTML demo</text>',
+            "</svg>",
+        ]
+    ) + "\n"
+
+
+def _svg_wrap_text(value: str, limit: int, max_lines: int) -> list[str]:
+    raw_words = value.strip().split()
+    if not raw_words:
+        return [""]
+    words: list[str] = []
+    for word in raw_words:
+        if len(word) <= limit:
+            words.append(word)
+            continue
+        words.extend(word[index : index + limit] for index in range(0, len(word), limit))
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        candidate = word if not current else f"{current} {word}"
+        if len(candidate) <= limit:
+            current = candidate
+            continue
+        if current:
+            lines.append(current)
+        current = word
+        if len(lines) == max_lines:
+            break
+    if current and len(lines) < max_lines:
+        lines.append(current)
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+    used_words = " ".join(lines).split()
+    if len(used_words) < len(words) and lines:
+        lines[-1] = lines[-1].rstrip(".") + "..."
+    return lines
+
+
+def _count_label(count: int, singular: str) -> str:
+    suffix = "" if count == 1 else "s"
+    return f"{count} {singular}{suffix}"
 
 
 def _normalize_site_base_url(base_url: str) -> str:

@@ -786,6 +786,7 @@ def test_export_share_kit_writes_public_review_assets(tmp_path: Path) -> None:
     names = [path.relative_to(output_dir).as_posix() for path in outputs]
     assert "first-novel-pitch.md" in names
     assert "first-novel-announcement.md" in names
+    assert "first-novel-social-card.svg" in names
     assert "site/index.html" in names
     assert "site/sitemap.xml" in names
     assert "site/robots.txt" in names
@@ -795,7 +796,36 @@ def test_export_share_kit_writes_public_review_assets(tmp_path: Path) -> None:
     assert "# First Novel Share Kit" in announcement
     assert "First Novel is a mystery project for adult readers: A detective follows a signal into a flooded archive." in announcement
     assert "Public preview: https://example.com/books/first-novel" in announcement
+    social_card = (output_dir / "first-novel-social-card.svg").read_text(encoding="utf-8")
+    assert "<title>First Novel social preview</title>" in social_card
+    assert "Novel Workbench Share Card" in social_card
+    assert "mystery / adult readers / 1 chapter / 3 words" in social_card
     assert '<html lang="en" data-theme="focus">' in (output_dir / "site" / "index.html").read_text(encoding="utf-8")
+
+
+def test_export_social_card_writes_escaped_svg_preview(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First <Novel>", "A concise & private premise for public sharing.")
+    store.create_project("long-title", "SupercalifragilisticexpialidociousNovel", "A compact premise.")
+    store.update_project_metadata("first-novel", genre="mystery", audience="adult")
+    store.set_target_words("first-novel", 1000)
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft")
+    output = tmp_path / "first-novel-card.svg"
+    long_output = tmp_path / "long-title-card.svg"
+
+    result = store.export_social_card("first-novel", output, theme="editorial")
+    store.export_social_card("long-title", long_output)
+
+    assert result == output
+    svg = output.read_text(encoding="utf-8")
+    long_svg = long_output.read_text(encoding="utf-8")
+    assert svg.startswith('<svg xmlns="http://www.w3.org/2000/svg"')
+    assert "First &lt;Novel&gt;" in svg
+    assert "A concise &amp; private premise for public sharing." in svg
+    assert "mystery / adult readers / 1 chapter / 3 words / 0% of 1000 words" in svg
+    assert "local-first / markdown export / static HTML demo" in svg
+    assert "Supercalifragilistic" in long_svg
+    assert "pialidociousNovel" in long_svg
 
 
 def test_export_context_json_writes_agent_payload(tmp_path: Path) -> None:
