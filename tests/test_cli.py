@@ -552,11 +552,14 @@ def test_pages_demo_script_builds_static_site(tmp_path: Path, capsys) -> None:
     assert "Ada chooses to descend before the signal window closes." in index
     assert '<meta property="og:image" content="https://xinjian0101.github.io/novel-workbench/social-card.svg">' in index
     assert '<meta name="twitter:image" content="https://xinjian0101.github.io/novel-workbench/social-card.svg">' in index
+    assert '<link rel="alternate" type="application/rss+xml" title="Moon Archive updates" href="https://xinjian0101.github.io/novel-workbench/feed.xml">' in index
     assert "They opened the hatch" in (output_dir / "manuscript.html").read_text(encoding="utf-8")
     assert "https://xinjian0101.github.io/novel-workbench/index.html" in (output_dir / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://xinjian0101.github.io/novel-workbench/social-card.svg" in (output_dir / "sitemap.xml").read_text(encoding="utf-8")
+    assert "https://xinjian0101.github.io/novel-workbench/feed.xml" in (output_dir / "sitemap.xml").read_text(encoding="utf-8")
     assert "Sitemap: https://xinjian0101.github.io/novel-workbench/sitemap.xml" in (output_dir / "robots.txt").read_text(encoding="utf-8")
     assert "Novel Workbench Share Card" in (output_dir / "social-card.svg").read_text(encoding="utf-8")
+    assert "<title>Moon Archive - Novel Workbench</title>" in (output_dir / "feed.xml").read_text(encoding="utf-8")
     assert context["project"]["slug"] == "moon-archive"
     assert context["chapter_state"][0]["scenes"][0]["label"] == "1.1"
     assert context["chapter_state"][0]["scenes"][0]["title"] == "Hatch Pressure"

@@ -45,8 +45,10 @@ Static site export:
 index.html
 manuscript.html
 context.json
+social-card.svg
 sitemap.xml
 robots.txt
+feed.xml
 Demo: https://xinjian0101.github.io/novel-workbench/
 Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 ```
@@ -65,8 +67,10 @@ The generated directory contains:
 index.html
 manuscript.html
 context.json
+social-card.svg
 sitemap.xml
 robots.txt
+feed.xml
 ```
 
 ## Manuscript Markdown

@@ -74,4 +74,4 @@ The `Pages` workflow builds a static demo site with:
 python scripts/build_pages_demo.py public
 ```
 
-It uploads the generated `public/` directory as a GitHub Pages artifact. The site contains `index.html`, `manuscript.html`, `context.json`, `social-card.svg`, `sitemap.xml`, and `robots.txt`, matching the user-facing `novel export-site --base-url` output.
+It uploads the generated `public/` directory as a GitHub Pages artifact. The site contains `index.html`, `manuscript.html`, `context.json`, `social-card.svg`, `sitemap.xml`, `robots.txt`, and `feed.xml`, matching the user-facing `novel export-site --base-url` output.

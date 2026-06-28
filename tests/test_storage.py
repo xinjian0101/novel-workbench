@@ -934,17 +934,28 @@ def test_export_site_writes_discovery_files_with_base_url(tmp_path: Path) -> Non
 
     outputs = store.export_site("first-novel", output_dir, base_url="https://example.com/books/first-novel/")
 
-    assert [path.name for path in outputs] == ["index.html", "manuscript.html", "context.json", "social-card.svg", "sitemap.xml", "robots.txt"]
+    assert [path.name for path in outputs] == ["index.html", "manuscript.html", "context.json", "social-card.svg", "sitemap.xml", "robots.txt", "feed.xml"]
     index = (output_dir / "index.html").read_text(encoding="utf-8")
+    manuscript = (output_dir / "manuscript.html").read_text(encoding="utf-8")
     sitemap = (output_dir / "sitemap.xml").read_text(encoding="utf-8")
     robots = (output_dir / "robots.txt").read_text(encoding="utf-8")
+    feed = (output_dir / "feed.xml").read_text(encoding="utf-8")
     assert '<meta property="og:image" content="https://example.com/books/first-novel/social-card.svg">' in index
     assert '<meta name="twitter:image" content="https://example.com/books/first-novel/social-card.svg">' in index
+    assert '<link rel="alternate" type="application/rss+xml" title="First Novel updates" href="https://example.com/books/first-novel/feed.xml">' in index
+    assert '<link rel="alternate" type="application/rss+xml" title="First Novel updates" href="https://example.com/books/first-novel/feed.xml">' in manuscript
     assert "<loc>https://example.com/books/first-novel/index.html</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/manuscript.html</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/context.json</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/social-card.svg</loc>" in sitemap
+    assert "<loc>https://example.com/books/first-novel/feed.xml</loc>" in sitemap
     assert "Sitemap: https://example.com/books/first-novel/sitemap.xml" in robots
+    assert "<title>First Novel - Novel Workbench</title>" in feed
+    assert "<link>https://example.com/books/first-novel/</link>" in feed
+    assert "<link>https://example.com/books/first-novel/index.html</link>" in feed
+    assert "<link>https://example.com/books/first-novel/manuscript.html</link>" in feed
+    assert "<link>https://example.com/books/first-novel/context.json</link>" in feed
+    assert "<generator>Novel Workbench</generator>" in feed
 
 
 def test_export_site_rejects_invalid_base_url(tmp_path: Path) -> None:

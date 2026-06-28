@@ -776,15 +776,17 @@ class ProjectStore:
         output_dir.mkdir(parents=True, exist_ok=True)
         social_card_name = "social-card.svg"
         social_card_url = f"{base_url}/{social_card_name}" if base_url else social_card_name
+        feed_url = f"{base_url}/feed.xml" if base_url else ""
         files = {
-            output_dir / "index.html": _site_index_html(project, theme, social_card_url),
-            output_dir / "manuscript.html": _site_manuscript_html(project, theme, social_card_url),
+            output_dir / "index.html": _site_index_html(project, theme, social_card_url, feed_url),
+            output_dir / "manuscript.html": _site_manuscript_html(project, theme, social_card_url, feed_url),
             output_dir / "context.json": json.dumps(_context_for_project(project), indent=2, ensure_ascii=False) + "\n",
             output_dir / social_card_name: social_card_svg(project, theme),
         }
         if base_url:
             files[output_dir / "sitemap.xml"] = _site_sitemap_xml(base_url)
             files[output_dir / "robots.txt"] = _site_robots_txt(base_url)
+            files[output_dir / "feed.xml"] = _site_feed_xml(project, base_url)
         for path, content in files.items():
             path.write_text(content, encoding="utf-8")
         return list(files)
@@ -1007,7 +1009,7 @@ def validate_site_theme(theme: str) -> str:
     return normalized
 
 
-def _site_index_html(project: NovelProject, theme: str = "classic", image_url: str = "social-card.svg") -> str:
+def _site_index_html(project: NovelProject, theme: str = "classic", image_url: str = "social-card.svg", feed_url: str = "") -> str:
     stats = _stats_for_project(project)
     chapters = sorted(project.chapters, key=lambda item: item.number)
     notes = sorted(project.notes, key=lambda item: item.id)
@@ -1029,6 +1031,7 @@ def _site_index_html(project: NovelProject, theme: str = "classic", image_url: s
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         f"<title>{_html(project.title)} - Novel Workbench</title>",
         _site_meta_tags(project, "Project dashboard", image_url),
+        _site_feed_link(project, feed_url),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1080,7 +1083,7 @@ def _site_index_html(project: NovelProject, theme: str = "classic", image_url: s
     return "\n".join(body) + "\n"
 
 
-def _site_manuscript_html(project: NovelProject, theme: str = "classic", image_url: str = "social-card.svg") -> str:
+def _site_manuscript_html(project: NovelProject, theme: str = "classic", image_url: str = "social-card.svg", feed_url: str = "") -> str:
     body = [
         '<!doctype html>',
         f'<html lang="en" data-theme="{_html(theme)}">',
@@ -1089,6 +1092,7 @@ def _site_manuscript_html(project: NovelProject, theme: str = "classic", image_u
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         f"<title>{_html(project.title)} Manuscript</title>",
         _site_meta_tags(project, "Manuscript", image_url),
+        _site_feed_link(project, feed_url),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1130,6 +1134,12 @@ def _site_meta_tags(project: NovelProject, page_label: str, image_url: str = "so
             f'<meta name="twitter:image" content="{_html(image_url)}">',
         ]
     )
+
+
+def _site_feed_link(project: NovelProject, feed_url: str) -> str:
+    if not feed_url:
+        return ""
+    return f'<link rel="alternate" type="application/rss+xml" title="{_html(project.title)} updates" href="{_html(feed_url)}">'
 
 
 def social_card_svg(project: NovelProject, theme: str = "classic") -> str:
@@ -1236,7 +1246,7 @@ def _normalize_site_base_url(base_url: str) -> str:
 
 
 def _site_sitemap_xml(base_url: str) -> str:
-    urls = ["index.html", "manuscript.html", "context.json", "social-card.svg"]
+    urls = ["index.html", "manuscript.html", "context.json", "social-card.svg", "feed.xml"]
     entries = "\n".join(f"  <url><loc>{_html(base_url + '/' + url)}</loc></url>" for url in urls)
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -1248,6 +1258,62 @@ def _site_sitemap_xml(base_url: str) -> str:
 
 def _site_robots_txt(base_url: str) -> str:
     return f"User-agent: *\nAllow: /\nSitemap: {base_url}/sitemap.xml\n"
+
+
+def _site_feed_xml(project: NovelProject, base_url: str) -> str:
+    description = project.synopsis or "A local-first novel project workspace exported by Novel Workbench."
+    updated_at = project.updated_at or project.created_at
+    items = [
+        (
+            f"{project.title} project dashboard",
+            f"{base_url}/index.html",
+            "Project status, chapter plan, notes, and writing progress.",
+        ),
+        (
+            f"{project.title} manuscript",
+            f"{base_url}/manuscript.html",
+            "Readable manuscript export for review.",
+        ),
+        (
+            f"{project.title} context JSON",
+            f"{base_url}/context.json",
+            "Structured project context for editors and AI handoff.",
+        ),
+    ]
+    item_xml = "\n".join(
+        "    <item>\n"
+        f"      <title>{_html(title)}</title>\n"
+        f"      <link>{_html(link)}</link>\n"
+        f"      <guid isPermaLink=\"true\">{_html(link)}</guid>\n"
+        f"      <description>{_html(summary)}</description>\n"
+        f"      <pubDate>{_rss_pub_date(updated_at)}</pubDate>\n"
+        "    </item>"
+        for title, link, summary in items
+    )
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0">\n'
+        "  <channel>\n"
+        f"    <title>{_html(project.title)} - Novel Workbench</title>\n"
+        f"    <link>{_html(base_url)}/</link>\n"
+        f"    <description>{_html(description)}</description>\n"
+        "    <generator>Novel Workbench</generator>\n"
+        f"    <lastBuildDate>{_rss_pub_date(updated_at)}</lastBuildDate>\n"
+        f"{item_xml}\n"
+        "  </channel>\n"
+        "</rss>\n"
+    )
+
+
+def _rss_pub_date(timestamp: str) -> str:
+    normalized = timestamp.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        return "Thu, 01 Jan 1970 00:00:00 +0000"
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
 
 
 def _site_chapter_list(chapters: list[Chapter]) -> str:

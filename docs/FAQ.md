@@ -42,13 +42,15 @@ Other export templates can produce focus briefs, handoff briefs, momentum report
 
 ## Can I share a static preview?
 
-Yes. `export-site` writes `index.html`, `manuscript.html`, and `context.json`:
+Yes. `export-site` writes `index.html`, `manuscript.html`, `context.json`, and `social-card.svg`:
 
 ```powershell
 novel --workspace workspace export-site my-novel exports\my-novel-site
 ```
 
 The live repository demo uses the same static-site path: https://xinjian0101.github.io/novel-workbench/
+
+Use `--base-url` when exporting for a public URL to add absolute preview metadata, RSS discovery metadata, `sitemap.xml`, `robots.txt`, and `feed.xml` for crawlers and subscribers.
 
 ## Does it work without installing runtime dependencies?
 
@@ -71,4 +73,3 @@ python -m pip install "https://github.com/xinjian0101/novel-workbench/releases/d
 ## Is this ready for real writing projects?
 
 The local project format, import/export flow, backup/restore commands, workspace doctor, migration command, tests, CI, Pages demo, and release package checks are in place. Keep normal backups of important manuscripts and review exports before sharing them publicly.
-
