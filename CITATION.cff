@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use Novel Workbench in research, teaching, tooling, or public examples, please cite it using this metadata."
+title: "Novel Workbench"
+abstract: "Local-first Python CLI workspace for planning, drafting, tracking, and exporting long-form fiction with Markdown, AI/editor context, and static HTML demos."
+authors:
+  - name: "Novel Workbench Maintainers"
+version: "0.1.1"
+date-released: "2026-06-27"
+license: "MIT"
+repository-code: "https://github.com/xinjian0101/novel-workbench"
+url: "https://xinjian0101.github.io/novel-workbench/"
+keywords:
+  - author-tools
+  - creative-writing
+  - fiction
+  - local-first
+  - markdown
+  - novel
+  - python
+  - static-site

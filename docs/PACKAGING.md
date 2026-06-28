@@ -13,6 +13,7 @@ The current GitHub Release is [v0.1.1](https://github.com/xinjian0101/novel-work
 - Keywords include `author-tools`, `creative-writing`, `github-pages`, `static-site`, and `ai-handoff`.
 - Project URLs include the live demo, GitHub Discussions, the current release, evaluation guide, use cases, source, issues, changelog, and CLI reference.
 - Classifiers identify the package as console software for writing, Markdown, utilities, and local creative workflows.
+- `CITATION.cff` gives GitHub and citation tools a standard project title, release date, license, repository URL, live demo URL, and discovery keywords.
 
 ## Local Package Check
 
