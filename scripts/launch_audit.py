@@ -47,6 +47,7 @@ REQUIRED_FILES = [
     "docs/MAINTAINER_GUIDE.md",
     "scripts/build_pages_demo.py",
     "scripts/demo.py",
+    "scripts/verify_github_metadata.py",
     "scripts/verify_public_links.py",
 ]
 
@@ -137,7 +138,9 @@ REQUIRED_TEXT = {
         "docs/CODESPACES.md",
         "python scripts/check.py",
         "python scripts/build_pages_demo.py public",
+        "python scripts/verify_github_metadata.py",
         "python scripts/verify_public_links.py",
+        "python scripts/verify_github_metadata.py --min-stars 10000",
         "python scripts/verify_public_links.py --min-stars 10000",
         "sitemap.xml",
         "robots.txt",
@@ -303,6 +306,15 @@ REQUIRED_TEXT = {
         "--template",
         "pitch",
     ],
+    "scripts/verify_github_metadata.py": [
+        "EXPECTED_TOPICS",
+        "creative-writing",
+        "static-site",
+        "novel-writing",
+        "EXPECTED_HOMEPAGE",
+        "EXPECTED_RELEASE",
+        "stargazers_count",
+    ],
     "docs/FAQ.md": [
         "Does Novel Workbench upload manuscripts?",
         "Where is my writing stored?",
@@ -363,7 +375,9 @@ REQUIRED_TEXT = {
         "python scripts/release_check.py",
         "python scripts/launch_audit.py",
         "python scripts/build_pages_demo.py public",
+        "python scripts/verify_github_metadata.py",
         "python scripts/verify_public_links.py",
+        "python scripts/verify_github_metadata.py --min-stars 10000",
         "python scripts/verify_public_links.py --min-stars 10000",
         "Do not mark a milestone complete unless the verifier passes against the live GitHub repository.",
         "good first issue",

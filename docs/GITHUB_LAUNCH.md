@@ -5,7 +5,7 @@ Use this checklist before making the repository public or announcing it.
 ## Repository Settings
 
 - Description: `Local-first CLI workspace for writing, organizing, searching, and exporting novels.`
-- Topics: `writing`, `novel`, `markdown`, `cli`, `local-first`, `author-tools`, `python`
+- Topics: `writing`, `novel`, `novel-writing`, `creative-writing`, `writing-tools`, `fiction`, `markdown`, `cli`, `local-first`, `author-tools`, `python`, `static-site`
 - Website: use the GitHub Pages URL after the `Pages` workflow publishes successfully.
 - Visibility: public only after CI passes on GitHub.
 - Features: enable Issues and Discussions if maintainers can respond.
@@ -43,6 +43,7 @@ Use this checklist before making the repository public or announcing it.
    python scripts/release_check.py
    python scripts/build_pages_demo.py public
    python scripts/launch_audit.py
+   python scripts/verify_github_metadata.py
    python scripts/verify_public_links.py
    ```
 
@@ -50,9 +51,10 @@ Use this checklist before making the repository public or announcing it.
 3. Use `docs/RELEASE_TEMPLATE.md` and the matching version section from `CHANGELOG.md` as release notes.
 4. Push the tag to let the Release workflow build, verify, and attach the source distribution and wheel.
 5. Confirm the `Pages` workflow publishes `index.html`, `manuscript.html`, `context.json`, `social-card.svg`, `sitemap.xml`, `robots.txt`, `feed.xml`, `llms.txt`, and `site.webmanifest`.
-6. Run `python scripts/verify_public_links.py` after publish to confirm the repository, Pages demo, badges, release wheel, and reported star count resolve from a clean public path.
-7. When auditing a star-count milestone, run `python scripts/verify_public_links.py --min-stars 10000` and rely on the command result instead of estimating from README badges by eye.
-8. Do not mark a milestone complete unless the live GitHub verifier passes.
+6. Run `python scripts/verify_github_metadata.py` after publish to confirm the public repository description, homepage, release, topics, and star count from GitHub's API.
+7. Run `python scripts/verify_public_links.py` after publish to confirm the repository, Pages demo, badges, release wheel, and reported star count resolve from a clean public path.
+8. When auditing a star-count milestone, run `python scripts/verify_github_metadata.py --min-stars 10000` and `python scripts/verify_public_links.py --min-stars 10000`; rely on command results instead of estimating from README badges by eye.
+9. Do not mark a milestone complete unless the live GitHub verifiers pass.
 
 ## Social Preview
 

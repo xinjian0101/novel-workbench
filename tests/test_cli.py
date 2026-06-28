@@ -6,6 +6,7 @@ from novel_workbench.cli import main
 from scripts.launch_audit import main as launch_audit_main
 from scripts.build_pages_demo import main as pages_demo_main
 from scripts.demo import main as demo_main
+from scripts.verify_github_metadata import check_metadata, main as verify_github_metadata_main
 from scripts.verify_public_links import main as verify_public_links_main, parse_stars_badge
 
 
@@ -632,3 +633,44 @@ def test_public_link_verifier_parses_star_badge_counts() -> None:
     assert parse_stars_badge("<svg><text>Stars</text><text>1</text></svg>") == 1
     assert parse_stars_badge("<svg><text>Stars</text><text>10.4k</text></svg>") == 10400
     assert parse_stars_badge("<svg><text>Stars</text><text>1,234</text></svg>") == 1234
+
+
+def test_github_metadata_verifier_lists_expected_metadata_offline(capsys) -> None:
+    assert verify_github_metadata_main(["--offline"]) == 0
+
+    captured = capsys.readouterr()
+    assert "CHECK Repository: xinjian0101/novel-workbench" in captured.out
+    assert "CHECK Homepage: https://xinjian0101.github.io/novel-workbench/" in captured.out
+    assert "CHECK Latest release: v0.1.1" in captured.out
+    assert "creative-writing" in captured.out
+    assert "static-site" in captured.out
+
+
+def test_github_metadata_verifier_checks_repository_fields() -> None:
+    metadata = {
+        "private": False,
+        "description": "Local-first CLI workspace for writing, organizing, searching, and exporting novels.",
+        "homepage": "https://xinjian0101.github.io/novel-workbench/",
+        "topics": [
+            "author-tools",
+            "cli",
+            "creative-writing",
+            "fiction",
+            "local-first",
+            "markdown",
+            "novel",
+            "novel-writing",
+            "python",
+            "static-site",
+            "writing",
+            "writing-tools",
+        ],
+        "latest_release": {"tag_name": "v0.1.1"},
+        "stargazers_count": 10000,
+    }
+
+    ok, messages = check_metadata(metadata, min_stars=10000)
+
+    assert ok
+    assert "OK topics: discovery topics are present" in messages
+    assert "OK stars: 10000" in messages

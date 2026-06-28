@@ -25,12 +25,14 @@ python scripts/check.py
 python scripts/release_check.py
 python scripts/launch_audit.py
 python scripts/build_pages_demo.py public
+python scripts/verify_github_metadata.py
 python scripts/verify_public_links.py
 ```
 
 For milestone checks, verify the public star target explicitly:
 
 ```powershell
+python scripts/verify_github_metadata.py --min-stars 10000
 python scripts/verify_public_links.py --min-stars 10000
 ```
 
@@ -39,6 +41,7 @@ Do not mark a milestone complete unless the verifier passes against the live Git
 ## Public Surface Checks
 
 - README first screen should keep the live demo, release link, star badge, fastest try path, and evaluation links visible.
+- GitHub repository metadata should keep the public Pages homepage and discovery topics checked by `python scripts/verify_github_metadata.py`.
 - The Pages demo should include `index.html`, `manuscript.html`, `context.json`, `social-card.svg`, `sitemap.xml`, `robots.txt`, `feed.xml`, `llms.txt`, and `site.webmanifest`.
 - Static site exports with a public URL should use `export-site --base-url`.
 - Launch materials should point to `docs/LAUNCH_KIT.md`, `docs/SHOWCASE.md`, and `docs/FIRST_PR.md`.
