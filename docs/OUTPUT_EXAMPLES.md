@@ -219,6 +219,7 @@ Output files:
 ```text
 moon-archive-pitch.md
 moon-archive-announcement.md
+moon-archive-launch-copy.md
 moon-archive-social-card.svg
 site/index.html
 site/manuscript.html
@@ -243,6 +244,22 @@ moon-archive-social-card.svg
 ```
 
 The SVG card includes the project title, synopsis, genre, audience, chapter count, word count, and target progress when available. It is safe to commit, upload as a launch image, or include in a share kit.
+
+## Launch Copy
+
+Command:
+
+```powershell
+novel --workspace workspace launch-copy moon-archive exports\moon-archive-launch-copy.md --base-url https://example.com/moon-archive
+```
+
+Output:
+
+```text
+moon-archive-launch-copy.md
+```
+
+The Markdown file includes a one-line pitch, short social post, community post, awesome-list entry, and follow-up reply so a project can move from local draft to public feedback request without rewriting the same launch copy from scratch.
 
 ## Reproduce Locally
 

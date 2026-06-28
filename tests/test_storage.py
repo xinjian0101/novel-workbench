@@ -786,6 +786,7 @@ def test_export_share_kit_writes_public_review_assets(tmp_path: Path) -> None:
     names = [path.relative_to(output_dir).as_posix() for path in outputs]
     assert "first-novel-pitch.md" in names
     assert "first-novel-announcement.md" in names
+    assert "first-novel-launch-copy.md" in names
     assert "first-novel-social-card.svg" in names
     assert "site/index.html" in names
     assert "site/sitemap.xml" in names
@@ -796,11 +797,35 @@ def test_export_share_kit_writes_public_review_assets(tmp_path: Path) -> None:
     assert "# First Novel Share Kit" in announcement
     assert "First Novel is a mystery project for adult readers: A detective follows a signal into a flooded archive." in announcement
     assert "Public preview: https://example.com/books/first-novel" in announcement
+    launch_copy = (output_dir / "first-novel-launch-copy.md").read_text(encoding="utf-8")
+    assert "# First Novel Launch Copy" in launch_copy
+    assert "## Short Social Post" in launch_copy
+    assert "Preview: https://example.com/books/first-novel" in launch_copy
+    assert "## Awesome List Entry" in launch_copy
     social_card = (output_dir / "first-novel-social-card.svg").read_text(encoding="utf-8")
     assert "<title>First Novel social preview</title>" in social_card
     assert "Novel Workbench Share Card" in social_card
     assert "mystery / adult readers / 1 chapter / 3 words" in social_card
     assert '<html lang="en" data-theme="focus">' in (output_dir / "site" / "index.html").read_text(encoding="utf-8")
+
+
+def test_export_launch_copy_writes_channel_ready_posts(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A detective follows a signal into a flooded archive.")
+    store.update_project_metadata("first-novel", genre="mystery", audience="adult")
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft")
+    output = tmp_path / "first-novel-launch-copy.md"
+
+    result = store.export_launch_copy("first-novel", output, base_url="https://example.com/books/first-novel/")
+
+    assert result == output
+    copy = output.read_text(encoding="utf-8")
+    assert "# First Novel Launch Copy" in copy
+    assert "First Novel is a mystery project for adult readers: A detective follows a signal into a flooded archive." in copy
+    assert "Preview: https://example.com/books/first-novel" in copy
+    assert "Current shape: 1 chapter, 3 words." in copy
+    assert "https://github.com/xinjian0101/novel-workbench" in copy
+    assert "## Follow-Up Reply" in copy
 
 
 def test_export_social_card_writes_escaped_svg_preview(tmp_path: Path) -> None:

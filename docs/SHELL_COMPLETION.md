@@ -6,7 +6,7 @@ Novel Workbench ships a dependency-free `novel completion` command that prints s
 
 The standard Python `argparse` module does not generate shell completion scripts by itself. The most common argparse completion package is `argcomplete`, which officially focuses on bash and zsh, with other shells such as PowerShell handled outside the core support path. Novel Workbench keeps completion built in so bash, zsh, and PowerShell users can use the same installed `novel` command without adding a runtime dependency.
 
-The generated scripts complete top-level commands such as `create`, `dashboard`, `export-dashboard`, `focus`, `handoff`, `context`, `momentum`, `board`, `outline`, `pitch`, `plan`, `review`, `revision`, `migrate`, `tour`, `templates`, `add-character`, `add-location`, `add-scene`, `add-progress`, `update-progress`, `delete-progress`, `set-deadline`, `stats`, `export`, `export-context`, `export-site`, `social-card`, `export-pack`, `share-kit`, `backup`, and `restore-backup`. They do not yet complete project slugs, file paths, or option values.
+The generated scripts complete top-level commands such as `create`, `dashboard`, `export-dashboard`, `focus`, `handoff`, `context`, `momentum`, `board`, `outline`, `pitch`, `plan`, `review`, `revision`, `migrate`, `tour`, `templates`, `add-character`, `add-location`, `add-scene`, `add-progress`, `update-progress`, `delete-progress`, `set-deadline`, `stats`, `export`, `export-context`, `export-site`, `social-card`, `launch-copy`, `export-pack`, `share-kit`, `backup`, and `restore-backup`. They do not yet complete project slugs, file paths, or option values.
 
 ## Bash
 

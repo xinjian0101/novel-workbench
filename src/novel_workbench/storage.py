@@ -792,6 +792,12 @@ class ProjectStore:
         output_path.write_text(social_card_svg(project, theme), encoding="utf-8")
         return output_path
 
+    def export_launch_copy(self, slug: str, output_path: Path, base_url: str = "") -> Path:
+        project = self.get_project(slug)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text("\n".join(launch_copy_lines(project, _normalize_site_base_url(base_url))).rstrip() + "\n", encoding="utf-8")
+        return output_path
+
     def search(self, slug: str, query: str) -> list[dict[str, str | int]]:
         normalized_query = query.strip().lower()
         if not normalized_query:
@@ -906,14 +912,16 @@ class ProjectStore:
 
         pitch_path = output_dir / f"{project.slug}-pitch.md"
         announcement_path = output_dir / f"{project.slug}-announcement.md"
+        launch_copy_path = output_dir / f"{project.slug}-launch-copy.md"
         social_card_path = output_dir / f"{project.slug}-social-card.svg"
         pitch_path.write_text("\n".join(pitch_lines(project)).rstrip() + "\n", encoding="utf-8")
         announcement_path.write_text("\n".join(share_announcement_lines(project, normalized_base_url)).rstrip() + "\n", encoding="utf-8")
+        launch_copy_path.write_text("\n".join(launch_copy_lines(project, normalized_base_url)).rstrip() + "\n", encoding="utf-8")
         social_card_path.write_text(social_card_svg(project, theme), encoding="utf-8")
 
         site_paths = self.export_site(project.slug, output_dir / "site", theme=theme, base_url=normalized_base_url)
         pack_paths = self.export_pack(project.slug, output_dir / "pack")
-        return [pitch_path, announcement_path, social_card_path, *site_paths, *pack_paths]
+        return [pitch_path, announcement_path, launch_copy_path, social_card_path, *site_paths, *pack_paths]
 
     def _read_project(self, path: Path) -> NovelProject:
         try:
@@ -1601,6 +1609,49 @@ def share_announcement_lines(project: NovelProject, base_url: str = "") -> list[
     lines.extend(["", "## Suggested Follow-Up", ""])
     lines.append("- Ask readers whether the premise, genre, audience, and current hook are clear.")
     lines.append("- Regenerate this kit after major synopsis, chapter, or pitch changes.")
+    return lines
+
+
+def launch_copy_lines(project: NovelProject, base_url: str = "") -> list[str]:
+    stats = _stats_for_project(project)
+    share_copy = _project_share_copy(project) if project.synopsis.strip() else f"{project.title} is a local-first novel project."
+    preview_url = base_url or "Add a public preview URL after exporting with --base-url."
+    repo_url = "https://github.com/xinjian0101/novel-workbench"
+    lines = [f"# {project.title} Launch Copy", ""]
+    lines.extend(
+        [
+            "## One-Line Pitch",
+            "",
+            share_copy,
+            "",
+            "## Short Social Post",
+            "",
+            f"{share_copy}",
+            "",
+            f"Preview: {preview_url}",
+            "Built with Novel Workbench: local JSON projects, Markdown exports, AI/editor context, and static HTML previews.",
+            "",
+            "## Community Post",
+            "",
+            f"I am sharing {project.title}, a {project.genre or 'novel'} project managed with Novel Workbench.",
+            "",
+            project.synopsis.strip() or "The project is ready for a sharper public synopsis.",
+            "",
+            f"Current shape: {_count_label(stats['chapters'], 'chapter')}, {_count_label(stats['words'], 'word')}.",
+            f"Preview: {preview_url}",
+            f"Tool: {repo_url}",
+            "",
+            "I would especially value feedback on whether the premise, audience, genre, and current hook are clear.",
+            "",
+            "## Awesome List Entry",
+            "",
+            f"- [{project.title}]({preview_url}) - {share_copy}",
+            "",
+            "## Follow-Up Reply",
+            "",
+            "Thanks for taking a look. The project data stays local; the shared files are exported Markdown, SVG, JSON, and static HTML.",
+        ]
+    )
     return lines
 
 

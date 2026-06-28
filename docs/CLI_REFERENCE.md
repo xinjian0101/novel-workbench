@@ -619,6 +619,17 @@ novel --workspace workspace social-card moon-archive exports/moon-archive-social
 
 The SVG includes the project title, synopsis, genre, audience, chapter count, word count, and target progress when available. Use it next to `novel pitch`, `novel share-kit`, or a static-site export when preparing a public project update.
 
+## `novel launch-copy`
+
+Export channel-ready launch copy for a project.
+
+```powershell
+novel --workspace workspace launch-copy moon-archive exports/moon-archive-launch-copy.md
+novel --workspace workspace launch-copy moon-archive exports/moon-archive-launch-copy.md --base-url https://example.com/moon-archive
+```
+
+The command writes a one-line pitch, short social post, community post, awesome-list entry, and follow-up reply. Use `--base-url` after exporting a public preview so the generated copy points readers to the right static site.
+
 ## `novel export-pack`
 
 Export every standard project report to one directory.
@@ -639,7 +650,7 @@ novel --workspace workspace share-kit moon-archive exports/moon-archive-share --
 novel --workspace workspace share-kit moon-archive exports/moon-archive-share --base-url https://example.com/moon-archive
 ```
 
-The command writes `<slug>-pitch.md`, `<slug>-announcement.md`, `<slug>-social-card.svg`, a static site under `site/`, and the full Markdown report pack under `pack/`. Use it when preparing a beta-reader packet, public progress update, editor note, or launch post.
+The command writes `<slug>-pitch.md`, `<slug>-announcement.md`, `<slug>-launch-copy.md`, `<slug>-social-card.svg`, a static site under `site/`, and the full Markdown report pack under `pack/`. Use it when preparing a beta-reader packet, public progress update, editor note, or launch post.
 
 ## `novel backup`
 

@@ -104,6 +104,7 @@ COMPLETION_COMMANDS = (
     "export-context",
     "export-site",
     "social-card",
+    "launch-copy",
     "export-pack",
     "share-kit",
     "backup",
@@ -430,6 +431,11 @@ def build_parser() -> argparse.ArgumentParser:
     social_card.add_argument("slug")
     social_card.add_argument("output", type=Path)
     social_card.add_argument("--theme", choices=("classic", "editorial", "focus"), default="classic", help="Card theme.")
+
+    launch_copy = subparsers.add_parser("launch-copy", help="Export channel-ready launch copy for a project.")
+    launch_copy.add_argument("slug")
+    launch_copy.add_argument("output", type=Path)
+    launch_copy.add_argument("--base-url", default="", help="Public preview URL included in the generated copy.")
 
     export_pack = subparsers.add_parser("export-pack", help="Export all standard Markdown reports for a project.")
     export_pack.add_argument("slug")
@@ -889,6 +895,10 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "social-card":
         output = store.export_social_card(args.slug, args.output, theme=args.theme)
         print(f"Exported social card: {output}")
+        return 0
+    if args.command == "launch-copy":
+        output = store.export_launch_copy(args.slug, args.output, base_url=args.base_url)
+        print(f"Exported launch copy: {output}")
         return 0
     if args.command == "export-pack":
         outputs = store.export_pack(args.slug, args.output_dir)
