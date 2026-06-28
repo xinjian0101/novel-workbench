@@ -650,7 +650,7 @@ novel --workspace workspace share-kit moon-archive exports/moon-archive-share --
 novel --workspace workspace share-kit moon-archive exports/moon-archive-share --base-url https://example.com/moon-archive
 ```
 
-The command writes `<slug>-pitch.md`, `<slug>-announcement.md`, `<slug>-launch-copy.md`, `<slug>-social-card.svg`, a static site under `site/`, and the full Markdown report pack under `pack/`. Use it when preparing a beta-reader packet, public progress update, editor note, or launch post.
+The command writes `<slug>-pitch.md`, `<slug>-announcement.md`, `<slug>-launch-copy.md`, `<slug>-outreach-plan.md`, `<slug>-social-card.svg`, a static site under `site/`, and the full Markdown report pack under `pack/`. Use it when preparing a beta-reader packet, public progress update, editor note, launch post, or directory submission.
 
 ## `novel backup`
 

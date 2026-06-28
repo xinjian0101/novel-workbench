@@ -922,15 +922,17 @@ class ProjectStore:
         pitch_path = output_dir / f"{project.slug}-pitch.md"
         announcement_path = output_dir / f"{project.slug}-announcement.md"
         launch_copy_path = output_dir / f"{project.slug}-launch-copy.md"
+        outreach_plan_path = output_dir / f"{project.slug}-outreach-plan.md"
         social_card_path = output_dir / f"{project.slug}-social-card.svg"
         pitch_path.write_text("\n".join(pitch_lines(project)).rstrip() + "\n", encoding="utf-8")
         announcement_path.write_text("\n".join(share_announcement_lines(project, normalized_base_url)).rstrip() + "\n", encoding="utf-8")
         launch_copy_path.write_text("\n".join(launch_copy_lines(project, normalized_base_url)).rstrip() + "\n", encoding="utf-8")
+        outreach_plan_path.write_text("\n".join(outreach_plan_lines(project, normalized_base_url)).rstrip() + "\n", encoding="utf-8")
         social_card_path.write_text(social_card_svg(project, theme), encoding="utf-8")
 
         site_paths = self.export_site(project.slug, output_dir / "site", theme=theme, base_url=normalized_base_url)
         pack_paths = self.export_pack(project.slug, output_dir / "pack")
-        return [pitch_path, announcement_path, launch_copy_path, social_card_path, *site_paths, *pack_paths]
+        return [pitch_path, announcement_path, launch_copy_path, outreach_plan_path, social_card_path, *site_paths, *pack_paths]
 
     def _read_project(self, path: Path) -> NovelProject:
         try:
@@ -1817,6 +1819,43 @@ def launch_copy_lines(project: NovelProject, base_url: str = "") -> list[str]:
             "Thanks for taking a look. The project data stays local; the shared files are exported Markdown, SVG, JSON, and static HTML.",
         ]
     )
+    return lines
+
+
+def outreach_plan_lines(project: NovelProject, base_url: str = "") -> list[str]:
+    demo_url = base_url or "https://xinjian0101.github.io/novel-workbench/"
+    repo_url = "https://github.com/xinjian0101/novel-workbench"
+    release_url = "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1"
+    slug = project.slug
+    lines = [
+        f"# {project.title} Outreach Plan",
+        "",
+        "Use this checklist after generating a share kit. Keep each post pointed at the same repository, demo, release, and discussion links so interested readers can try the project quickly.",
+        "",
+        "## Core Links",
+        "",
+        f"- Repository: {repo_url}",
+        f"- Demo: {demo_url}",
+        f"- Release: {release_url}",
+        f"- Tour command: `novel --workspace workspace tour --output-dir exports`",
+        "",
+        "## Channel Checklist",
+        "",
+        "| Channel | Primary asset | Link target | Success signal |",
+        "|---|---|---|---|",
+        f"| GitHub Discussion | `{slug}-announcement.md` | Repository | replies, stars, follow-up issues |",
+        f"| Awesome list or directory | `{slug}-launch-copy.md` awesome-list entry | Repository | accepted listing or maintainer feedback |",
+        f"| Developer forum | `{slug}-launch-copy.md` community post | Demo | questions about install, workflow, or examples |",
+        f"| Writing community | `{slug}-pitch.md` plus `{slug}-social-card.svg` | Demo | readers asking for templates or export examples |",
+        f"| Personal site or newsletter | `site/index.html` and `pack/{slug}-handoff.md` | Demo | clicks, stars, and concrete workflow replies |",
+        "",
+        "## Follow-Up Loop",
+        "",
+        "- Turn repeated install questions into README or FAQ updates.",
+        "- Turn unclear workflow questions into `docs/USE_CASES.md` examples.",
+        "- Turn feature requests into small issues labeled `good first issue` or `help wanted` when they fit the local-first model.",
+        "- Re-run `python scripts/verify_github_metadata.py` and `python scripts/verify_public_links.py` after updating public launch surfaces.",
+    ]
     return lines
 
 

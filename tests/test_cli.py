@@ -280,6 +280,8 @@ def test_cli_create_show_stats_search_backup_and_export(tmp_path: Path, capsys) 
     assert "# Renamed Novel Share Kit" in (tmp_path / "share-kit" / "renamed-novel-announcement.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Pitch" in (tmp_path / "share-kit" / "renamed-novel-pitch.md").read_text(encoding="utf-8")
     assert "# Renamed Novel Launch Copy" in (tmp_path / "share-kit" / "renamed-novel-launch-copy.md").read_text(encoding="utf-8")
+    assert "# Renamed Novel Outreach Plan" in (tmp_path / "share-kit" / "renamed-novel-outreach-plan.md").read_text(encoding="utf-8")
+    assert "Awesome list or directory" in (tmp_path / "share-kit" / "renamed-novel-outreach-plan.md").read_text(encoding="utf-8")
     assert "Novel Workbench Share Card" in (tmp_path / "share-kit" / "renamed-novel-social-card.svg").read_text(encoding="utf-8")
     assert '<html lang="en" data-theme="editorial">' in (tmp_path / "share-kit" / "site" / "index.html").read_text(encoding="utf-8")
     assert "https://example.com/renamed-novel/index.html" in (tmp_path / "share-kit" / "site" / "sitemap.xml").read_text(encoding="utf-8")
@@ -533,6 +535,7 @@ def test_demo_script_runs(capsys) -> None:
     assert "Exported share kit:" in captured.out
     assert "moon-archive-announcement.md" in captured.out
     assert "moon-archive-launch-copy.md" in captured.out
+    assert "moon-archive-outreach-plan.md" in captured.out
     assert "moon-archive-social-card.svg" in captured.out
     assert "Backed up:" in captured.out
 

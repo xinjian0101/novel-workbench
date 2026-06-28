@@ -228,6 +228,7 @@ Output files:
 moon-archive-pitch.md
 moon-archive-announcement.md
 moon-archive-launch-copy.md
+moon-archive-outreach-plan.md
 moon-archive-social-card.svg
 site/index.html
 site/manuscript.html
@@ -268,6 +269,8 @@ moon-archive-launch-copy.md
 ```
 
 The Markdown file includes a one-line pitch, short social post, community post, awesome-list entry, and follow-up reply so a project can move from local draft to public feedback request without rewriting the same launch copy from scratch.
+
+The outreach plan file maps the generated pitch, announcement, launch copy, social card, static site, and report pack to channel-specific submission targets such as GitHub Discussions, awesome lists, developer forums, writing communities, and newsletters.
 
 ## Reproduce Locally
 
