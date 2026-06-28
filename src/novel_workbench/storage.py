@@ -774,10 +774,13 @@ class ProjectStore:
         theme = validate_site_theme(theme)
         base_url = _normalize_site_base_url(base_url)
         output_dir.mkdir(parents=True, exist_ok=True)
+        social_card_name = "social-card.svg"
+        social_card_url = f"{base_url}/{social_card_name}" if base_url else social_card_name
         files = {
-            output_dir / "index.html": _site_index_html(project, theme),
-            output_dir / "manuscript.html": _site_manuscript_html(project, theme),
+            output_dir / "index.html": _site_index_html(project, theme, social_card_url),
+            output_dir / "manuscript.html": _site_manuscript_html(project, theme, social_card_url),
             output_dir / "context.json": json.dumps(_context_for_project(project), indent=2, ensure_ascii=False) + "\n",
+            output_dir / social_card_name: social_card_svg(project, theme),
         }
         if base_url:
             files[output_dir / "sitemap.xml"] = _site_sitemap_xml(base_url)
@@ -1004,7 +1007,7 @@ def validate_site_theme(theme: str) -> str:
     return normalized
 
 
-def _site_index_html(project: NovelProject, theme: str = "classic") -> str:
+def _site_index_html(project: NovelProject, theme: str = "classic", image_url: str = "social-card.svg") -> str:
     stats = _stats_for_project(project)
     chapters = sorted(project.chapters, key=lambda item: item.number)
     notes = sorted(project.notes, key=lambda item: item.id)
@@ -1025,7 +1028,7 @@ def _site_index_html(project: NovelProject, theme: str = "classic") -> str:
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         f"<title>{_html(project.title)} - Novel Workbench</title>",
-        _site_meta_tags(project, "Project dashboard"),
+        _site_meta_tags(project, "Project dashboard", image_url),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1077,7 +1080,7 @@ def _site_index_html(project: NovelProject, theme: str = "classic") -> str:
     return "\n".join(body) + "\n"
 
 
-def _site_manuscript_html(project: NovelProject, theme: str = "classic") -> str:
+def _site_manuscript_html(project: NovelProject, theme: str = "classic", image_url: str = "social-card.svg") -> str:
     body = [
         '<!doctype html>',
         f'<html lang="en" data-theme="{_html(theme)}">',
@@ -1085,7 +1088,7 @@ def _site_manuscript_html(project: NovelProject, theme: str = "classic") -> str:
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         f"<title>{_html(project.title)} Manuscript</title>",
-        _site_meta_tags(project, "Manuscript"),
+        _site_meta_tags(project, "Manuscript", image_url),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1109,7 +1112,7 @@ def _site_manuscript_html(project: NovelProject, theme: str = "classic") -> str:
     return "\n".join(body) + "\n"
 
 
-def _site_meta_tags(project: NovelProject, page_label: str) -> str:
+def _site_meta_tags(project: NovelProject, page_label: str, image_url: str = "social-card.svg") -> str:
     title = f"{project.title} - {page_label}"
     description = project.synopsis or "A local-first novel project workspace exported by Novel Workbench."
     return "\n".join(
@@ -1118,11 +1121,13 @@ def _site_meta_tags(project: NovelProject, page_label: str) -> str:
             f'<meta name="description" content="{_html(description)}">',
             f'<meta property="og:title" content="{_html(title)}">',
             f'<meta property="og:description" content="{_html(description)}">',
+            f'<meta property="og:image" content="{_html(image_url)}">',
             '<meta property="og:type" content="website">',
             '<meta property="og:site_name" content="Novel Workbench">',
-            '<meta name="twitter:card" content="summary">',
+            '<meta name="twitter:card" content="summary_large_image">',
             f'<meta name="twitter:title" content="{_html(title)}">',
             f'<meta name="twitter:description" content="{_html(description)}">',
+            f'<meta name="twitter:image" content="{_html(image_url)}">',
         ]
     )
 
@@ -1231,7 +1236,7 @@ def _normalize_site_base_url(base_url: str) -> str:
 
 
 def _site_sitemap_xml(base_url: str) -> str:
-    urls = ["index.html", "manuscript.html", "context.json"]
+    urls = ["index.html", "manuscript.html", "context.json", "social-card.svg"]
     entries = "\n".join(f"  <url><loc>{_html(base_url + '/' + url)}</loc></url>" for url in urls)
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'

@@ -880,7 +880,7 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
 
     outputs = store.export_site("first-novel", output_dir)
 
-    assert [path.name for path in outputs] == ["index.html", "manuscript.html", "context.json"]
+    assert [path.name for path in outputs] == ["index.html", "manuscript.html", "context.json", "social-card.svg"]
     index = (output_dir / "index.html").read_text(encoding="utf-8")
     manuscript = (output_dir / "manuscript.html").read_text(encoding="utf-8")
     context = json.loads((output_dir / "context.json").read_text(encoding="utf-8"))
@@ -890,8 +890,10 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
     assert '<meta name="description" content="A concise &amp; private premise.">' in index
     assert '<meta property="og:title" content="First &lt;Novel&gt; - Project dashboard">' in index
     assert '<meta property="og:description" content="A concise &amp; private premise.">' in index
-    assert '<meta name="twitter:card" content="summary">' in index
+    assert '<meta property="og:image" content="social-card.svg">' in index
+    assert '<meta name="twitter:card" content="summary_large_image">' in index
     assert '<meta name="twitter:title" content="First &lt;Novel&gt; - Project dashboard">' in index
+    assert '<meta name="twitter:image" content="social-card.svg">' in index
     assert "Read manuscript" in index
     assert "Download context JSON" in index
     assert "Try Novel Workbench" in index
@@ -906,6 +908,8 @@ def test_export_site_writes_static_html_project_site(tmp_path: Path) -> None:
     assert "A clue &lt;appears&gt;." in manuscript
     assert '<meta property="og:title" content="First &lt;Novel&gt; - Manuscript">' in manuscript
     assert '<meta name="twitter:description" content="A concise &amp; private premise.">' in manuscript
+    assert '<meta name="twitter:image" content="social-card.svg">' in manuscript
+    assert "Novel Workbench Share Card" in (output_dir / "social-card.svg").read_text(encoding="utf-8")
     assert context["format"] == "novel-workbench-project-context"
 
 
@@ -930,12 +934,16 @@ def test_export_site_writes_discovery_files_with_base_url(tmp_path: Path) -> Non
 
     outputs = store.export_site("first-novel", output_dir, base_url="https://example.com/books/first-novel/")
 
-    assert [path.name for path in outputs] == ["index.html", "manuscript.html", "context.json", "sitemap.xml", "robots.txt"]
+    assert [path.name for path in outputs] == ["index.html", "manuscript.html", "context.json", "social-card.svg", "sitemap.xml", "robots.txt"]
+    index = (output_dir / "index.html").read_text(encoding="utf-8")
     sitemap = (output_dir / "sitemap.xml").read_text(encoding="utf-8")
     robots = (output_dir / "robots.txt").read_text(encoding="utf-8")
+    assert '<meta property="og:image" content="https://example.com/books/first-novel/social-card.svg">' in index
+    assert '<meta name="twitter:image" content="https://example.com/books/first-novel/social-card.svg">' in index
     assert "<loc>https://example.com/books/first-novel/index.html</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/manuscript.html</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/context.json</loc>" in sitemap
+    assert "<loc>https://example.com/books/first-novel/social-card.svg</loc>" in sitemap
     assert "Sitemap: https://example.com/books/first-novel/sitemap.xml" in robots
 
 

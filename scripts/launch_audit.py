@@ -140,6 +140,7 @@ REQUIRED_TEXT = {
         "python scripts/verify_public_links.py --min-stars 10000",
         "sitemap.xml",
         "robots.txt",
+        "social-card.svg",
         ".github/CODEOWNERS",
         "docs/MAINTAINER_GUIDE.md",
     ],
@@ -225,6 +226,7 @@ REQUIRED_TEXT = {
         "scene summaries",
         "Open Graph",
         "Twitter summary metadata",
+        "social-card.svg",
         "sitemap.xml",
         "robots.txt",
         "Codespaces quick start",
@@ -256,6 +258,7 @@ REQUIRED_TEXT = {
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",
         "sitemap.xml",
         "robots.txt",
+        "social-card.svg",
         "python scripts/check.py",
     ],
     "scripts/demo.py": [
