@@ -425,7 +425,7 @@ def build_parser() -> argparse.ArgumentParser:
     export_site.add_argument("slug")
     export_site.add_argument("output_dir", type=Path)
     export_site.add_argument("--theme", choices=("classic", "editorial", "focus"), default="classic", help="Static site theme.")
-    export_site.add_argument("--base-url", default="", help="Public site URL used to generate sitemap.xml, robots.txt, feed.xml, and llms.txt.")
+    export_site.add_argument("--base-url", default="", help="Public site URL used to generate sitemap.xml, robots.txt, feed.xml, llms.txt, and site.webmanifest.")
 
     social_card = subparsers.add_parser("social-card", help="Export a shareable SVG social preview card.")
     social_card.add_argument("slug")
@@ -445,7 +445,7 @@ def build_parser() -> argparse.ArgumentParser:
     share_kit.add_argument("slug")
     share_kit.add_argument("output_dir", type=Path)
     share_kit.add_argument("--theme", choices=("classic", "editorial", "focus"), default="classic", help="Static site theme.")
-    share_kit.add_argument("--base-url", default="", help="Public site URL used to generate sitemap.xml, robots.txt, feed.xml, and llms.txt.")
+    share_kit.add_argument("--base-url", default="", help="Public site URL used to generate sitemap.xml, robots.txt, feed.xml, llms.txt, and site.webmanifest.")
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
     backup.add_argument("slug")

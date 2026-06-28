@@ -39,7 +39,7 @@ Do not mark a milestone complete unless the verifier passes against the live Git
 ## Public Surface Checks
 
 - README first screen should keep the live demo, release link, star badge, fastest try path, and evaluation links visible.
-- The Pages demo should include `index.html`, `manuscript.html`, `context.json`, `social-card.svg`, `sitemap.xml`, `robots.txt`, `feed.xml`, and `llms.txt`.
+- The Pages demo should include `index.html`, `manuscript.html`, `context.json`, `social-card.svg`, `sitemap.xml`, `robots.txt`, `feed.xml`, `llms.txt`, and `site.webmanifest`.
 - Static site exports with a public URL should use `export-site --base-url`.
 - Launch materials should point to `docs/LAUNCH_KIT.md`, `docs/SHOWCASE.md`, and `docs/FIRST_PR.md`.
 

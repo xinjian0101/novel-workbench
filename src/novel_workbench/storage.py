@@ -778,9 +778,10 @@ class ProjectStore:
         social_card_url = f"{base_url}/{social_card_name}" if base_url else social_card_name
         feed_url = f"{base_url}/feed.xml" if base_url else ""
         llms_url = f"{base_url}/llms.txt" if base_url else ""
+        manifest_url = f"{base_url}/site.webmanifest" if base_url else ""
         files = {
-            output_dir / "index.html": _site_index_html(project, theme, social_card_url, feed_url, llms_url),
-            output_dir / "manuscript.html": _site_manuscript_html(project, theme, social_card_url, feed_url, llms_url),
+            output_dir / "index.html": _site_index_html(project, theme, social_card_url, feed_url, llms_url, manifest_url),
+            output_dir / "manuscript.html": _site_manuscript_html(project, theme, social_card_url, feed_url, llms_url, manifest_url),
             output_dir / "context.json": json.dumps(_context_for_project(project), indent=2, ensure_ascii=False) + "\n",
             output_dir / social_card_name: social_card_svg(project, theme),
         }
@@ -789,6 +790,7 @@ class ProjectStore:
             files[output_dir / "robots.txt"] = _site_robots_txt(base_url)
             files[output_dir / "feed.xml"] = _site_feed_xml(project, base_url)
             files[output_dir / "llms.txt"] = _site_llms_txt(project, base_url)
+            files[output_dir / "site.webmanifest"] = _site_webmanifest(project, base_url, theme)
         for path, content in files.items():
             path.write_text(content, encoding="utf-8")
         return list(files)
@@ -1017,6 +1019,7 @@ def _site_index_html(
     image_url: str = "social-card.svg",
     feed_url: str = "",
     llms_url: str = "",
+    manifest_url: str = "",
 ) -> str:
     stats = _stats_for_project(project)
     chapters = sorted(project.chapters, key=lambda item: item.number)
@@ -1041,6 +1044,7 @@ def _site_index_html(
         _site_meta_tags(project, "Project dashboard", image_url),
         _site_feed_link(project, feed_url),
         _site_llms_link(llms_url),
+        _site_manifest_link(manifest_url),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1098,6 +1102,7 @@ def _site_manuscript_html(
     image_url: str = "social-card.svg",
     feed_url: str = "",
     llms_url: str = "",
+    manifest_url: str = "",
 ) -> str:
     body = [
         '<!doctype html>',
@@ -1109,6 +1114,7 @@ def _site_manuscript_html(
         _site_meta_tags(project, "Manuscript", image_url),
         _site_feed_link(project, feed_url),
         _site_llms_link(llms_url),
+        _site_manifest_link(manifest_url),
         f"<style>{_site_css()}</style>",
         "</head>",
         "<body>",
@@ -1162,6 +1168,12 @@ def _site_llms_link(llms_url: str) -> str:
     if not llms_url:
         return ""
     return f'<link rel="help" type="text/plain" href="{_html(llms_url)}">'
+
+
+def _site_manifest_link(manifest_url: str) -> str:
+    if not manifest_url:
+        return ""
+    return f'<link rel="manifest" href="{_html(manifest_url)}">'
 
 
 def social_card_svg(project: NovelProject, theme: str = "classic") -> str:
@@ -1268,7 +1280,7 @@ def _normalize_site_base_url(base_url: str) -> str:
 
 
 def _site_sitemap_xml(base_url: str) -> str:
-    urls = ["index.html", "manuscript.html", "context.json", "social-card.svg", "feed.xml", "llms.txt"]
+    urls = ["index.html", "manuscript.html", "context.json", "social-card.svg", "feed.xml", "llms.txt", "site.webmanifest"]
     entries = "\n".join(f"  <url><loc>{_html(base_url + '/' + url)}</loc></url>" for url in urls)
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -1369,6 +1381,33 @@ def _site_llms_txt(project: NovelProject, base_url: str) -> str:
         "- Do not assume private workspace files exist beyond the public export listed here.",
     ]
     return "\n".join(lines) + "\n"
+
+
+def _site_webmanifest(project: NovelProject, base_url: str, theme: str) -> str:
+    palette = {
+        "classic": ("#2563eb", "#f8fafc"),
+        "editorial": ("#7c2d12", "#fff7ed"),
+        "focus": ("#047857", "#ecfdf5"),
+    }[validate_site_theme(theme)]
+    manifest = {
+        "name": f"{project.title} - Novel Workbench",
+        "short_name": project.title[:24] or "Novel Workbench",
+        "description": project.synopsis or "A local-first novel project workspace exported by Novel Workbench.",
+        "start_url": f"{base_url}/index.html",
+        "scope": f"{base_url}/",
+        "display": "standalone",
+        "background_color": palette[1],
+        "theme_color": palette[0],
+        "icons": [
+            {
+                "src": f"{base_url}/social-card.svg",
+                "type": "image/svg+xml",
+                "sizes": "any",
+                "purpose": "any",
+            }
+        ],
+    }
+    return json.dumps(manifest, indent=2, ensure_ascii=False) + "\n"
 
 
 def _site_chapter_list(chapters: list[Chapter]) -> str:

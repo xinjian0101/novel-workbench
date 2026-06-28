@@ -50,6 +50,7 @@ sitemap.xml
 robots.txt
 feed.xml
 llms.txt
+site.webmanifest
 Demo: https://xinjian0101.github.io/novel-workbench/
 Release: https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1
 ```
@@ -73,6 +74,7 @@ sitemap.xml
 robots.txt
 feed.xml
 llms.txt
+site.webmanifest
 ```
 
 ## Manuscript Markdown

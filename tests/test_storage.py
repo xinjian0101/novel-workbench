@@ -793,6 +793,7 @@ def test_export_share_kit_writes_public_review_assets(tmp_path: Path) -> None:
     assert "site/robots.txt" in names
     assert "site/feed.xml" in names
     assert "site/llms.txt" in names
+    assert "site/site.webmanifest" in names
     assert "pack/first-novel-handoff.md" in names
     assert "# First Novel Pitch" in (output_dir / "first-novel-pitch.md").read_text(encoding="utf-8")
     announcement = (output_dir / "first-novel-announcement.md").read_text(encoding="utf-8")
@@ -945,6 +946,7 @@ def test_export_site_writes_discovery_files_with_base_url(tmp_path: Path) -> Non
         "robots.txt",
         "feed.xml",
         "llms.txt",
+        "site.webmanifest",
     ]
     index = (output_dir / "index.html").read_text(encoding="utf-8")
     manuscript = (output_dir / "manuscript.html").read_text(encoding="utf-8")
@@ -952,18 +954,22 @@ def test_export_site_writes_discovery_files_with_base_url(tmp_path: Path) -> Non
     robots = (output_dir / "robots.txt").read_text(encoding="utf-8")
     feed = (output_dir / "feed.xml").read_text(encoding="utf-8")
     llms = (output_dir / "llms.txt").read_text(encoding="utf-8")
+    manifest = json.loads((output_dir / "site.webmanifest").read_text(encoding="utf-8"))
     assert '<meta property="og:image" content="https://example.com/books/first-novel/social-card.svg">' in index
     assert '<meta name="twitter:image" content="https://example.com/books/first-novel/social-card.svg">' in index
     assert '<link rel="alternate" type="application/rss+xml" title="First Novel updates" href="https://example.com/books/first-novel/feed.xml">' in index
     assert '<link rel="alternate" type="application/rss+xml" title="First Novel updates" href="https://example.com/books/first-novel/feed.xml">' in manuscript
     assert '<link rel="help" type="text/plain" href="https://example.com/books/first-novel/llms.txt">' in index
     assert '<link rel="help" type="text/plain" href="https://example.com/books/first-novel/llms.txt">' in manuscript
+    assert '<link rel="manifest" href="https://example.com/books/first-novel/site.webmanifest">' in index
+    assert '<link rel="manifest" href="https://example.com/books/first-novel/site.webmanifest">' in manuscript
     assert "<loc>https://example.com/books/first-novel/index.html</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/manuscript.html</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/context.json</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/social-card.svg</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/feed.xml</loc>" in sitemap
     assert "<loc>https://example.com/books/first-novel/llms.txt</loc>" in sitemap
+    assert "<loc>https://example.com/books/first-novel/site.webmanifest</loc>" in sitemap
     assert "Sitemap: https://example.com/books/first-novel/sitemap.xml" in robots
     assert "<title>First Novel - Novel Workbench</title>" in feed
     assert "<link>https://example.com/books/first-novel/</link>" in feed
@@ -975,6 +981,9 @@ def test_export_site_writes_discovery_files_with_base_url(tmp_path: Path) -> Non
     assert "A concise premise." in llms
     assert "[Context JSON](https://example.com/books/first-novel/context.json)" in llms
     assert "novel --workspace workspace tour --output-dir exports" in llms
+    assert manifest["name"] == "First Novel - Novel Workbench"
+    assert manifest["start_url"] == "https://example.com/books/first-novel/index.html"
+    assert manifest["icons"][0]["src"] == "https://example.com/books/first-novel/social-card.svg"
 
 
 def test_export_site_rejects_invalid_base_url(tmp_path: Path) -> None:
