@@ -225,6 +225,7 @@ novel --workspace workspace share-kit moon-archive exports\moon-archive-share
 Output files:
 
 ```text
+moon-archive-share-index.md
 moon-archive-pitch.md
 moon-archive-announcement.md
 moon-archive-launch-copy.md
@@ -237,6 +238,8 @@ pack/moon-archive.md
 pack/moon-archive-pitch.md
 pack/moon-archive-handoff.md
 ```
+
+Open `moon-archive-share-index.md` first when handing the bundle to a collaborator or preparing posts. It maps each generated file to a launch action and includes a star-conversion checklist for repository links, preview assets, focused feedback asks, and follow-up updates.
 
 ## Social Preview Card
 
@@ -270,7 +273,7 @@ moon-archive-launch-copy.md
 
 The Markdown file includes a one-line pitch, short social post, community post, awesome-list entry, and follow-up reply so a project can move from local draft to public feedback request without rewriting the same launch copy from scratch.
 
-The outreach plan file maps the generated pitch, announcement, launch copy, social card, static site, and report pack to channel-specific submission targets such as GitHub Discussions, awesome lists, developer forums, writing communities, and newsletters.
+The share index and outreach plan files map the generated pitch, announcement, launch copy, social card, static site, and report pack to channel-specific submission targets such as GitHub Discussions, awesome lists, developer forums, writing communities, and newsletters.
 
 ## Reproduce Locally
 

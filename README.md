@@ -193,6 +193,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export shareable progress reports with chapter, status, target, and streak tables
 - Export shareable revision checklists for manuscript edit passes
 - Export a share kit with pitch copy, static site, and report pack assets
+- Export a share-kit index that maps every generated asset to a launch or follow-up action
 - Export SVG social preview cards for project announcements and launch posts
 - Export channel-ready launch copy for social posts, community posts, awesome-list entries, and follow-up replies
 - Export a share-kit outreach plan that maps generated assets to directory, forum, writing-community, and newsletter submissions

@@ -923,6 +923,7 @@ class ProjectStore:
         announcement_path = output_dir / f"{project.slug}-announcement.md"
         launch_copy_path = output_dir / f"{project.slug}-launch-copy.md"
         outreach_plan_path = output_dir / f"{project.slug}-outreach-plan.md"
+        share_index_path = output_dir / f"{project.slug}-share-index.md"
         social_card_path = output_dir / f"{project.slug}-social-card.svg"
         pitch_path.write_text("\n".join(pitch_lines(project)).rstrip() + "\n", encoding="utf-8")
         announcement_path.write_text("\n".join(share_announcement_lines(project, normalized_base_url)).rstrip() + "\n", encoding="utf-8")
@@ -932,7 +933,20 @@ class ProjectStore:
 
         site_paths = self.export_site(project.slug, output_dir / "site", theme=theme, base_url=normalized_base_url)
         pack_paths = self.export_pack(project.slug, output_dir / "pack")
-        return [pitch_path, announcement_path, launch_copy_path, outreach_plan_path, social_card_path, *site_paths, *pack_paths]
+        share_index_path.write_text(
+            "\n".join(share_kit_index_lines(project, normalized_base_url)).rstrip() + "\n",
+            encoding="utf-8",
+        )
+        return [
+            share_index_path,
+            pitch_path,
+            announcement_path,
+            launch_copy_path,
+            outreach_plan_path,
+            social_card_path,
+            *site_paths,
+            *pack_paths,
+        ]
 
     def _read_project(self, path: Path) -> NovelProject:
         try:
@@ -1855,6 +1869,50 @@ def outreach_plan_lines(project: NovelProject, base_url: str = "") -> list[str]:
         "- Turn unclear workflow questions into `docs/USE_CASES.md` examples.",
         "- Turn feature requests into small issues labeled `good first issue` or `help wanted` when they fit the local-first model.",
         "- Re-run `python scripts/verify_github_metadata.py` and `python scripts/verify_public_links.py` after updating public launch surfaces.",
+    ]
+    return lines
+
+
+def share_kit_index_lines(project: NovelProject, base_url: str = "") -> list[str]:
+    slug = project.slug
+    preview = base_url or "Open site/index.html locally, or regenerate with --base-url after publishing."
+    lines = [
+        f"# {project.title} Share Kit Index",
+        "",
+        "Use this index as the first file to open after generating a share kit. It maps each asset to the fastest public-sharing action so the bundle can move from local export to launch post, directory submission, or reader review without hunting through filenames.",
+        "",
+        "## Fast Path",
+        "",
+        f"1. Review `{slug}-pitch.md` for the public logline and hook.",
+        f"2. Open `site/index.html` and confirm the exported preview reads correctly.",
+        f"3. Use `{slug}-launch-copy.md` for social, forum, or awesome-list copy.",
+        f"4. Use `{slug}-outreach-plan.md` to track where the kit was submitted and what follow-up is needed.",
+        "",
+        "## Preview",
+        "",
+        f"- Preview target: {preview}",
+        f"- Social card: `{slug}-social-card.svg`",
+        "- Static site: `site/index.html`",
+        "- Machine-readable context: `site/context.json`",
+        "",
+        "## Asset Map",
+        "",
+        "| Asset | Use it for |",
+        "|---|---|",
+        f"| `{slug}-pitch.md` | Project positioning, reader hook, and short share copy |",
+        f"| `{slug}-announcement.md` | GitHub Discussion, release note, or project update post |",
+        f"| `{slug}-launch-copy.md` | Short social post, community post, awesome-list entry, and follow-up reply |",
+        f"| `{slug}-outreach-plan.md` | Submission checklist and response follow-up loop |",
+        f"| `{slug}-social-card.svg` | Link preview image or visual attachment |",
+        "| `site/` | Static public preview for GitHub Pages or any static host |",
+        "| `pack/` | Full Markdown report pack for editors, reviewers, and contributors |",
+        "",
+        "## Star Conversion Checklist",
+        "",
+        "- Link the repository, live preview, and one-command trial path in every post.",
+        "- Put the clearest screenshot or social card beside the link.",
+        "- Ask for one focused kind of feedback instead of a general review.",
+        "- Turn repeated replies into README, FAQ, or issue updates before posting again.",
     ]
     return lines
 

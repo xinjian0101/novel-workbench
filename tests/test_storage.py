@@ -784,6 +784,7 @@ def test_export_share_kit_writes_public_review_assets(tmp_path: Path) -> None:
     )
 
     names = [path.relative_to(output_dir).as_posix() for path in outputs]
+    assert "first-novel-share-index.md" in names
     assert "first-novel-pitch.md" in names
     assert "first-novel-announcement.md" in names
     assert "first-novel-launch-copy.md" in names
@@ -796,6 +797,11 @@ def test_export_share_kit_writes_public_review_assets(tmp_path: Path) -> None:
     assert "site/site.webmanifest" in names
     assert "pack/first-novel-handoff.md" in names
     assert "# First Novel Pitch" in (output_dir / "first-novel-pitch.md").read_text(encoding="utf-8")
+    share_index = (output_dir / "first-novel-share-index.md").read_text(encoding="utf-8")
+    assert "# First Novel Share Kit Index" in share_index
+    assert "Star Conversion Checklist" in share_index
+    assert "Preview target: https://example.com/books/first-novel" in share_index
+    assert "`first-novel-launch-copy.md`" in share_index
     announcement = (output_dir / "first-novel-announcement.md").read_text(encoding="utf-8")
     assert "# First Novel Share Kit" in announcement
     assert "First Novel is a mystery project for adult readers: A detective follows a signal into a flooded archive." in announcement
