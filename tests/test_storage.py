@@ -769,6 +769,35 @@ def test_export_pack_writes_all_standard_reports(tmp_path: Path) -> None:
     assert "# First Novel Review" in (output_dir / "first-novel-review.md").read_text(encoding="utf-8")
 
 
+def test_export_share_kit_writes_public_review_assets(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "workspace")
+    store.create_project("first-novel", "First Novel", "A detective follows a signal into a flooded archive.")
+    store.update_project_metadata("first-novel", genre="mystery", audience="adult")
+    store.add_chapter("first-novel", "Opening", "The story begins.", "draft", "The first clue arrives.")
+    output_dir = tmp_path / "share-kit"
+
+    outputs = store.export_share_kit(
+        "first-novel",
+        output_dir,
+        theme="focus",
+        base_url="https://example.com/books/first-novel",
+    )
+
+    names = [path.relative_to(output_dir).as_posix() for path in outputs]
+    assert "first-novel-pitch.md" in names
+    assert "first-novel-announcement.md" in names
+    assert "site/index.html" in names
+    assert "site/sitemap.xml" in names
+    assert "site/robots.txt" in names
+    assert "pack/first-novel-handoff.md" in names
+    assert "# First Novel Pitch" in (output_dir / "first-novel-pitch.md").read_text(encoding="utf-8")
+    announcement = (output_dir / "first-novel-announcement.md").read_text(encoding="utf-8")
+    assert "# First Novel Share Kit" in announcement
+    assert "First Novel is a mystery project for adult readers: A detective follows a signal into a flooded archive." in announcement
+    assert "Public preview: https://example.com/books/first-novel" in announcement
+    assert '<html lang="en" data-theme="focus">' in (output_dir / "site" / "index.html").read_text(encoding="utf-8")
+
+
 def test_export_context_json_writes_agent_payload(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "workspace")
     store.create_project("first-novel", "First Novel", "A concise premise.")

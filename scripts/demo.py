@@ -75,6 +75,7 @@ def main() -> int:
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export-context", "moon-archive", str(exports / "moon-archive-context.json")],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export-site", "moon-archive", str(exports / "moon-archive-site")],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "export-pack", "moon-archive", str(exports / "moon-archive-pack")],
+        [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "share-kit", "moon-archive", str(exports / "moon-archive-share")],
         [sys.executable, "-m", "novel_workbench.cli", "--workspace", str(workspace), "backup", "moon-archive", str(backups)],
     ]
 

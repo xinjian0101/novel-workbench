@@ -206,6 +206,27 @@ moon-archive-review.md
 moon-archive-revision.md
 ```
 
+## Share Kit
+
+Command:
+
+```powershell
+novel --workspace workspace share-kit moon-archive exports\moon-archive-share
+```
+
+Output files:
+
+```text
+moon-archive-pitch.md
+moon-archive-announcement.md
+site/index.html
+site/manuscript.html
+site/context.json
+pack/moon-archive.md
+pack/moon-archive-pitch.md
+pack/moon-archive-handoff.md
+```
+
 ## Reproduce Locally
 
 Run the one-command tour:

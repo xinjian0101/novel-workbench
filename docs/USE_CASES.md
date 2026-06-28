@@ -14,6 +14,7 @@ Use Novel Workbench when a novel needs structure before it needs a full writing 
 - Discover built-in structures with `novel templates`, then start from importable manuscript templates with `novel starter` for `three-act`, `hero-journey`, `mystery`, `romance`, `sci-fi`, and `thriller` drafts.
 - Track daily word-count progress and deadline pace.
 - Generate a shareable `novel pitch` brief before posting a project, asking for beta readers, or handing the draft to an editor.
+- Export a `novel share-kit` bundle when you need pitch copy, static preview files, and report-pack assets in one directory.
 - Export Markdown when the draft is ready for an editor, static site, or publishing pipeline.
 
 Useful commands:

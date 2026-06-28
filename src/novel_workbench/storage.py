@@ -893,6 +893,20 @@ class ProjectStore:
             paths.append(self.export_markdown(project.slug, output_path, template))
         return paths
 
+    def export_share_kit(self, slug: str, output_dir: Path, theme: str = "classic", base_url: str = "") -> list[Path]:
+        project = self.get_project(slug)
+        normalized_base_url = _normalize_site_base_url(base_url)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        pitch_path = output_dir / f"{project.slug}-pitch.md"
+        announcement_path = output_dir / f"{project.slug}-announcement.md"
+        pitch_path.write_text("\n".join(pitch_lines(project)).rstrip() + "\n", encoding="utf-8")
+        announcement_path.write_text("\n".join(share_announcement_lines(project, normalized_base_url)).rstrip() + "\n", encoding="utf-8")
+
+        site_paths = self.export_site(project.slug, output_dir / "site", theme=theme, base_url=normalized_base_url)
+        pack_paths = self.export_pack(project.slug, output_dir / "pack")
+        return [pitch_path, announcement_path, *site_paths, *pack_paths]
+
     def _read_project(self, path: Path) -> NovelProject:
         try:
             raw = path.read_text(encoding="utf-8")
@@ -1455,12 +1469,43 @@ def pitch_lines(project: NovelProject) -> list[str]:
 
     lines.extend(["", "## Share Copy", ""])
     if project.synopsis.strip():
-        descriptor = f"{project.genre.strip()} project" if project.genre.strip() else "novel project"
-        audience = f" for {project.audience.strip()} readers" if project.audience.strip() else ""
-        lines.append(f"{project.title} is a {descriptor}{audience}: {project.synopsis.strip()}")
+        lines.append(_project_share_copy(project))
     else:
         lines.append(f"{project.title} is ready for a sharper public pitch once synopsis, genre, and audience are set.")
     return lines
+
+
+def share_announcement_lines(project: NovelProject, base_url: str = "") -> list[str]:
+    lines = [f"# {project.title} Share Kit", ""]
+    lines.extend(["## Short Post", ""])
+    if project.synopsis.strip():
+        lines.append(_project_share_copy(project))
+    else:
+        lines.append(f"{project.title} is a work-in-progress novel project ready for a clearer synopsis.")
+    lines.extend(
+        [
+            "",
+            "Built with Novel Workbench, a local-first writing workspace that exports Markdown, project context, and a static HTML preview.",
+            "",
+            "## Share Assets",
+            "",
+            f"- Pitch brief: `{project.slug}-pitch.md`",
+            "- Static preview: `site/index.html`",
+            "- Report pack: `pack/`",
+        ]
+    )
+    if base_url:
+        lines.append(f"- Public preview: {base_url}")
+    lines.extend(["", "## Suggested Follow-Up", ""])
+    lines.append("- Ask readers whether the premise, genre, audience, and current hook are clear.")
+    lines.append("- Regenerate this kit after major synopsis, chapter, or pitch changes.")
+    return lines
+
+
+def _project_share_copy(project: NovelProject) -> str:
+    descriptor = f"{project.genre.strip()} project" if project.genre.strip() else "novel project"
+    audience = f" for {project.audience.strip()} readers" if project.audience.strip() else ""
+    return f"{project.title} is a {descriptor}{audience}: {project.synopsis.strip()}"
 
 
 def momentum_lines(project: NovelProject) -> list[str]:

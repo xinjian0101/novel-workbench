@@ -616,7 +616,19 @@ Export every standard project report to one directory.
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
 ```
 
-The command writes the plain manuscript, YAML-frontmatter manuscript, focus brief, handoff brief, momentum report, status board, outline, progress report, readiness review, and revision checklist. File names use the project slug, for example `moon-archive.md`, `moon-archive-handoff.md`, and `moon-archive-revision.md`.
+The command writes the plain manuscript, YAML-frontmatter manuscript, pitch brief, focus brief, handoff brief, momentum report, status board, outline, progress report, readiness review, and revision checklist. File names use the project slug, for example `moon-archive.md`, `moon-archive-pitch.md`, `moon-archive-handoff.md`, and `moon-archive-revision.md`.
+
+## `novel share-kit`
+
+Export a public review bundle for a project.
+
+```powershell
+novel --workspace workspace share-kit moon-archive exports/moon-archive-share
+novel --workspace workspace share-kit moon-archive exports/moon-archive-share --theme focus
+novel --workspace workspace share-kit moon-archive exports/moon-archive-share --base-url https://example.com/moon-archive
+```
+
+The command writes `<slug>-pitch.md`, `<slug>-announcement.md`, a static site under `site/`, and the full Markdown report pack under `pack/`. Use it when preparing a beta-reader packet, public progress update, editor note, or launch post.
 
 ## `novel backup`
 

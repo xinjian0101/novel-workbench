@@ -186,6 +186,7 @@ Most writing apps are either too heavy for developers and terminal users, or too
 - Export shareable writing momentum reports with weekly progress rollups
 - Export shareable progress reports with chapter, status, target, and streak tables
 - Export shareable revision checklists for manuscript edit passes
+- Export a share kit with pitch copy, static site, and report pack assets
 - Export through custom Markdown template files
 - Automatically snapshot project JSON before renames and destructive deletes
 - Back up project JSON on demand
@@ -252,6 +253,7 @@ novel --workspace workspace export moon-archive exports/moon-archive-revision.md
 novel --workspace workspace export-context moon-archive exports/moon-archive-context.json
 novel --workspace workspace export-site moon-archive exports/moon-archive-site
 novel --workspace workspace export-pack moon-archive exports/moon-archive-pack
+novel --workspace workspace share-kit moon-archive exports/moon-archive-share
 novel --workspace workspace backup moon-archive backups
 novel --workspace workspace restore-backup backups/moon-archive-20260626T120000000000Z.json --force
 ```
@@ -325,6 +327,7 @@ novel export <slug> <output.md> [--template board|default|focus|frontmatter|hand
 novel export-context <slug> <output.json>
 novel export-site <slug> <output-dir> [--theme classic|editorial|focus] [--base-url https://example.com/site]
 novel export-pack <slug> <output-dir>
+novel share-kit <slug> <output-dir> [--theme classic|editorial|focus] [--base-url https://example.com/site]
 novel backup <slug> <output-dir>
 novel restore-backup <backup.json> [--force]
 ```

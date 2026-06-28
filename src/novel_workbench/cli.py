@@ -104,6 +104,7 @@ COMPLETION_COMMANDS = (
     "export-context",
     "export-site",
     "export-pack",
+    "share-kit",
     "backup",
     "restore-backup",
     "completion",
@@ -411,7 +412,7 @@ def build_parser() -> argparse.ArgumentParser:
     export = subparsers.add_parser("export", help="Export a project to Markdown.")
     export.add_argument("slug")
     export.add_argument("output", type=Path)
-    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, handoff, momentum, outline, progress, review, or revision.")
+    export.add_argument("--template", default="default", help="board, default, focus, frontmatter, handoff, momentum, outline, pitch, progress, review, or revision.")
     export.add_argument("--template-file", type=Path, help="Custom Markdown template file with named fields.")
 
     export_context = subparsers.add_parser("export-context", help="Export an AI/editor project context JSON document.")
@@ -427,6 +428,12 @@ def build_parser() -> argparse.ArgumentParser:
     export_pack = subparsers.add_parser("export-pack", help="Export all standard Markdown reports for a project.")
     export_pack.add_argument("slug")
     export_pack.add_argument("output_dir", type=Path)
+
+    share_kit = subparsers.add_parser("share-kit", help="Export a pitch, announcement copy, static site, and report pack.")
+    share_kit.add_argument("slug")
+    share_kit.add_argument("output_dir", type=Path)
+    share_kit.add_argument("--theme", choices=("classic", "editorial", "focus"), default="classic", help="Static site theme.")
+    share_kit.add_argument("--base-url", default="", help="Public site URL used to generate sitemap.xml and robots.txt.")
 
     backup = subparsers.add_parser("backup", help="Copy a project JSON file to a backup directory.")
     backup.add_argument("slug")
@@ -876,6 +883,12 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "export-pack":
         outputs = store.export_pack(args.slug, args.output_dir)
         print(f"Exported pack: {args.output_dir}")
+        for output in outputs:
+            print(f"- {output}")
+        return 0
+    if args.command == "share-kit":
+        outputs = store.export_share_kit(args.slug, args.output_dir, theme=args.theme, base_url=args.base_url)
+        print(f"Exported share kit: {args.output_dir}")
         for output in outputs:
             print(f"- {output}")
         return 0
