@@ -6,6 +6,14 @@ PyPI release preparation lives in [docs/PYPI_PUBLISHING.md](docs/PYPI_PUBLISHING
 
 The current GitHub Release is [v0.1.1](https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1), with both the wheel and source distribution attached.
 
+## Package Metadata
+
+`pyproject.toml` keeps discovery metadata aligned with the public launch surface:
+
+- Keywords include `author-tools`, `creative-writing`, `github-pages`, `static-site`, and `ai-handoff`.
+- Project URLs include the live demo, GitHub Discussions, the current release, evaluation guide, use cases, source, issues, changelog, and CLI reference.
+- Classifiers identify the package as console software for writing, Markdown, utilities, and local creative workflows.
+
 ## Local Package Check
 
 Run the full project check:

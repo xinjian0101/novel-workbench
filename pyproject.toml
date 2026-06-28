@@ -10,7 +10,19 @@ readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Novel Workbench Maintainers" }]
 license = "MIT"
-keywords = ["writing", "novel", "markdown", "cli", "local-first"]
+keywords = [
+  "ai-handoff",
+  "author-tools",
+  "cli",
+  "creative-writing",
+  "fiction",
+  "github-pages",
+  "local-first",
+  "markdown",
+  "novel",
+  "static-site",
+  "writing",
+]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
@@ -19,7 +31,10 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Topic :: Artistic Software",
+  "Topic :: Office/Business",
   "Topic :: Text Processing",
+  "Topic :: Text Processing :: Markup :: Markdown",
   "Topic :: Utilities",
 ]
 dependencies = []
@@ -30,7 +45,11 @@ Source = "https://github.com/xinjian0101/novel-workbench"
 Documentation = "https://github.com/xinjian0101/novel-workbench/blob/master/docs/CLI_REFERENCE.md"
 "Live Demo" = "https://xinjian0101.github.io/novel-workbench/"
 Issues = "https://github.com/xinjian0101/novel-workbench/issues"
+Discussions = "https://github.com/xinjian0101/novel-workbench/discussions"
+Release = "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1"
 Changelog = "https://github.com/xinjian0101/novel-workbench/blob/master/CHANGELOG.md"
+Evaluation = "https://github.com/xinjian0101/novel-workbench/blob/master/docs/EVALUATION.md"
+"Use Cases" = "https://github.com/xinjian0101/novel-workbench/blob/master/docs/USE_CASES.md"
 
 [project.optional-dependencies]
 dev = [
