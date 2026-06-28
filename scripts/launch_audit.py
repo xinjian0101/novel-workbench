@@ -69,6 +69,7 @@ REQUIRED_TEXT = {
         "Star fit",
         "60-Second Tour",
         "novel --workspace workspace tour --output-dir exports",
+        "novel try",
         "novel templates",
         "novel pitch",
         "novel social-card",
@@ -185,6 +186,7 @@ REQUIRED_TEXT = {
         "Share Targets",
         "Contribution Fit",
         "novel --workspace workspace tour --output-dir exports",
+        "novel try",
         "no account, server, database, telemetry, or background network calls",
     ],
     "docs/PYPI_PUBLISHING.md": [
@@ -192,6 +194,11 @@ REQUIRED_TEXT = {
         "TestPyPI Dry Run",
         "PyPI Release",
         "Post-Release Updates",
+    ],
+    "docs/CLI_REFERENCE.md": [
+        "## `novel try`",
+        "novel try",
+        "one-word trial path",
     ],
     "docs/PACKAGING.md": [
         "https://github.com/xinjian0101/novel-workbench/releases/tag/v0.1.1",

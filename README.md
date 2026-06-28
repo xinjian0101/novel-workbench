@@ -87,6 +87,12 @@ Run the one-command tour:
 novel --workspace workspace tour --output-dir exports
 ```
 
+For the shortest first run after installation:
+
+```powershell
+novel try
+```
+
 It creates or reuses the sample project, prints the next writing focus, exports AI/editor context JSON, writes a static HTML site, and builds a complete Markdown report pack.
 
 Or run the steps manually:
@@ -285,6 +291,7 @@ novel export-dashboard <output.md>
 novel doctor
 novel migrate [--dry-run]
 novel tour [--slug moon-archive] [--output-dir exports]
+novel try [--slug moon-archive] [--output-dir exports]
 novel templates
 novel completion bash|zsh|powershell
 novel sample [--slug moon-archive]

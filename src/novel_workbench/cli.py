@@ -59,6 +59,7 @@ COMPLETION_COMMANDS = (
     "migrate",
     "sample",
     "tour",
+    "try",
     "templates",
     "starter",
     "create",
@@ -211,6 +212,10 @@ def build_parser() -> argparse.ArgumentParser:
     tour = subparsers.add_parser("tour", help="Run a one-command sample tour and export shareable outputs.")
     tour.add_argument("--slug", default="moon-archive", help="Sample project slug.")
     tour.add_argument("--output-dir", type=Path, default=Path("exports"), help="Directory for generated tour outputs.")
+
+    try_demo = subparsers.add_parser("try", help="Run the fastest local demo and export sample outputs.")
+    try_demo.add_argument("--slug", default="moon-archive", help="Sample project slug.")
+    try_demo.add_argument("--output-dir", type=Path, default=Path("exports"), help="Directory for generated demo outputs.")
 
     subparsers.add_parser("templates", help="List starter and export templates.")
 
@@ -528,7 +533,7 @@ def run(args: argparse.Namespace) -> int:
         project = store.create_sample_project(args.slug)
         print(f"Created sample project: {project.slug} ({len(project.chapters)} chapters)")
         return 0
-    if args.command == "tour":
+    if args.command in {"tour", "try"}:
         slug, created = _get_or_create_tour_project(store, args.slug)
         project = store.get_project(slug)
         output_root = args.output_dir / project.slug

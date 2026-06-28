@@ -353,6 +353,21 @@ def test_cli_tour_creates_sample_and_exports_outputs(tmp_path: Path, capsys) -> 
     assert (output_dir / "moon-archive" / "pack" / "moon-archive-handoff.md").exists()
 
 
+def test_cli_try_creates_sample_and_exports_outputs(tmp_path: Path, capsys) -> None:
+    workspace = tmp_path / "workspace"
+    output_dir = tmp_path / "try-exports"
+
+    assert main(["--workspace", str(workspace), "try", "--output-dir", str(output_dir)]) == 0
+
+    captured = capsys.readouterr()
+    assert "Created sample project: moon-archive (2 chapters)" in captured.out
+    assert "Tour outputs:" in captured.out
+    assert "# Moon Archive Focus" in captured.out
+    assert (output_dir / "moon-archive" / "context.json").exists()
+    assert (output_dir / "moon-archive" / "site" / "index.html").exists()
+    assert (output_dir / "moon-archive" / "pack" / "moon-archive-pitch.md").exists()
+
+
 def test_cli_dashboard_reports_empty_workspace(tmp_path: Path, capsys) -> None:
     assert main(["--workspace", str(tmp_path), "dashboard"]) == 0
 
@@ -459,6 +474,7 @@ def test_cli_prints_completion_scripts(capsys) -> None:
     assert "export-dashboard" in captured.out
     assert "migrate" in captured.out
     assert "tour" in captured.out
+    assert "try" in captured.out
     assert "templates" in captured.out
     assert "import-markdown" in captured.out
     assert "focus" in captured.out

@@ -27,6 +27,12 @@ python -m pip install "git+https://github.com/xinjian0101/novel-workbench.git"
 novel --workspace workspace tour --output-dir exports
 ```
 
+For a one-word first run after installation:
+
+```powershell
+novel try
+```
+
 Then inspect:
 
 - `workspace/projects/moon-archive.json` for the local project file.
